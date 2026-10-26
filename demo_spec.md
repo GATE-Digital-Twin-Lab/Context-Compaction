@@ -57,7 +57,7 @@ Written only through the **Log** action. The agent decides **when** to log and *
 - #2 → `p2, p4, p6 → +I` (one data point, nothing to infer: all labels "present")
 - #3 → `(higher) p2, p4, p6 → +I` (1 → 2 p2 raised 2% → 5%)
 
-A later potion #4 that leads the agent to believe p6 must be odd adds `(higher) p2, p4, odd p6 → +I` as a fourth entry. Under the real rules p6 has no effect, so this belief is wrong; labels are beliefs, not truths. Logging #3's labels again would be an exact duplicate and is dropped.
+A later potion #4 that leads the agent to believe p6 must be odd adds `(higher) p2, p4, (odd) p6 → +I` as a fourth entry. Under the real rules p6 has no effect, so this belief is wrong; labels are beliefs, not truths. Logging #3's labels again would be an exact duplicate and is dropped.
 
 The quantities, the magnitudes and which potion is the best so far exist **only in the conversation**. After compaction the agent may still know "more p2 helps I" from the KB, but not that 2 p2 gave 5%.
 
