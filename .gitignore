@@ -1,5 +1,5 @@
 Papers/
 runs/
 temp/
-.venv/
-
+__pycache__/
+.pytest_cache/
