@@ -1,2 +1,5 @@
 Papers/
+runs/
+temp/
+.venv/
 
