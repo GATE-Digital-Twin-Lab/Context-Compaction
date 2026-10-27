@@ -236,11 +236,11 @@ A separate garden-view tool is not needed: the garden state is shown at the star
 | Gather | `Gathered: +2 p2, +1 p7.` (or `Gathered nothing.`) | **Never fails.** Collects **all** ready plots (counts only, not per plot), updates the inventory, and removes the planting records of the gathered plots. |
 | Brew | `Brewed {"p1": 2, "p5": 4, "p8": 2} → {"positive": {"S": 20}, "negative": {}} (potion #4)` | Failures (`Not enough plants: need 4 p5, have 2.` · `A recipe needs 3–4 distinct plants.`) cost 0 turns; 3 failures → forced Skip. |
 | Skip | `Skipped.` | – |
-| Log | `Logged: growth p2 = 4 turns, p7 = 3 turns; plantings: plot 3 (p2), plot 5 (p7); potion #3: (higher) p5, even p8, even p1 → +S.` | Garden part never fails (may log nothing new). A potion part fails for an unknown potion ID or a label outside the vocabulary. An exact duplicate (same plant set, effect and labels) is reported as `potion #3: already known` and the potion is marked logged. |
+| Log | `Logged: growth p2 = 4 turns, p7 = 3 turns; plantings: plot 3 (p2), plot 5 (p7); potion #3: (higher) p5, even p8, even p1 → +S.` | **All-or-nothing:** if any potion entry is invalid (unknown potion ID, a label for a plant the potion does not contain, or a label outside the vocabulary), nothing is logged, including the garden part. A failed Log costs **0 turns** and counts toward the 3-failure limit. Plants the agent leaves unlabelled default to `present`. The garden part alone never fails (it may log nothing new). An exact duplicate (same plant set, effect and labels) is reported as `potion #3: already known` and the potion is marked logged. |
 | KB lookup | `p5: grows in 4 turns. Interactions: (higher) p5, even p8, even p1 → +S; …` | All known info for the plant: growth time (if logged) and all logged outcome statements involving it, **in the order they were logged** (the last one is the agent's latest belief). |
 | Inventory | `plants: p2: 3, p5: 1, p7: 1; potions: #1 (logged), #2, #3` | Potion details are never shown here; they live only in the conversation. |
 
-- **Errors** (malformed JSON, failed brews) cost **0 turns**. After **3 failed attempts** in one turn the environment forces a Skip.
+- **Errors** (malformed JSON, failed brews, failed logs) cost **0 turns**. After **3 failed attempts** in one turn the environment forces a Skip.
 - **Allergy violations are not flagged.** A brew containing the allergic pair succeeds normally (plants consumed, effect shown) but counts as a failure in scoring. A warning would re-insert the allergy into the context and undo the effect of compaction.
 
 ### Episode flow

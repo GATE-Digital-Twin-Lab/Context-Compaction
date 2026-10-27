@@ -8,6 +8,9 @@ from environment.brewer import PLANTS, STAT_SETS
 from environment.inventory import Potion
 
 
+STAT_NAMES = {"I": "intelligence", "S": "strength", "V": "vitality", "D": "dexterity", "W": "wisdom"}
+
+
 class GoalKind(StrEnum):
     TIME = "time"      # best potion within a turn budget
     TARGET = "target"  # reach an intensity as fast as possible
@@ -27,6 +30,13 @@ class Goal:
             raise ValueError("A time goal needs turns >= 1 and no target.")
         if self.kind is GoalKind.TARGET and not (self.target and self.target > 0 and self.turns is None):
             raise ValueError("A target goal needs a target > 0 and no turn budget.")
+
+    def describe(self) -> str:
+        """E.g. 'brew the best strength (S) potion you can in 30 turns'."""
+        name = f"{STAT_NAMES[self.stat]} ({self.stat})"
+        if self.kind is GoalKind.TIME:
+            return f"brew the best {name} potion you can in {self.turns} turns"
+        return f"brew a {name} potion of at least +{self.target}% as fast as you can"
 
 
 @dataclass(frozen=True)

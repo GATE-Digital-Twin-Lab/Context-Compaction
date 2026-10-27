@@ -52,6 +52,7 @@ class GatherResult:
 @dataclass
 class _Plot:
     plant: str
+    planted_turn: int
     ready_turn: int
 
 
@@ -79,9 +80,13 @@ class Garden:
             elif plot in self._plots:
                 failed[plot] = "occupied"
             else:
-                self._plots[plot] = _Plot(plant, turn + self.growth_times[plant])
+                self._plots[plot] = _Plot(plant, turn, turn + self.growth_times[plant])
                 planted[plot] = plant
         return PlantResult(planted, failed)
+
+    def plantings(self) -> dict[int, tuple[str, int]]:
+        """Occupied plots: plot -> (plant, turn it was planted)."""
+        return {p: (s.plant, s.planted_turn) for p, s in sorted(self._plots.items())}
 
     def gather(self, turn: int) -> GatherResult:
         """Harvest all ready plots and free them. Never fails."""
