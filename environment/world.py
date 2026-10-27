@@ -76,6 +76,10 @@ class World:
     def current_goal(self) -> Goal | None:
         return self.goals[self.goal_index] if self.goal_index < len(self.goals) else None
 
+    @property
+    def episode_over(self) -> bool:
+        return self.current_goal is None or self.turn > self.turn_cap
+
     # --- actions (each costs the turn if it returns) ------------------------
 
     def plant(self, assignments: Mapping[int, str]) -> PlantResult:

@@ -31,6 +31,9 @@ class Goal:
         if self.kind is GoalKind.TARGET and not (self.target and self.target > 0 and self.turns is None):
             raise ValueError("A target goal needs a target > 0 and no turn budget.")
 
+    def to_dict(self) -> dict:
+        return {"kind": str(self.kind), "stat": self.stat, "turns": self.turns, "target": self.target}
+
     def describe(self) -> str:
         """E.g. 'brew the best strength (S) potion you can in 30 turns'."""
         name = f"{STAT_NAMES[self.stat]} ({self.stat})"
