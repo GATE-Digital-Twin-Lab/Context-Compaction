@@ -43,7 +43,8 @@ class Goal:
         name = f"{STAT_NAMES[self.stat]} ({self.stat})"
         if self.kind is GoalKind.TIME:
             return f"brew the best {name} potion you can in {self.turns} turns"
-        return f"brew a {name} potion of at least +{self.target}% as fast as you can"
+        article = "an" if name[0] in "aeiou" else "a"
+        return f"brew {article} {name} potion of at least +{self.target}% as fast as you can"
 
 
 @dataclass(frozen=True)

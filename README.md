@@ -60,7 +60,7 @@ Seeds that are not given are drawn at random and recorded in `params.json`, so e
 A checkpoint is saved after every completed turn. To continue a run that crashed or was stopped:
 
 ```
-python main.py --resume runs/<agent>/<run_id>
+scripts/resume.sh runs/<agent>/<run_id>      # same as: python main.py --resume runs/<agent>/<run_id>
 ```
 
 The run continues with exactly its saved parameters and state; at most the interrupted turn is replayed.
@@ -88,9 +88,10 @@ Working data needed while the run is in progress: the knowledge base (`knowledge
 ## Status
 
 - [x] Environment specification ([demo_spec.md](demo_spec.md))
-- [ ] Project setup (this README, folder structure, `requirements.txt`)
-- [ ] Environment implementation and tests
-- [ ] Non-LLM agents (random, oracle) and parameter tuning (a, b, N, goal budgets)
+- [x] Project setup (this README, folder structure, `requirements.txt`)
+- [x] Environment implementation and tests (`python -m pytest`)
+- [x] Turn loop, checkpointing and resume, random agent, `scripts/run_experiment.sh`
+- [ ] Oracle agent and parameter tuning (a, b, N, goal budgets)
 - [ ] LLM agent; how the local model is served is *to be decided* (e.g. Ollama, vLLM, llama.cpp or Transformers)
 - [ ] Compaction methods
 - [ ] Evaluation plan
