@@ -17,11 +17,31 @@ class Potion:
     turn: int
     logged: bool = False
 
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "recipe": self.recipe,
+            "effect": self.effect.to_dict(),
+            "turn": self.turn,
+            "logged": self.logged,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Mapping) -> "Potion":
+        return cls(data["id"], dict(data["recipe"]), Effect.from_dict(data["effect"]), data["turn"], data["logged"])
+
 
 @dataclass
 class Inventory:
     plants: Counter[str] = field(default_factory=Counter)
     potions: list[Potion] = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return {"plants": dict(sorted(self.plants.items())), "potions": [p.to_dict() for p in self.potions]}
+
+    @classmethod
+    def from_dict(cls, data: Mapping) -> "Inventory":
+        return cls(Counter(data["plants"]), [Potion.from_dict(p) for p in data["potions"]])
 
     def add_plants(self, counts: Mapping[str, int]) -> None:
         self.plants.update(counts)

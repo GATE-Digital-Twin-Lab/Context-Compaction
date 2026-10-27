@@ -19,8 +19,9 @@ LLM/
   episode.py                the turn loop: garden state → agent → action → result → (compaction) → next turn
 environment/                the hidden world: garden and growth timers, brewer rules, knowledge base, inventory, goals, turn clock
 tools/                      one file per agent-facing tool (plant, gather, log, brew, skip, kb_lookup, inventory); thin wrappers around environment/
-compaction/                 compactors and the token-threshold trigger (empty for now; approach not settled yet)
+compaction/                 compactors (empty for now; approach not settled yet)
 ledger.py                   records every needed fact when it appears; snapshots them at each compaction
+checkpoint.py               per-turn checkpoints: saves the full state, restores it after a crash (--resume)
 agents/                     non-LLM agents for testing, parameter tuning and baselines (random, scripted oracle)
 prompts/                    system prompt and user-message templates as text files
 tests/                      unit tests (brewer rules, garden timing, logging edge cases)
@@ -41,15 +42,28 @@ demo.md, demo_spec.md       first demo idea and the current environment specific
 
 All runs are started from shell scripts in `scripts/`. Each script lists every parameter with its default value, and any parameter can be overridden on the command line. The script calls `main.py`, which does the work.
 
-Parameters (planned):
+Parameters (`python -c "from input import build_parser; build_parser().print_help()"` lists them all):
 
 | Group | Parameters |
 |---|---|
-| Agent | agent type (LLM / random / oracle), LLM name, sampling parameters (temperature, max tokens, …), LLM seed |
-| Garden | garden size N, growth-time range a–b, environment seed |
-| User | goals (type, stat, deadline or target), allergy (two-plant combination or none) |
-| Episode | global turn cap, prompt file |
-| Compaction | compactor, token threshold (to be added) |
+| Agent | `--agent` (llm / random / oracle), `--llm-name`, `--temperature`, `--max-tokens`, `--llm-seed` |
+| Garden | `--garden-size`, `--growth-min`, `--growth-max`, `--env-seed` |
+| User | `--goals` (e.g. `time:S:30,target:I:10`), `--allergy` (e.g. `p3+p5` or `none`) |
+| Episode | `--turn-cap`, `--prompt-file` |
+| Compaction | `--compactor`, `--context-window` (tokens), `--compaction-trigger` (fraction of the window, default 0.8; checked only between turns) |
+| Output | `--runs-dir`, `--temp-dir` |
+
+Seeds that are not given are drawn at random and recorded in `params.json`, so every run can be repeated.
+
+### Resuming an interrupted run
+
+A checkpoint is saved after every completed turn. To continue a run that crashed or was stopped:
+
+```
+python main.py --resume runs/<agent>/<run_id>
+```
+
+The run continues with exactly its saved parameters and state; at most the interrupted turn is replayed.
 
 ## Outputs
 
@@ -69,7 +83,7 @@ One folder per run. `<agent>` is the LLM name (e.g. `qwen3-8b`) or the non-LLM a
 
 ### `temp/<agent>/<timestamp>/`
 
-Working data needed while the run is in progress: the knowledge base (a small SQLite database), inventory and garden tables, and other intermediate files. Whether `temp/` is cleaned up after a successful run is *to be decided*.
+Working data needed while the run is in progress: the knowledge base (`knowledge_base.sqlite`) and the latest checkpoint (`checkpoint.json`). Whether `temp/` is cleaned up after a successful run is *to be decided*.
 
 ## Status
 

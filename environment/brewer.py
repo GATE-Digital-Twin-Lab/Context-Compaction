@@ -34,6 +34,10 @@ class Effect:
     def to_dict(self) -> dict[str, dict[str, int]]:
         return {"positive": dict(self.positive), "negative": dict(self.negative)}
 
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Mapping[str, int]]) -> "Effect":
+        return cls(dict(data["positive"]), dict(data["negative"]))
+
 
 def intensity(score: int) -> int:
     """Map a driver score to an intensity level; score <= 0 gives no effect."""

@@ -1,6 +1,8 @@
 """Command-line arguments, validation, and the experiment configuration."""
 
 import argparse
+import json
+import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -30,9 +32,10 @@ class ExperimentConfig:
     # episode
     turn_cap: int
     prompt_file: Path
-    # compaction
+    # compaction (checked only between turns)
     compactor: str
-    compaction_threshold: int | None
+    context_window: int | None   # model's context size in tokens
+    compaction_trigger: float    # compact once the context passes this fraction of the window
     # output
     runs_dir: Path
     temp_dir: Path
@@ -49,6 +52,23 @@ class ExperimentConfig:
         for key in ("prompt_file", "runs_dir", "temp_dir"):
             data[key] = str(data[key])
         return data
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "ExperimentConfig":
+        """Rebuild from params.json (extra keys such as run_id are ignored)."""
+        values = {k: data[k] for k in cls.__dataclass_fields__}
+        values["goals"] = tuple(Goal.from_dict(g) for g in data["goals"])
+        values["allergy"] = Allergy(frozenset(data["allergy"])) if data["allergy"] else None
+        for key in ("prompt_file", "runs_dir", "temp_dir"):
+            values[key] = Path(values[key])
+        return cls(**values)
+
+
+def load_config(run_dir: Path) -> ExperimentConfig:
+    params = run_dir / "params.json"
+    if not params.is_file():
+        raise ValueError(f"No params.json in {run_dir}.")
+    return ExperimentConfig.from_dict(json.loads(params.read_text(encoding="utf-8")))
 
 
 def parse_goal(text: str) -> Goal:
@@ -92,13 +112,33 @@ def build_parser() -> argparse.ArgumentParser:
     e = p.add_argument_group("episode")
     e.add_argument("--turn-cap", type=int, default=150)
     e.add_argument("--prompt-file", type=Path, default=Path("prompts/system.txt"))
-    c = p.add_argument_group("compaction")
+    c = p.add_argument_group("compaction (checked only between turns)")
     c.add_argument("--compactor", choices=COMPACTORS, default="none")
-    c.add_argument("--compaction-threshold", type=int, help="tokens; required unless --compactor none")
+    c.add_argument("--context-window", type=int, help="model context size in tokens; required unless --compactor none")
+    c.add_argument("--compaction-trigger", type=float, default=0.8,
+                   help="compact once the context passes this fraction of the window (default 0.8)")
     o = p.add_argument_group("output")
     o.add_argument("--runs-dir", type=Path, default=Path("runs"))
     o.add_argument("--temp-dir", type=Path, default=Path("temp"))
+    r = p.add_argument_group("resume")
+    r.add_argument("--resume", type=Path, metavar="RUN_DIR",
+                   help="continue an interrupted run from its last checkpoint; takes no other options")
     return p
+
+
+def parse_command(argv: list[str] | None = None) -> tuple[ExperimentConfig, Path | None]:
+    """A new run's config, or (saved config, run folder) for --resume."""
+    argv = sys.argv[1:] if argv is None else argv
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if args.resume is None:
+        return parse_args(argv), None
+    if len(argv) != 2:
+        parser.error("--resume takes no other options: the run continues with its saved parameters.")
+    try:
+        return load_config(args.resume), args.resume
+    except (ValueError, KeyError) as err:
+        parser.error(f"Cannot resume {args.resume}: {err}")
 
 
 def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
@@ -128,7 +168,8 @@ def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
         turn_cap=args.turn_cap,
         prompt_file=args.prompt_file,
         compactor=args.compactor,
-        compaction_threshold=args.compaction_threshold,
+        context_window=args.context_window,
+        compaction_trigger=args.compaction_trigger,
         runs_dir=args.runs_dir,
         temp_dir=args.temp_dir,
     )
@@ -151,5 +192,9 @@ def _check(args: argparse.Namespace) -> None:
         raise ValueError("--temperature must be >= 0.")
     if args.max_tokens < 1:
         raise ValueError("--max-tokens must be >= 1.")
-    if args.compactor != "none" and not (args.compaction_threshold and args.compaction_threshold > 0):
-        raise ValueError("--compaction-threshold (> 0) is required when a compactor is used.")
+    if not 0 < args.compaction_trigger <= 1:
+        raise ValueError("--compaction-trigger must be in (0, 1].")
+    if args.context_window is not None and args.context_window < 1:
+        raise ValueError("--context-window must be >= 1.")
+    if args.compactor != "none" and args.context_window is None:
+        raise ValueError("--context-window is required when a compactor is used.")

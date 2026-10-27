@@ -89,6 +89,18 @@ class RunOutput:
         self._transcript_turn: int | None = None
         append_text(self.dir / "transcript.md", f"# Transcript — {config.agent_label} — {self.run_id}\n")
 
+    @classmethod
+    def reopen(cls, config: ExperimentConfig, run_dir: Path) -> "RunOutput":
+        """Attach to an existing run folder (for --resume)."""
+        out = cls.__new__(cls)
+        out.run_id = run_dir.name
+        out.dir = run_dir
+        out.temp = config.temp_dir / config.agent_label / run_dir.name
+        if not out.temp.is_dir():
+            raise FileNotFoundError(f"No working folder {out.temp} for this run.")
+        out._transcript_turn = None
+        return out
+
     @property
     def kb_path(self) -> Path:
         return self.temp / "knowledge_base.sqlite"

@@ -84,6 +84,16 @@ class Garden:
                 planted[plot] = plant
         return PlantResult(planted, failed)
 
+    def to_dict(self) -> dict:
+        plots = {str(p): [s.plant, s.planted_turn, s.ready_turn] for p, s in sorted(self._plots.items())}
+        return {"size": self.size, "growth_times": self.growth_times, "plots": plots}
+
+    @classmethod
+    def from_dict(cls, data: Mapping) -> "Garden":
+        garden = cls(data["size"], dict(data["growth_times"]))
+        garden._plots = {int(p): _Plot(*slot) for p, slot in data["plots"].items()}
+        return garden
+
     def plantings(self) -> dict[int, tuple[str, int]]:
         """Occupied plots: plot -> (plant, turn it was planted)."""
         return {p: (s.plant, s.planted_turn) for p, s in sorted(self._plots.items())}

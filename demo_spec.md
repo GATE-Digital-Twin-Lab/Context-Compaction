@@ -149,7 +149,7 @@ The user sets the **initial conditions** and the **goals**:
 
 ## Compaction
 
-- Triggered when the context exceeds **N tokens** (independent of turns).
+- Triggered when the context passes a **fraction of the model's context window** (`--compaction-trigger`, default 0.8, of `--context-window` tokens). The check runs **only between turns**, after an action and its response are complete, so compaction never cuts an action in half.
 - **Blind by default:** the agent is never told how full its context is or when compaction will happen, just as a person doesn't know when they will forget something. Logging is therefore insurance. A *warned* variant (the agent sees its context usage and can log just before compaction) is an optional later experiment.
 - With about 3 goals per episode, at least one compaction happens.
 - The same garden can be run with **0, 1, …, k compactions** for comparison.
@@ -253,10 +253,19 @@ A separate garden-view tool is not needed: the garden state is shown at the star
    2. The agent reasons, uses free tools, and submits one action.
    3. The environment applies the action and returns the result (or forces a Skip after 3 failed attempts).
    4. The environment checks the goal. A target goal reached by a valid brew ends now; a time-limited goal ends when its deadline passes.
-   5. If the context now exceeds the token threshold, **compaction** runs (blind: the agent is not told).
-   6. Time advances to t + 1. A plant planted in turn t with growth time g becomes **ready at the start of turn t + g** and stays ready until gathered.
+   5. Time advances to t + 1. A plant planted in turn t with growth time g becomes **ready at the start of turn t + g** and stays ready until gathered.
+   6. If the context has passed the compaction trigger, **compaction** runs (blind: the agent is not told).
+   7. A **checkpoint** of the complete state is saved (see Checkpointing).
 5. **Goal end:** the user sends *"Goal finished."* together with the next goal, without reporting the result.
 6. **Episode end:** after the last goal, or at the global turn cap.
+
+### Checkpointing
+
+Protects long runs against crashes (connection loss, out of memory, context overflow). It is prevention, not logging.
+- **After every completed turn** the complete state is saved to `temp/<agent>/<run_id>/checkpoint.json`: world (garden, inventory, goals, turn), knowledge base contents, ledger, agent state (conversation, random state), the byte sizes of the log files, and the number of compactions so far.
+- Only the **latest** checkpoint is kept. It is written to a temporary file and then renamed, so a crash while saving keeps the previous one.
+- **Resume** with `--resume runs/<agent>/<run_id>`. All parameters come from that run's `params.json` (no other options are accepted). The log files are cut back to their checkpointed sizes, later compaction files are removed, and the knowledge base is rebuilt from the checkpoint, so nothing from the interrupted turn remains.
+- The interrupted turn is **replayed from its start**; at most one turn is lost. The resumed run first re-checks compaction, so a crash caused by a full context compacts before retrying.
 
 ### Evaluation and comparisons (parked)
 
@@ -273,6 +282,6 @@ To be designed later. Notes so far:
 - [ ] Evaluation plan and baselines (parked)
 - [ ] Concrete allergy list (one required + one non-required plant for the user's goals)
 - [ ] Values of a, b for growth times; range of garden sizes N; time budgets per goal
-- [ ] Token threshold for compaction, and which compactors to try
+- [ ] Compaction trigger value and context window per model, and which compactors to try
 - [ ] Which local LLM plays the agent
 - [ ] Optional: a scripted reference planner that knows the hidden rules (upper bound for the auxiliary metric)

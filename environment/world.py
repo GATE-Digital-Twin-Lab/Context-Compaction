@@ -72,6 +72,41 @@ class World:
         kb = KnowledgeBase(kb_path, catalogue=[(p, None) for p in PLANTS])
         return cls(Garden(size, growth), Inventory(), kb, list(goals), allergy, turn_cap)
 
+    def to_dict(self) -> dict:
+        """Complete state, including the knowledge base contents."""
+        return {
+            "garden": self.garden.to_dict(),
+            "inventory": self.inventory.to_dict(),
+            "knowledge_base": self.kb.dump(),
+            "goals": [g.to_dict() for g in self.goals],
+            "allergy": sorted(self.allergy.plants) if self.allergy else None,
+            "turn_cap": self.turn_cap,
+            "turn": self.turn,
+            "goal_index": self.goal_index,
+            "goal_start": self.goal_start,
+            "results": [r.to_dict() for r in self.results],
+            "target_reached": self._target_reached,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Mapping, kb_path: str = ":memory:") -> "World":
+        """Rebuild a world; the knowledge base at kb_path is overwritten with the saved contents."""
+        kb = KnowledgeBase(kb_path)
+        kb.restore(data["knowledge_base"])
+        return cls(
+            garden=Garden.from_dict(data["garden"]),
+            inventory=Inventory.from_dict(data["inventory"]),
+            kb=kb,
+            goals=[Goal.from_dict(g) for g in data["goals"]],
+            allergy=Allergy(frozenset(data["allergy"])) if data["allergy"] else None,
+            turn_cap=data["turn_cap"],
+            turn=data["turn"],
+            goal_index=data["goal_index"],
+            goal_start=data["goal_start"],
+            results=[GoalResult.from_dict(r) for r in data["results"]],
+            _target_reached=data["target_reached"],
+        )
+
     @property
     def current_goal(self) -> Goal | None:
         return self.goals[self.goal_index] if self.goal_index < len(self.goals) else None

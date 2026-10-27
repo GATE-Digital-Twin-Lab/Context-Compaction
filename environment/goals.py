@@ -34,6 +34,10 @@ class Goal:
     def to_dict(self) -> dict:
         return {"kind": str(self.kind), "stat": self.stat, "turns": self.turns, "target": self.target}
 
+    @classmethod
+    def from_dict(cls, data: Mapping) -> "Goal":
+        return cls(GoalKind(data["kind"]), data["stat"], data["turns"], data["target"])
+
     def describe(self) -> str:
         """E.g. 'brew the best strength (S) potion you can in 30 turns'."""
         name = f"{STAT_NAMES[self.stat]} ({self.stat})"
@@ -81,6 +85,21 @@ class GoalResult:
     @property
     def turns_used(self) -> int:
         return self.end_turn - self.start_turn + 1
+
+    def to_dict(self) -> dict:
+        return {
+            "goal": self.goal.to_dict(),
+            "start_turn": self.start_turn,
+            "end_turn": self.end_turn,
+            "best_potion": self.best_potion,
+            "best_intensity": self.best_intensity,
+            "success": self.success,
+            "allergy_violations": self.allergy_violations,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Mapping) -> "GoalResult":
+        return cls(**{**data, "goal": Goal.from_dict(data["goal"])})
 
 
 def score_goal(

@@ -55,6 +55,14 @@ class Ledger:
     _seen: dict[str, Fact] = field(default_factory=dict)
     _grown: dict[str, int] = field(default_factory=dict)  # plant -> turn first seen ready
 
+    def to_dict(self) -> dict:
+        return {"seen": [asdict(f) for f in self._seen.values()], "grown": self._grown}
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "Ledger":
+        seen = {f["id"]: Fact(f["id"], FactKind(f["kind"]), f["text"], f["turn"]) for f in data["seen"]}
+        return cls(seen, dict(data["grown"]))
+
     def observe(self, world: World) -> list[Fact]:
         """Record readiness seen this turn; return facts that are new since the last call."""
         for ready in world.garden.state(world.turn).ready:

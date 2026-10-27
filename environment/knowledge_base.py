@@ -72,6 +72,22 @@ class KnowledgeBase:
     def close(self) -> None:
         self._db.close()
 
+    _TABLES = ("plants", "plantings", "outcomes", "outcome_plants")
+
+    def dump(self) -> dict[str, list[list]]:
+        """All rows of every table (for checkpoints)."""
+        return {t: [list(r) for r in self._db.execute(f"SELECT * FROM {t} ORDER BY rowid")] for t in self._TABLES}
+
+    def restore(self, data: Mapping[str, list[list]]) -> None:
+        """Replace all contents with a dump, e.g. after a crash left the file ahead of the checkpoint."""
+        with self._db:
+            for table in reversed(self._TABLES):
+                self._db.execute(f"DELETE FROM {table}")
+            for table in self._TABLES:
+                for row in data[table]:
+                    marks = ", ".join("?" * len(row))
+                    self._db.execute(f"INSERT INTO {table} VALUES ({marks})", row)
+
     # --- reads -------------------------------------------------------------
 
     def catalogue(self) -> list[str]:
