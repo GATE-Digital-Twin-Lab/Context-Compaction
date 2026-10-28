@@ -480,7 +480,10 @@ textarea { resize: vertical; font-size: 13.5px; }
 .tab { background: transparent; border-radius: 8px 8px 0 0; color: var(--muted); }
 .tab.active { color: var(--ink); background: var(--panel-2); font-weight: 600; }
 .tab-body { max-height: min(62vh, 640px); overflow-y: auto; }
-.tab-body.prompt h3 { font-size: 14px; margin: 14px 0 4px; color: var(--potion); }
+.tab-body.prompt h3, .howto h3 { font-size: 14px; margin: 14px 0 4px; color: var(--potion); }
+.howto p { margin: 6px 0; line-height: 1.55; }
+.howto .lead { font-size: 15px; }
+.howto table.map td:last-child { white-space: nowrap; font-weight: 600; }
 .tab-body.prompt p, .tab-body.prompt li { margin: 4px 0; }
 .tab-body.prompt pre { font-family: var(--mono); font-size: 12px; background: var(--panel-2); padding: 8px; border-radius: 8px; white-space: pre-wrap; }
 .tab-body.prompt ul, .tab-body.prompt ol { padding-left: 20px; margin: 4px 0; }

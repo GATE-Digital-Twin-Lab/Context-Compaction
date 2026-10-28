@@ -140,22 +140,30 @@
     <h2>Briefing</h2>
     <div class="tabs">
       <button class="tab active" data-tab="howto">How to play</button>
-      <button class="tab" data-tab="prompt">System prompt (what the agent is told)</button>
+      <button class="tab" data-tab="prompt">What the agent is told</button>
     </div>
-    <div class="tab-body" id="tabHowto">
-      <p>You play the agent. You get exactly the agent's messages: the system prompt, the user's opening message, and the environment's replies. The controls send the same JSON calls the agent would send, and every call appears in the conversation. The conversation is shown in a readable form; hover a message to see the exact text the agent gets, which is also what the downloaded transcript contains.</p>
+    <div class="tab-body howto" id="tabHowto">
+      <p class="lead">You play the agent: a gardener who grows plants and brews potions for a user. The user's first message, at the top of the conversation, tells you the size of your garden, any plants you must never combine, and your goal. Time is counted in turns and is limited, so make every turn count.</p>
+
+      <h3>What you can do</h3>
       <table class="map">
-        <tr><th>Control</th><th>Call it sends</th><th>Cost</th></tr>
-        <tr><td>Seed packets → plots, then <b>Plant</b></td><td><code>{"action": "plant", "plots": {...}}</code></td><td>1 turn</td></tr>
-        <tr><td>Plants → cauldron, then <b>Brew</b> (several recipes at once)</td><td><code>{"action": "brew", "recipes": [...]}</code></td><td>1 turn</td></tr>
-        <tr><td>Garden switch and/or potions → log book, then <b>Log</b></td><td><code>{"action": "log", "garden": true, "potions": [...]}</code></td><td>1 turn</td></tr>
-        <tr><td><b>Skip</b></td><td><code>{"action": "skip"}</code></td><td>1 turn</td></tr>
-        <tr><td><b>Gather</b></td><td><code>{"tool": "gather"}</code></td><td>free</td></tr>
-        <tr><td><b>Look up</b> (pick plants first)</td><td><code>{"tool": "kb_lookup", "plants": [...]}</code></td><td>free</td></tr>
-        <tr><td>Inventory <b>Ask</b></td><td><code>{"tool": "inventory"}</code></td><td>free</td></tr>
+        <tr><th>To…</th><th>do this</th><th>Cost</th></tr>
+        <tr><td><b>Plant seeds</b></td><td>Drag seed packets onto free plots (or click a packet, then the plots), then press <b>Plant</b>. Plant as many plots as you like at once.</td><td>1 turn</td></tr>
+        <tr><td><b>Brew potions</b></td><td>Drag plants from your inventory into the cauldron and set the amounts with − and +. A recipe needs 3 or 4 different plants. Add more recipes to brew several potions at once, then press <b>Brew</b>.</td><td>1 turn</td></tr>
+        <tr><td><b>Write down what you learned</b></td><td>Tick <b>Garden</b> to record growth times and what grows where, and/or drop potions into the log book and click their plants to label them (higher, lower, odd, even, present). Then press <b>Log</b>.</td><td>1 turn</td></tr>
+        <tr><td><b>Wait</b></td><td>Press <b>Skip</b>.</td><td>1 turn</td></tr>
+        <tr><td><b>Harvest</b></td><td>Press <b>Gather ready plots</b>. The plots are free at once, so you can replant them in the same turn.</td><td>free</td></tr>
+        <tr><td><b>Read the knowledge base</b></td><td>Pick plants in the knowledge base panel and press <b>Look up</b>.</td><td>free</td></tr>
+        <tr><td><b>Check your inventory</b></td><td>Press <b>Ask</b> in the inventory panel.</td><td>free</td></tr>
       </table>
-      <p>The board shows only what the agent can see. A plot shows its plant only after you log the garden, and a potion never shows its recipe or effect. Your goal, your allergy and every brew result are only in the conversation, so write down what matters in your notes. The difference from the agent: nothing here is ever summarised or forgotten. There is no compaction.</p>
-      <p class="muted">Errors (bad recipes, not enough plants, invalid logs) cost no turn, but after 3 failed attempts in one turn the turn is skipped.</p>
+      <p>Each turn you can use the free buttons as often as you like, then make one move that costs a turn. That move ends the turn.</p>
+
+      <h3>What you can see</h3>
+      <p>You see only what the agent sees. A plot shows its plant only after you log the garden, and a potion never shows its recipe or effect. Ready plots glow. Your goal, the plants you must not combine and every brew result appear only in the conversation, so use the notes box to write down what matters; your notes are sent with your next move, like the agent's. Unlike the agent, you never forget: nothing in the conversation is summarised.</p>
+
+      <h3>Mistakes</h3>
+      <p>An invalid move, such as a recipe with too few plants or more plants than you have, costs no turn, and you are told what went wrong. After 3 mistakes in one turn, the turn is skipped.</p>
+      <p class="muted">The other tab has the agent's exact instructions, with all the rules.</p>
     </div>
     <div class="tab-body prompt" id="tabPrompt" hidden></div>
     <div class="dialog-foot">
