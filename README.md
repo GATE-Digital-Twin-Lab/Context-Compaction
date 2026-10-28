@@ -48,9 +48,9 @@ Parameters (`python -c "from input import build_parser; build_parser().print_hel
 
 | Group | Parameters |
 |---|---|
-| Agent | `--agent` (llm / random / oracle), `--llm-name`, `--llm-url`, `--thinking` (on / off), `--temperature`, `--top-p`, `--max-tokens` (per reply, thinking included), `--llm-seed` |
+| Agent | `--agent` (llm / random / oracle), `--llm-name`, `--llm-url`, `--thinking` (on / off), `--reasoning-effort`, `--temperature`, `--top-p`, `--max-tokens` (per reply, thinking included), `--llm-seed` |
 | Garden | `--garden-size`, `--growth-min`, `--growth-max`, `--env-seed` |
-| User | `--goals` (e.g. `time:S:30,target:I:10`), `--allergy` (e.g. `p3+p5` or `none`) |
+| User | `--goals` (e.g. `time:S:30,target:I:10`), `--allergy` (e.g. `nettle+chamomile` or `none`) |
 | Episode | `--turn-cap`, `--prompt-file` |
 | Compaction | `--compactor`, `--context-window` (tokens), `--compaction-trigger` (fraction of the window, default 0.8; checked only between turns) |
 | Output | `--runs-dir`, `--temp-dir` |
@@ -62,9 +62,11 @@ Seeds that are not given are drawn at random and recorded in `params.json`, so e
 The model is served by llama-server with an OpenAI-compatible API. Start it first, then run with `--agent llm`:
 
 ```
-scripts/serve_llm.sh                                   # Nemotron-3-Nano-30B-A3B Q8_0 on GPUs 0 and 1, 256k context
-scripts/run_experiment.sh --agent llm --llm-name nemotron-3-nano-30b-a3b-q8
+scripts/serve_llm.sh                                   # preset qwen3.8-27b: Qwen3.8-27B Q8_0 on GPUs 0 and 1, 256k context
+scripts/run_experiment.sh --agent llm --llm-name qwen3.8-27b-q8
 ```
+
+Presets (`scripts/serve_llm.sh <preset>`): `qwen3.8-27b` (default), `qwen3.6-27b`, `nemotron-3-nano`. Each sets the model file, the name to pass as `--llm-name`, and the model card's recommended sampling as the server default. `run_experiment.sh` passes `--reasoning-effort medium`: Qwen3.8's default (`xhigh`) adds "consider plausible alternatives" to the system prompt, which works against the decisive play the prompt asks for.
 
 Context shift is disabled in the server, so it never drops old tokens on its own. If the conversation no longer fits, the episode stops with `stop_reason: "context full"` in `summary.json`.
 

@@ -1,4 +1,4 @@
-"""Brew action: {"action": "brew", "recipe": {"p1": 2, "p5": 4, "p8": 2}}."""
+"""Brew action: {"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}}."""
 
 import json
 

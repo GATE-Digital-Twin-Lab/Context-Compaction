@@ -20,6 +20,7 @@ class ExperimentConfig:
     llm_name: str | None
     llm_url: str
     thinking: bool
+    reasoning_effort: str | None  # None: the chat template's default
     temperature: float | None   # None: the model's recommended default (as served)
     top_p: float | None         # None: the model's recommended default (as served)
     max_tokens: int             # per reply, thinking included
@@ -89,7 +90,7 @@ def parse_goal(text: str) -> Goal:
 
 
 def parse_allergy(text: str) -> Allergy | None:
-    """'p3+p5' or 'none'."""
+    """'nettle+chamomile' or 'none'."""
     if text.strip().lower() == "none":
         return None
     return Allergy(frozenset(p.strip() for p in text.split("+")))
@@ -103,6 +104,8 @@ def build_parser() -> argparse.ArgumentParser:
     a.add_argument("--llm-url", default="http://127.0.0.1:8080", help="OpenAI-compatible server (scripts/serve_llm.sh)")
     a.add_argument("--thinking", choices=("on", "off"), default="on",
                    help="model thinking; it is discarded after every reply either way")
+    a.add_argument("--reasoning-effort", help="passed to the chat template, e.g. low / medium / xhigh for Qwen3.8 "
+                   "(default: the template's default)")
     a.add_argument("--temperature", type=float, help="default: the model's recommended value")
     a.add_argument("--top-p", type=float, help="default: the model's recommended value")
     a.add_argument("--max-tokens", type=int, default=32768, help="per reply, thinking included")
@@ -115,7 +118,7 @@ def build_parser() -> argparse.ArgumentParser:
     u = p.add_argument_group("user")
     u.add_argument("--goals", default="target:I:10,time:S:40,target:D:10",
                    help="comma-separated, e.g. 'time:S:30,target:I:10'")
-    u.add_argument("--allergy", default="none", help="two plants, e.g. 'p3+p5', or 'none'")
+    u.add_argument("--allergy", default="none", help="two plants, e.g. 'nettle+chamomile', or 'none'")
     e = p.add_argument_group("episode")
     e.add_argument("--turn-cap", type=int, default=150)
     e.add_argument("--prompt-file", type=Path, default=Path("prompts/system.txt"))
@@ -165,6 +168,7 @@ def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
         llm_name=args.llm_name,
         llm_url=args.llm_url,
         thinking=args.thinking == "on",
+        reasoning_effort=args.reasoning_effort,
         temperature=args.temperature,
         top_p=args.top_p,
         max_tokens=args.max_tokens,

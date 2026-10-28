@@ -10,6 +10,7 @@ from typing import Any
 from agents.base import ContextFull
 
 RETRY_DELAYS = (5, 15, 45)  # seconds between attempts after a connection or server error
+SAMPLING_KEYS = ("temperature", "top_p", "top_k", "min_p", "presence_penalty", "repeat_penalty")
 
 
 class ServerError(Exception):
@@ -49,6 +50,7 @@ class ChatClient:
         temperature: float | None = None,
         top_p: float | None = None,
         thinking: bool = True,
+        reasoning_effort: str | None = None,
         timeout: float = 3600,
         retry_delays: tuple[float, ...] = RETRY_DELAYS,
     ) -> None:
@@ -58,6 +60,7 @@ class ChatClient:
         self.temperature = temperature
         self.top_p = top_p
         self.thinking = thinking
+        self.reasoning_effort = reasoning_effort
         self.timeout = timeout
         self.retry_delays = retry_delays
 
@@ -67,13 +70,22 @@ class ChatClient:
             "messages": messages,
             "max_tokens": self.max_tokens,
             "seed": seed,
-            "chat_template_kwargs": {"enable_thinking": self.thinking},
+            "chat_template_kwargs": self.template_kwargs(),
         }
         if self.temperature is not None:
             body["temperature"] = self.temperature
         if self.top_p is not None:
             body["top_p"] = self.top_p
         return body
+
+    def template_kwargs(self) -> dict[str, Any]:
+        """Chat-template switches; templates ignore the ones they do not know.
+        preserve_thinking is off because no thinking is ever sent back (Qwen3.8 would otherwise
+        render an empty think block for every past reply)."""
+        kwargs: dict[str, Any] = {"enable_thinking": self.thinking, "preserve_thinking": False}
+        if self.reasoning_effort is not None:
+            kwargs["reasoning_effort"] = self.reasoning_effort
+        return kwargs
 
     def complete(self, messages: list[dict[str, str]], seed: int) -> Completion:
         """Raises ContextFull if the conversation no longer fits, ServerError on other rejections."""
@@ -94,7 +106,7 @@ class ChatClient:
             return {}
         settings = props.get("default_generation_settings", {})
         params = settings.get("params", {})
-        sampling = {k: params[k] for k in ("temperature", "top_p", "top_k", "min_p") if k in params}
+        sampling = {k: params[k] for k in SAMPLING_KEYS if k in params}
         return {
             "url": self.url,
             "model_path": props.get("model_path"),

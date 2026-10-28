@@ -6,7 +6,7 @@ from environment.world import World
 from tools.dispatcher import Dispatcher
 from tools.observation import turn_header
 
-GROWTH = {"p1": 3, "p2": 4, "p3": 3, "p4": 2, "p5": 3, "p6": 3, "p7": 6, "p8": 3}
+GROWTH = {"mint": 3, "elderberry": 4, "nettle": 3, "sage": 2, "chamomile": 3, "dill": 3, "basil": 6, "rosemary": 3}
 
 
 @pytest.fixture
@@ -27,9 +27,9 @@ def act(d: Dispatcher, call) -> str:
 
 def test_spec_garden_example_as_the_agent_sees_it(world):
     d = Dispatcher(world)
-    act(d, {"action": "plant", "plots": {"2": "p2", "4": "p4"}})   # turn 1
+    act(d, {"action": "plant", "plots": {"2": "elderberry", "4": "sage"}})   # turn 1
     act(d, {"action": "skip"})                                     # turn 2
-    act(d, {"action": "plant", "plots": {"5": "p5", "7": "p7"}})   # turn 3
+    act(d, {"action": "plant", "plots": {"5": "chamomile", "7": "basil"}})   # turn 3
     act(d, {"action": "skip"})                                     # turn 4
     assert turn_header(world) == (
         "[Turn 5]\n"
@@ -37,82 +37,104 @@ def test_spec_garden_example_as_the_agent_sees_it(world):
         "Choose your action."
     )
     assert act(d, {"action": "log", "garden": True}) == (
-        "Logged: growth p2 = 4 turns, p4 = 2 turns; "
-        "plantings: plot 2 (p2), plot 4 (p4), plot 5 (p5), plot 7 (p7)."
+        "Logged: growth elderberry = 4 turns, sage = 2 turns; "
+        "plantings: plot 2 (elderberry), plot 4 (sage), plot 5 (chamomile), plot 7 (basil)."
     )
     assert turn_header(world).splitlines()[1] == (
-        "Garden: free: 1, 3, 6; growing: 7 (p7); "
-        "ready: 2 (p2, waiting 1), 4 (p4, waiting 3), 5 (p5, waiting 0)"
+        "Garden: free: 1, 3, 6; growing: 7 (basil); "
+        "ready: 2 (elderberry, waiting 1), 4 (sage, waiting 3), 5 (chamomile, waiting 0)"
     )
 
 
 def test_turns_left_shown_when_known(world):
     d = Dispatcher(world)
-    act(d, {"action": "plant", "plots": {"1": "p7"}})    # turn 1: ready at 7
+    act(d, {"action": "plant", "plots": {"1": "basil"}})    # turn 1: ready at 7
     act(d, {"action": "skip"})
     act(d, {"action": "skip"})
-    act(d, {"action": "plant", "plots": {"2": "p7"}})    # turn 4: ready at 10
+    act(d, {"action": "plant", "plots": {"2": "basil"}})    # turn 4: ready at 10
     act(d, {"action": "skip"})
     act(d, {"action": "skip"})
-    act(d, {"action": "log", "garden": True})            # turn 7: p7 growth + both plantings
-    assert "growing: 2 (p7, 2 turns left)" in turn_header(world)
+    act(d, {"action": "log", "garden": True})            # turn 7: basil growth + both plantings
+    assert "growing: 2 (basil, 2 turns left)" in turn_header(world)
     act(d, {"action": "skip"})                           # turn 8
-    assert "growing: 2 (p7, 1 turn left)" in turn_header(world)
+    assert "growing: 2 (basil, 1 turn left)" in turn_header(world)
 
 
 def test_plant_partial_success(world):
     d = Dispatcher(world)
-    act(d, {"action": "plant", "plots": {"5": "p2"}})
-    text = act(d, {"action": "plant", "plots": {"3": "p2", "5": "p4", "12": "p2", "6": "p9"}})
+    act(d, {"action": "plant", "plots": {"5": "elderberry"}})
+    text = act(d, {"action": "plant", "plots": {"3": "elderberry", "5": "sage", "12": "elderberry", "6": "lavender"}})
     assert text == (
-        "Planted: plot 3 (p2). "
-        "Failed: plot 5 (occupied), plot 12 (does not exist), plot 6 (unknown plant p9)."
+        "Planted: plot 3 (elderberry). "
+        "Failed: plot 5 (occupied), plot 12 (does not exist), plot 6 (unknown plant lavender)."
     )
 
 
 def test_gather_texts(world):
     d = Dispatcher(world)
-    assert act(d, {"action": "gather"}) == "Gathered nothing."
-    act(d, {"action": "plant", "plots": {"1": "p4", "2": "p4", "3": "p2"}})
+    assert act(d, {"tool": "gather"}) == "Gathered nothing."
+    act(d, {"action": "plant", "plots": {"1": "sage", "2": "sage", "3": "elderberry"}})
     for _ in range(4):
         act(d, {"action": "skip"})
-    assert act(d, {"action": "gather"}) == "Gathered: +1 p2, +2 p4."
+    assert act(d, {"tool": "gather"}) == "Gathered: +1 elderberry, +2 sage. Plots now free: 1, 2, 3."
+
+
+def test_gather_is_free_and_growth_stays_loggable_that_turn(world):
+    d = Dispatcher(world)
+    act(d, {"action": "plant", "plots": {"1": "sage", "2": "elderberry"}})   # turn 1: sage ready at 3
+    act(d, {"action": "skip"})                                                # turn 2
+    assert world.turn == 3
+    assert act(d, {"tool": "gather"}) == "Gathered: +1 sage. Plots now free: 1."
+    assert world.turn == 3                                                    # no turn spent
+    assert act(d, {"action": "log", "garden": True}) == (
+        "Logged: growth sage = 2 turns; plantings: plot 2 (elderberry)."    # gathered sage still counts
+    )
+    act(d, {"tool": "gather"})                                                # turn 4: nothing ready
+    assert act(d, {"action": "log", "garden": True}) == "Logged: nothing new."
+
+
+def test_gather_then_replant_in_one_turn(world):
+    d = Dispatcher(world)
+    act(d, {"action": "plant", "plots": {"1": "sage"}})
+    act(d, {"action": "skip"})
+    act(d, {"tool": "gather"})
+    assert act(d, {"action": "plant", "plots": {"1": "mint"}}) == "Planted: plot 1 (mint)."
 
 
 def test_brew_texts(world):
     d = Dispatcher(world)
-    world.inventory.add_plants({"p1": 2, "p5": 4, "p8": 2})
-    assert act(d, {"action": "brew", "recipe": {"p1": 2, "p5": 4, "p8": 2}}) == (
-        'Brewed {"p1": 2, "p5": 4, "p8": 2} → {"positive": {"S": 20}, "negative": {}} (potion #1)'
+    world.inventory.add_plants({"mint": 2, "chamomile": 4, "rosemary": 2})
+    assert act(d, {"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}}) == (
+        'Brewed {"mint": 2, "chamomile": 4, "rosemary": 2} → {"positive": {"S": 20}, "negative": {}} (potion #1)'
     )
-    failed = d.handle({"action": "brew", "recipe": {"p1": 2, "p5": 4, "p8": 2}})
+    failed = d.handle({"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}})
     assert failed.error and not failed.ends_turn
-    assert failed.text == "Not enough plants: need 2 p1, have 0; need 4 p5, have 0; need 2 p8, have 0."
-    assert d.handle({"action": "brew", "recipe": {"p1": 1}}).text == "A recipe needs 3–4 distinct plants."
+    assert failed.text == "Not enough plants: need 2 mint, have 0; need 4 chamomile, have 0; need 2 rosemary, have 0."
+    assert d.handle({"action": "brew", "recipe": {"mint": 1}}).text == "A recipe needs 3–4 distinct plants."
 
 
 def test_log_potions_and_lookup(world):
     d = Dispatcher(world)
-    world.inventory.add_plants({"p1": 1, "p2": 4, "p4": 3, "p6": 3})
-    act(d, {"action": "brew", "recipe": {"p1": 1, "p2": 1, "p6": 1}})
-    act(d, {"action": "brew", "recipe": {"p2": 1, "p4": 1, "p6": 1}})
-    act(d, {"action": "brew", "recipe": {"p2": 2, "p4": 1, "p6": 1}})
-    text = act(d, {"action": "log", "potions": [{"id": 1}, {"id": 2}, {"id": 3, "labels": {"p2": "higher"}}]})
+    world.inventory.add_plants({"mint": 1, "elderberry": 4, "sage": 3, "dill": 3})
+    act(d, {"action": "brew", "recipe": {"mint": 1, "elderberry": 1, "dill": 1}})
+    act(d, {"action": "brew", "recipe": {"elderberry": 1, "sage": 1, "dill": 1}})
+    act(d, {"action": "brew", "recipe": {"elderberry": 2, "sage": 1, "dill": 1}})
+    text = act(d, {"action": "log", "potions": [{"id": 1}, {"id": 2}, {"id": 3, "labels": {"elderberry": "higher"}}]})
     assert text == (
-        "Logged: potion #1: p1, p2, p6 → none; potion #2: p2, p4, p6 → +I; "
-        "potion #3: (higher) p2, p4, p6 → +I."
+        "Logged: potion #1: dill, elderberry, mint → none; potion #2: dill, elderberry, sage → +I; "
+        "potion #3: dill, (higher) elderberry, sage → +I."
     )
-    assert act(d, {"action": "log", "potions": [{"id": 3, "labels": {"p2": "higher"}}]}) == (
+    assert act(d, {"action": "log", "potions": [{"id": 3, "labels": {"elderberry": "higher"}}]}) == (
         "Logged: potion #3: already known."
     )
-    lookup = d.handle({"tool": "kb_lookup", "plants": ["p4", "p8"]})
+    lookup = d.handle({"tool": "kb_lookup", "plants": ["sage", "rosemary"]})
     assert not lookup.ends_turn
     assert lookup.text == (
-        "p4: growth time unknown. Interactions: p2, p4, p6 → +I; (higher) p2, p4, p6 → +I.\n"
-        "p8: growth time unknown. Interactions: none."
+        "sage: growth time unknown. Interactions: dill, elderberry, sage → +I; dill, (higher) elderberry, sage → +I.\n"
+        "rosemary: growth time unknown. Interactions: none."
     )
     assert d.handle({"tool": "inventory"}).text == (
-        "plants: p4: 1; potions: #1 (logged), #2 (logged), #3 (logged)"
+        "plants: sage: 1; potions: #1 (logged), #2 (logged), #3 (logged)"
     )
 
 
@@ -123,10 +145,10 @@ def test_log_potions_and_lookup(world):
         ("[1, 2]", "A call must be a JSON object."),
         ({"action": "skip", "tool": "inventory"}, 'exactly one of "action" or "tool"'),
         ({"action": "dance"}, "Unknown action 'dance'"),
-        ({"tool": "kb_lookup", "plants": ["p9"]}, "Unknown plant p9."),
+        ({"tool": "kb_lookup", "plants": ["lavender"]}, "Unknown plant lavender."),
         ({"action": "log"}, "Nothing to log"),
         ({"action": "log", "potions": [{"id": 4}]}, "Unknown potion #4."),
-        ({"action": "plant", "plots": {"x": "p1"}}, "A plot number must be a whole number"),
+        ({"action": "plant", "plots": {"x": "mint"}}, "A plot number must be a whole number"),
     ],
 )
 def test_errors_cost_no_turn(world, call, message):

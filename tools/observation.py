@@ -6,7 +6,7 @@ from tools.base import turns
 
 
 def render_garden(view: GardenView) -> str:
-    """E.g. 'free: 1, 6; growing: 3 (p2, 2 turns left), 5; ready: 7 (waiting 2)'."""
+    """E.g. 'free: 1, 6; growing: 3 (elderberry, 2 turns left), 5; ready: 7 (waiting 2)'."""
     growing = []
     for g in view.growing:
         details = [d for d in (g.plant, f"{turns(g.turns_left)} left" if g.turns_left is not None else None) if d]

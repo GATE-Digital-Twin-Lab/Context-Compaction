@@ -35,7 +35,7 @@ class RandomAgent(Agent):
             plots = self.rng.sample(free, self.rng.randint(1, len(free)))
             return self._say({"action": "plant", "plots": {str(p): self.rng.choice(PLANTS) for p in plots}})
         if choice == "gather":
-            return self._say({"action": "gather"})
+            return self._say({"tool": "gather"})
         if choice == "inventory":
             return self._say({"tool": "inventory"})
         if choice == "log_garden":
@@ -44,7 +44,7 @@ class RandomAgent(Agent):
 
     def _after_inventory(self, text: str) -> AgentReply:
         """Brew from what is available, or log a potion, or skip."""
-        plants = {p: int(n) for p, n in re.findall(r"(p\d): (\d+)", text)}
+        plants = {p: int(n) for p, n in re.findall(r"([a-z]+): (\d+)", text)}
         potions = [int(n) for n in re.findall(r"#(\d+)", text)]
         if potions and self.rng.random() < 0.3:
             pid = self.rng.choice(potions)

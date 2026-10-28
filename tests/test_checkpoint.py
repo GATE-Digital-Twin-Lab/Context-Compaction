@@ -10,23 +10,23 @@ from ledger import Ledger
 from output import RunOutput
 from tools.dispatcher import Dispatcher
 
-GROWTH = {"p1": 3, "p2": 4, "p3": 3, "p4": 2, "p5": 3, "p6": 3, "p7": 6, "p8": 3}
+GROWTH = {"mint": 3, "elderberry": 4, "nettle": 3, "sage": 2, "chamomile": 3, "dill": 3, "basil": 6, "rosemary": 3}
 CALLS = [
-    {"action": "plant", "plots": {"1": "p4", "2": "p7", "3": "p2"}},
+    {"action": "plant", "plots": {"1": "sage", "2": "basil", "3": "elderberry"}},
     {"action": "skip"},
     {"action": "log", "garden": True},
-    {"action": "gather"},
-    {"action": "brew", "recipe": {"p1": 2, "p5": 3, "p8": 2}},   # reaches the S target
-    {"action": "log", "potions": [{"id": 1, "labels": {"p5": "higher"}}]},
+    {"tool": "gather"},
+    {"action": "brew", "recipe": {"mint": 2, "chamomile": 3, "rosemary": 2}},   # reaches the S target
+    {"action": "log", "potions": [{"id": 1, "labels": {"chamomile": "higher"}}]},
 ]
-MORE = [{"action": "plant", "plots": {"4": "p1"}}, {"action": "skip"}, {"action": "gather"}]
+MORE = [{"action": "plant", "plots": {"4": "mint"}}, {"action": "skip"}, {"tool": "gather"}]
 
 
 def new_world(kb_path=":memory:") -> World:
     goals = [Goal(GoalKind.TARGET, "S", target=10), Goal(GoalKind.TIME, "I", turns=20)]
-    world = World.create(7, (2, 6), goals, Allergy(frozenset({"p3", "p5"})), 100, seed=0, kb_path=kb_path)
+    world = World.create(7, (2, 6), goals, Allergy(frozenset({"nettle", "chamomile"})), 100, seed=0, kb_path=kb_path)
     world.garden.growth_times = dict(GROWTH)
-    world.inventory.add_plants({"p1": 4, "p5": 3, "p8": 2})
+    world.inventory.add_plants({"mint": 4, "chamomile": 3, "rosemary": 2})
     return world
 
 
@@ -66,7 +66,7 @@ def test_crash_mid_turn_restores_last_checkpoint(tmp_path):
     saved = world.to_dict()
 
     # a turn that crashes halfway: KB written, logs appended, a compaction file created
-    world.kb.log_outcome({"p1": "odd", "p5": "present", "p8": "present"}, "+S", 1, world.turn)
+    world.kb.log_outcome({"mint": "odd", "chamomile": "present", "rosemary": "present"}, "+S", 1, world.turn)
     out.log_message(world.turn, "agent", "half a turn")
     out.log_call(world.turn, {"action": "skip"}, Dispatcher(world).handle({"tool": "inventory"}))
     out.write_compaction(1, {"partial": True})
@@ -89,7 +89,7 @@ def test_load_without_checkpoint(tmp_path):
 
 def test_resume_command(tmp_path):
     config = parse_args(["--runs-dir", str(tmp_path / "r"), "--temp-dir", str(tmp_path / "t"),
-                         "--goals", "time:S:30", "--allergy", "p3+p5", "--env-seed", "4"])
+                         "--goals", "time:S:30", "--allergy", "nettle+chamomile", "--env-seed", "4"])
     out = RunOutput(config)
     out.write_params(config, {"growth_times": GROWTH})
     resumed, run_dir = parse_command(["--resume", str(out.dir)])
@@ -124,5 +124,5 @@ def test_compaction_arguments(argv, message, capsys):
 
 
 def test_config_round_trip():
-    config = parse_args(["--goals", "target:I:10", "--allergy", "p3+p5", "--context-window", "8000"])
+    config = parse_args(["--goals", "target:I:10", "--allergy", "nettle+chamomile", "--context-window", "8000"])
     assert ExperimentConfig.from_dict(json.loads(json.dumps(config.to_dict()))) == config

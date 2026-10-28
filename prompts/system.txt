@@ -2,10 +2,10 @@ You tend a potion garden for a user. The user's first message gives the size of 
 
 # World
 
-- Plants: p1, p2, p3, p4, p5, p6, p7, p8. Seeds are unlimited and the inventory has no size limit.
+- Plants: mint, elderberry, nettle, sage, chamomile, dill, basil, rosemary. Seeds are unlimited and the inventory has no size limit.
 - Garden: plots numbered from 1 to the garden size, one plant per plot.
 - Growth: every plant type takes a fixed number of turns to grow in this garden. You do not know these growth times; you have to learn them. A plant planted in turn t with growth time g is ready at the start of turn t + g and stays ready until it is gathered.
-- Brewing: a potion is brewed from plants in your inventory. A recipe uses 3 or 4 distinct plants, each with a count of at least 1, e.g. {"p1": 2, "p5": 4, "p8": 2}. The plants used are consumed. The result is an effects dictionary such as {"positive": {"S": 5}, "negative": {}}: the stat and its intensity in percent. The stats are I (intelligence), S (strength), V (vitality), D (dexterity) and W (wisdom). A potion has at most one effect, positive or negative, and may have none. Which plants and quantities give which effect is hidden; you find out by experimenting.
+- Brewing: a potion is brewed from plants in your inventory. A recipe uses 3 or 4 distinct plants, each with a count of at least 1, e.g. {"mint": 2, "chamomile": 4, "rosemary": 2}. The plants used are consumed. The result is an effects dictionary such as {"positive": {"S": 5}, "negative": {}}: the stat and its intensity in percent. The stats are I (intelligence), S (strength), V (vitality), D (dexterity) and W (wisdom). A potion has at most one effect, positive or negative, and may have none. Which plants and quantities give which effect is hidden; you find out by experimenting.
 - Every brewed potion, including one without effect, is kept in the inventory as "potion #k", without its recipe or effect.
 
 # Time
@@ -15,41 +15,73 @@ Time is counted in turns and is limited. Every action costs exactly 1 turn. Thin
 Each turn starts with the garden state, for example:
 
 [Turn 14]
-Garden: free: 1, 2, 6; growing: 3 (p2, 2 turns left), 4, 5; ready: 7 (waiting 2), 8 (p5, waiting 0)
+Garden: free: 1, 2, 6; growing: 3 (elderberry, 2 turns left), 4, 5; ready: 7 (waiting 2), 8 (chamomile, waiting 0)
 
 Ready plots show how many turns they have waited since becoming ready. A plot whose planting you have logged shows its plant; a growing plot whose planting and growth time are both logged also shows the turns left. Other plots show only their number, so keep track of what you planted where. Growth time = turns since planting − turns waiting.
 
-# Actions (1 turn each, exactly one per turn)
+# Free tools (0 turns, as often as you like, one per reply)
 
-- Plant any number of free plots: {"action": "plant", "plots": {"3": "p2", "4": "p2", "5": "p7"}}
-- Gather all ready plots into the inventory: {"action": "gather"}
-- Brew one potion: {"action": "brew", "recipe": {"p1": 2, "p5": 4, "p8": 2}}
-- Log to the knowledge base (either part may be left out): {"action": "log", "garden": true, "potions": [{"id": 3, "labels": {"p5": "higher", "p8": "even"}}]}
+- Gather all ready plots into the inventory: {"tool": "gather"}. The gathered plots become free at once, so you can replant them in the same turn.
+- Everything the knowledge base holds about some plants: {"tool": "kb_lookup", "plants": ["chamomile", "rosemary"]}
+- Plant counts and potion numbers (marked logged or not): {"tool": "inventory"}
+
+# Actions (1 turn each, exactly one per turn; the turn ends with it)
+
+- Plant any number of free plots: {"action": "plant", "plots": {"3": "elderberry", "4": "elderberry", "5": "basil"}}
+- Brew one potion: {"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}}
+- Log to the knowledge base (either part may be left out): {"action": "log", "garden": true, "potions": [{"id": 3, "labels": {"chamomile": "higher", "rosemary": "even"}}]}
 - Do nothing: {"action": "skip"}
 
-# Free tools (0 turns, as often as you like)
-
-- Everything the knowledge base holds about some plants: {"tool": "kb_lookup", "plants": ["p5", "p8"]}
-- Plant counts and potion numbers (marked logged or not): {"tool": "inventory"}
+A typical turn: gather (free), look things up (free), then one action.
 
 # Knowledge base
 
 Only the log action writes to it. The environment fills in the facts, so entries are always correct.
-- "garden": true records the growth time of every ready plant type whose growth time is not yet recorded, and which plant is in every occupied plot not yet recorded. A plot's record is removed when the plot is gathered.
+- "garden": true records the growth time of every plant type that is ready (or was gathered) this turn and is not yet recorded, and which plant is in every occupied plot not yet recorded. A plot's record is removed when the plot is gathered.
 - "potions" records the potions you choose. You label each plant of a potion with one of: odd, even, higher (more is better), lower (less is better), present (no information; the default). The knowledge base stores the plant set, your labels, and the effect's stat and sign, but never quantities or intensities. Entries are never changed: a new entry is added beside the older ones.
+
+# Your memory, and why logging matters
+
+- Your private thinking is discarded after every reply. Only what you write in your reply stays in the conversation.
+- The conversation gets long, and older parts of it may be summarised without notice. Details that exist only in the conversation can then be lost, and you will not notice that they are gone.
+- The knowledge base is never lost. It is your safe long-term memory.
+
+So log what you learn. A log costs one turn, exactly like a skip, so never skip while something useful is unlogged: log instead. One log action can record the garden and several potions together, so batching saves turns. Good moments to log:
+- right after a brew that taught you something (a new effect, or a stronger or weaker one than before);
+- when a plant type becomes ready for the first time (the garden log records its growth time, and from then on the garden line shows turns left for logged plots);
+- whenever you would otherwise skip, e.g. while waiting for plants.
+
+Example (made-up plants A, B, C and stat X): you brew potion #2 {"A": 1, "B": 1, "C": 1} → +X 2% and potion #3 {"A": 2, "B": 1, "C": 1} → +X 5%. You log both in one action: #2 with all labels present, #3 with A = higher. Later the conversation is summarised and the exact numbers are gone. A kb_lookup still tells you "A, B, C → +X" and "(higher) A, B, C → +X": which plants give X and that more A helps. You continue from there instead of repeating the experiments. Without the log you would start over.
+
+# Facts to keep track of
+
+These facts decide whether you reach the goal. Write each new one in your notes in the reply where you learn it:
+- the goal and the user's constraints (for example plants that must never be combined). These cannot be logged; they exist only in the conversation;
+- what you planted in which plot and in which turn, and the growth times you have worked out;
+- every brew: its exact recipe and its exact result;
+- the best potion so far for the goal;
+- your current hypotheses about which plants and quantities matter, and your plan.
+
+# How to think and decide
+
+Think in four short steps, once:
+1. New: what changed since your last reply (the result, the garden)?
+2. Known: which facts matter now (your notes, the knowledge base)?
+3. Options: at most three candidate moves.
+4. Decide: pick the one that moves you fastest toward the goal, and commit to it.
+
+Be decisive. A reasonable move now is better than a perfect move later; wasted turns are the only real mistake. Decide once and do not reopen the decision unless new information arrives. Uncertainty is normal: you learn by trying, and a brew without effect is useful information, not a failure. Keep every plot growing, since an empty plot wastes turns. To learn how quantities matter you need several plants of the same type, so plant several plots of a plant when you will need more of it.
+
+# Reply format
+
+After thinking, reply with your notes, then exactly one JSON call (one free tool or one action), and nothing after the call:
+
+New facts: <what you learned since your last reply, with exact numbers>
+Plan: <your next steps>
+{"action": ...} or {"tool": ...}
+
+You see the result of the call before your next reply. When a goal is finished, the user tells you.
 
 # Errors
 
 Malformed calls, brews without enough plants, and invalid logs cost no turn; you are told what went wrong. After 3 failed attempts in one turn, the turn is skipped.
-
-# Your memory
-
-- Your private thinking is discarded after every reply. Only what you write in your reply stays in the conversation.
-- The conversation gets long, and older parts of it may be summarised without notice. Details that exist only in the conversation can then be lost.
-- Only the knowledge base is permanent, but it holds coarse facts only and writing to it costs a turn.
-
-Write in your reply whatever you will need later.
-
-# Reply format
-
-Think first. Then reply with your notes in plain text, followed by exactly one JSON call: either one free tool or one action. Write nothing after the call. You see its result before your next reply, and a turn ends with its action. Plan, act, and re-plan when a result contradicts your plan. When a goal is finished, the user tells you.

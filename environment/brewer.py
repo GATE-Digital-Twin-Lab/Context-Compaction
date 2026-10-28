@@ -3,16 +3,16 @@
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 
-PLANTS = tuple(f"p{i}" for i in range(1, 9))
+PLANTS = ("mint", "elderberry", "nettle", "sage", "chamomile", "dill", "basil", "rosemary")
 MIN_PLANTS, MAX_PLANTS = 3, 4
 LEVELS = (2, 5, 10, 20)
 
 STAT_SETS: dict[str, tuple[str, ...]] = {
-    "I": ("p2", "p4", "p6"),
-    "S": ("p1", "p5", "p8"),
-    "V": ("p1", "p3", "p7"),
-    "D": ("p3", "p4", "p8"),
-    "W": ("p2", "p5", "p6", "p7"),
+    "I": ("elderberry", "sage", "dill"),
+    "S": ("mint", "chamomile", "rosemary"),
+    "V": ("mint", "nettle", "basil"),
+    "D": ("nettle", "sage", "rosemary"),
+    "W": ("elderberry", "chamomile", "dill", "basil"),
 }
 
 
@@ -51,24 +51,24 @@ Rule = Callable[[Mapping[str, int]], tuple[int | None, int | None]]
 
 _RULES: dict[str, Rule] = {
     "I": lambda n: (
-        n["p2"] if n["p4"] % 2 == 1 else None,
-        n["p2"] if n["p4"] % 3 == 0 else None,
+        n["elderberry"] if n["sage"] % 2 == 1 else None,
+        n["elderberry"] if n["sage"] % 3 == 0 else None,
     ),
     "S": lambda n: (
-        n["p5"] if n["p8"] % 3 == 2 and n["p1"] == 2 else None,
-        n["p5"] if n["p8"] % 2 == 1 else None,
+        n["chamomile"] if n["rosemary"] % 3 == 2 and n["mint"] == 2 else None,
+        n["chamomile"] if n["rosemary"] % 2 == 1 else None,
     ),
     "V": lambda n: (
-        n["p7"] if n["p7"] % 5 != 0 and n["p3"] % 2 == 0 else None,
-        n["p7"] if n["p1"] == 2 else None,
+        n["basil"] if n["basil"] % 5 != 0 and n["nettle"] % 2 == 0 else None,
+        n["basil"] if n["mint"] == 2 else None,
     ),
     "D": lambda n: (
-        n["p8"] - n["p4"] + 1 if n["p4"] % 2 == 1 else None,
-        n["p8"] + n["p4"] - 2 if n["p4"] % 2 == 0 else None,
+        n["rosemary"] - n["sage"] + 1 if n["sage"] % 2 == 1 else None,
+        n["rosemary"] + n["sage"] - 2 if n["sage"] % 2 == 0 else None,
     ),
     "W": lambda n: (
-        n["p6"] if n["p2"] == 2 and n["p7"] % 2 == 1 else None,
-        n["p6"] if n["p7"] % 2 == 1 and n["p5"] % 2 == 0 else None,
+        n["dill"] if n["elderberry"] == 2 and n["basil"] % 2 == 1 else None,
+        n["dill"] if n["basil"] % 2 == 1 and n["chamomile"] % 2 == 0 else None,
     ),
 }
 

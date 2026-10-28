@@ -19,11 +19,11 @@ def test_intensity(score, level):
 @pytest.mark.parametrize(
     "recipe",
     [
-        {"p1": 1, "p2": 1},                                 # too few plants
-        {"p1": 1, "p2": 1, "p3": 1, "p4": 1, "p5": 1},      # too many plants
-        {"p1": 1, "p2": 1, "p9": 1},                        # unknown plant
-        {"p1": 0, "p2": 1, "p3": 1},                        # zero count
-        {"p1": 1.5, "p2": 1, "p3": 1},                      # non-integer count
+        {"mint": 1, "elderberry": 1},                                 # too few plants
+        {"mint": 1, "elderberry": 1, "nettle": 1, "sage": 1, "chamomile": 1},      # too many plants
+        {"mint": 1, "elderberry": 1, "lavender": 1},                        # unknown plant
+        {"mint": 0, "elderberry": 1, "nettle": 1},                        # zero count
+        {"mint": 1.5, "elderberry": 1, "nettle": 1},                      # non-integer count
     ],
 )
 def test_invalid_recipes(recipe):
@@ -68,11 +68,11 @@ def test_outcome_counts(stat, pos, neg, empty):
 @pytest.mark.parametrize(
     "stat, recipe",
     [
-        ("I", {"p2": 4, "p4": 1, "p6": 1}),
-        ("S", {"p1": 2, "p5": 4, "p8": 2}),
-        ("V", {"p1": 1, "p3": 2, "p7": 4}),
-        ("D", {"p3": 1, "p4": 1, "p8": 4}),
-        ("W", {"p2": 2, "p5": 1, "p6": 4, "p7": 1}),
+        ("I", {"elderberry": 4, "sage": 1, "dill": 1}),
+        ("S", {"mint": 2, "chamomile": 4, "rosemary": 2}),
+        ("V", {"mint": 1, "nettle": 2, "basil": 4}),
+        ("D", {"nettle": 1, "sage": 1, "rosemary": 4}),
+        ("W", {"elderberry": 2, "chamomile": 1, "dill": 4, "basil": 1}),
     ],
 )
 def test_cheapest_max_recipes(stat, recipe):
@@ -82,10 +82,10 @@ def test_cheapest_max_recipes(stat, recipe):
 @pytest.mark.parametrize(
     "recipe",
     [
-        {"p2": 2, "p4": 3, "p6": 1},          # I: p4 odd and divisible by 3
-        {"p1": 2, "p5": 3, "p8": 5},          # S: p8 = 5 is 2 mod 3 and odd
-        {"p1": 2, "p3": 2, "p7": 3},          # V: p3 even and p1 = 2
-        {"p2": 2, "p5": 2, "p6": 3, "p7": 1}, # W: p2 = 2, p7 odd, p5 even
+        {"elderberry": 2, "sage": 3, "dill": 1},          # I: sage odd and divisible by 3
+        {"mint": 2, "chamomile": 3, "rosemary": 5},          # S: rosemary = 5 is 2 mod 3 and odd
+        {"mint": 2, "nettle": 2, "basil": 3},          # V: nettle even and mint = 2
+        {"elderberry": 2, "chamomile": 2, "dill": 3, "basil": 1}, # W: elderberry = 2, basil odd, chamomile even
     ],
 )
 def test_cancellation(recipe):
@@ -93,21 +93,21 @@ def test_cancellation(recipe):
 
 
 def test_traps():
-    assert brew({"p1": 1, "p3": 2, "p7": 5}).is_empty   # V: p7 multiple of 5
-    assert brew({"p3": 1, "p4": 3, "p8": 1}).is_empty   # D: score <= 0
+    assert brew({"mint": 1, "nettle": 2, "basil": 5}).is_empty   # V: basil multiple of 5
+    assert brew({"nettle": 1, "sage": 3, "rosemary": 1}).is_empty   # D: score <= 0
 
 
 def test_no_complete_set():
-    assert brew({"p1": 1, "p2": 1, "p6": 1}).is_empty
+    assert brew({"mint": 1, "elderberry": 1, "dill": 1}).is_empty
 
 
 def test_extra_plant_does_not_change_effect():
-    base = {"p1": 2, "p5": 4, "p8": 2}
-    assert brew({**base, "p3": 5}) == brew(base)
+    base = {"mint": 2, "chamomile": 4, "rosemary": 2}
+    assert brew({**base, "nettle": 5}) == brew(base)
 
 
 def test_to_dict():
-    assert brew({"p2": 2, "p4": 1, "p6": 1}).to_dict() == {
+    assert brew({"elderberry": 2, "sage": 1, "dill": 1}).to_dict() == {
         "positive": {"I": 5},
         "negative": {},
     }

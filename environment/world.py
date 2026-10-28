@@ -53,6 +53,7 @@ class World:
     goal_start: int = 1
     results: list[GoalResult] = field(default_factory=list)
     _target_reached: bool = field(default=False, repr=False)
+    _gathered_this_turn: set[str] = field(default_factory=set, repr=False)  # empty at every checkpoint
 
     @classmethod
     def create(
@@ -122,6 +123,7 @@ class World:
 
     def gather(self) -> GatherResult:
         result = self.garden.gather(self.turn)
+        self._gathered_this_turn.update(result.counts)
         self.kb.clear_plantings(result.plots)
         self.inventory.add_plants(result.counts)
         return result
@@ -152,7 +154,10 @@ class World:
                 raise LogError(f'Invalid label "{bad[0]}" (allowed: {", ".join(LABELS)}).')
             full = {p: labels.get(p, "present") for p in sorted(potion.recipe)}
             entries.append((potion, full))
-        garden_result = self.kb.log_garden(self.garden.state(self.turn), self.garden.growth_times) if garden else None
+        garden_result = None
+        if garden:
+            state = self.garden.state(self.turn)
+            garden_result = self.kb.log_garden(state, self.garden.growth_times, also_ready=self._gathered_this_turn)
         logs = []
         for potion, labels in entries:
             effect = effect_label(potion.effect)
@@ -188,5 +193,6 @@ class World:
                 self._target_reached = False
         over = self.current_goal is None or self.turn >= self.turn_cap
         self.turn += 1
+        self._gathered_this_turn.clear()
         next_goal = self.current_goal if finished and not over else None
         return TurnEnd(finished, next_goal, over)

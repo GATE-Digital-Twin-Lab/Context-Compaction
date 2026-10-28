@@ -1,4 +1,4 @@
-"""Free tool: {"tool": "kb_lookup", "plants": ["p5", "p8"]}."""
+"""Free tool: {"tool": "kb_lookup", "plants": ["chamomile", "rosemary"]}."""
 
 from environment.world import World
 from tools.base import ToolError, ToolResult, turns

@@ -15,13 +15,13 @@ from main import main
 
 
 def test_call_after_notes():
-    call, kept = extract_call('Notes: plant p2.\n{"action": "plant", "plots": {"1": "p2"}}')
-    assert call == {"action": "plant", "plots": {"1": "p2"}}
-    assert kept == 'Notes: plant p2.\n{"action": "plant", "plots": {"1": "p2"}}'
+    call, kept = extract_call('Notes: plant elderberry.\n{"action": "plant", "plots": {"1": "elderberry"}}')
+    assert call == {"action": "plant", "plots": {"1": "elderberry"}}
+    assert kept == 'Notes: plant elderberry.\n{"action": "plant", "plots": {"1": "elderberry"}}'
 
 
 def test_text_after_the_call_is_cut():
-    text = 'Gather now.\n{"action": "gather"}\nGathered: +2 p2.\n[Turn 5]\n{"action": "skip"}'
+    text = 'Gather now.\n{"action": "gather"}\nGathered: +2 elderberry.\n[Turn 5]\n{"action": "skip"}'
     call, kept = extract_call(text)
     assert call == {"action": "gather"} and kept == 'Gather now.\n{"action": "gather"}'
 
@@ -32,13 +32,13 @@ def test_fenced_call_keeps_a_closed_fence():
 
 
 def test_braces_in_notes_are_skipped():
-    call, _ = extract_call('Best so far {p2: 2} gave 5%; {"p2": 2} too.\n{"action": "brew", "recipe": {"p2": 3}}')
-    assert call == {"action": "brew", "recipe": {"p2": 3}}
+    call, _ = extract_call('Best so far {elderberry: 2} gave 5%; {"elderberry": 2} too.\n{"action": "brew", "recipe": {"elderberry": 3}}')
+    assert call == {"action": "brew", "recipe": {"elderberry": 3}}
 
 
 def test_object_without_action_is_passed_on_for_the_dispatcher():
-    call, kept = extract_call('Brew {"recipe": {"p1": 1}} done')
-    assert call == {"recipe": {"p1": 1}} and kept == 'Brew {"recipe": {"p1": 1}}'
+    call, kept = extract_call('Brew {"recipe": {"mint": 1}} done')
+    assert call == {"recipe": {"mint": 1}} and kept == 'Brew {"recipe": {"mint": 1}}'
 
 
 def test_no_json_returns_the_text():
@@ -151,16 +151,18 @@ def test_client_request_and_reply(server):
     result = client.complete([{"role": "user", "content": "hi"}], seed=4)
     assert (result.content, result.reasoning, result.usage["prompt_tokens"]) == ("Notes {}", "think", 7)
     body = server.bodies[0]
-    assert body["chat_template_kwargs"] == {"enable_thinking": True}
+    assert body["chat_template_kwargs"] == {"enable_thinking": True, "preserve_thinking": False}
     assert body["seed"] == 4 and body["max_tokens"] == 99
     assert "temperature" not in body and "top_p" not in body  # the model's defaults apply
 
 
 def test_client_overrides_and_server_info(server):
     server.responses = [ok("x")]
-    client = ChatClient(server.url, "m", 10, temperature=0.6, top_p=0.95, thinking=False)
+    client = ChatClient(server.url, "m", 10, temperature=0.6, top_p=0.95, thinking=False, reasoning_effort="medium")
     client.complete([], seed=0)
-    assert server.bodies[0]["temperature"] == 0.6 and server.bodies[0]["chat_template_kwargs"]["enable_thinking"] is False
+    assert server.bodies[0]["temperature"] == 0.6
+    assert server.bodies[0]["chat_template_kwargs"] == {"enable_thinking": False, "preserve_thinking": False,
+                                                        "reasoning_effort": "medium"}
     assert client.server_info() == {"url": server.url, "model_path": "/m.gguf", "n_ctx": 4096, "build_info": "b1",
                                     "default_sampling": {"temperature": 1.0, "top_p": 1.0}}
 

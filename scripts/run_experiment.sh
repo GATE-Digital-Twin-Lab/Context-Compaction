@@ -7,9 +7,11 @@ cd "$(dirname "$0")/.."
 
 # --- agent ---
 AGENT="random"            # llm | random | oracle
-LLM_NAME=""               # required for --agent llm; same as ALIAS in scripts/serve_llm.sh
+LLM_NAME=""               # required for --agent llm; same as the preset's ALIAS in scripts/serve_llm.sh
 LLM_URL="http://127.0.0.1:8080"
 THINKING="on"             # on | off; thinking is discarded after every reply either way
+REASONING_EFFORT="medium" # Qwen3.8: low | medium | xhigh (its default, which adds "consider plausible alternatives"
+                          # to the system prompt); medium adds nothing. Empty: the template's default
 TEMPERATURE=""            # empty: the model's recommended value (recorded in params.json)
 TOP_P=""                  # empty: the model's recommended value (recorded in params.json)
 MAX_TOKENS="32768"        # per reply, thinking included
@@ -23,7 +25,7 @@ ENV_SEED=""               # empty: random, recorded in params.json
 
 # --- user ---
 GOALS="target:I:10"       # one goal per episode while testing; several: "target:I:10,time:S:40"
-ALLERGY="none"            # e.g. p3+p5
+ALLERGY="none"            # e.g. nettle+chamomile
 
 # --- episode ---
 TURN_CAP="150"
@@ -47,6 +49,7 @@ args=(
   --runs-dir "$RUNS_DIR" --temp-dir "$TEMP_DIR"
 )
 [[ -n "$LLM_NAME" ]] && args+=(--llm-name "$LLM_NAME")
+[[ -n "$REASONING_EFFORT" ]] && args+=(--reasoning-effort "$REASONING_EFFORT")
 [[ -n "$TEMPERATURE" ]] && args+=(--temperature "$TEMPERATURE")
 [[ -n "$TOP_P" ]] && args+=(--top-p "$TOP_P")
 [[ -n "$LLM_SEED" ]] && args+=(--llm-seed "$LLM_SEED")

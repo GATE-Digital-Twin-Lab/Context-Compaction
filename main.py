@@ -19,7 +19,7 @@ def make_agent(config: ExperimentConfig) -> Agent:
         return RandomAgent(seed=config.llm_seed)
     if config.agent == "llm":
         client = ChatClient(config.llm_url, config.llm_name, config.max_tokens,
-                            config.temperature, config.top_p, config.thinking)
+                            config.temperature, config.top_p, config.thinking, config.reasoning_effort)
         return LLMAgent(client, config.prompt_file.read_text(encoding="utf-8"), seed=config.llm_seed)
     raise NotImplementedError(f"The {config.agent!r} agent is not implemented yet.")
 

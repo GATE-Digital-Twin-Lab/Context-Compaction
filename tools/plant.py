@@ -1,4 +1,4 @@
-"""Plant action: {"action": "plant", "plots": {"3": "p2", "4": "p7"}}."""
+"""Plant action: {"action": "plant", "plots": {"3": "elderberry", "4": "basil"}}."""
 
 from environment.world import World
 from tools.base import ToolError, ToolResult, require_dict, require_int
@@ -9,7 +9,7 @@ def run(world: World, args: dict) -> ToolResult:
     assignments = {}
     for plot, plant in raw.items():
         if not isinstance(plant, str):
-            raise ToolError(f"Plant for plot {plot} must be a name like \"p2\".")
+            raise ToolError(f"Plant for plot {plot} must be a name like \"elderberry\".")
         assignments[require_int(plot, "A plot number")] = plant
     result = world.plant(assignments)
     planted = ", ".join(f"plot {p} ({plant})" for p, plant in result.planted.items()) or "nothing"

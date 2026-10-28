@@ -3,12 +3,12 @@ from environment.world import World
 from ledger import FactKind, Ledger
 from tools.dispatcher import Dispatcher
 
-GROWTH = {"p1": 3, "p2": 4, "p3": 3, "p4": 2, "p5": 3, "p6": 3, "p7": 6, "p8": 3}
+GROWTH = {"mint": 3, "elderberry": 4, "nettle": 3, "sage": 2, "chamomile": 3, "dill": 3, "basil": 6, "rosemary": 3}
 STRENGTH_10 = Goal(GoalKind.TARGET, "S", target=10)
 INTEL_30 = Goal(GoalKind.TIME, "I", turns=30)
 
 
-def setup(goals=(STRENGTH_10, INTEL_30), allergy=Allergy(frozenset({"p3", "p5"}))):
+def setup(goals=(STRENGTH_10, INTEL_30), allergy=Allergy(frozenset({"nettle", "chamomile"}))):
     world = World.create(7, (2, 6), list(goals), allergy, 100, seed=0)
     world.garden.growth_times = dict(GROWTH)
     ledger = Ledger()
@@ -31,7 +31,7 @@ def test_initial_facts():
     world, _, ledger = setup()
     texts = [r["text"] for r in active(ledger, world)]
     assert texts == [
-        "The user is allergic to the combination of p3 and p5.",
+        "The user is allergic to the combination of chamomile and nettle.",
         "Current goal (goal 1, started turn 1): brew a strength (S) potion of at least +10% as fast as you can.",
     ]
     assert all(not r["recoverable"] and r["logged"] is None for r in active(ledger, world))
@@ -39,39 +39,39 @@ def test_initial_facts():
 
 def test_planting_and_growth_facts_lifecycle():
     world, d, ledger = setup()
-    new = act(world, d, ledger, {"action": "plant", "plots": {"1": "p4"}})       # turn 1
-    assert [f.text for f in new] == ["Plot 1 contains p4 (planted turn 1)."]
+    new = act(world, d, ledger, {"action": "plant", "plots": {"1": "sage"}})       # turn 1
+    assert [f.text for f in new] == ["Plot 1 contains sage (planted turn 1)."]
     assert active(ledger, world, FactKind.PLANTING)[0]["logged"] is False
-    new = act(world, d, ledger, {"action": "skip"})                                # turn 2 → p4 ready at 3
-    assert [(f.text, f.turn) for f in new] == [("p4 grows in 2 turns.", 3)]
+    new = act(world, d, ledger, {"action": "skip"})                                # turn 2 → sage ready at 3
+    assert [(f.text, f.turn) for f in new] == [("sage grows in 2 turns.", 3)]
     act(world, d, ledger, {"action": "log", "garden": True})                       # turn 3
     assert active(ledger, world, FactKind.PLANTING)[0]["logged"] is True
     assert active(ledger, world, FactKind.GROWTH)[0]["logged"] is True
-    act(world, d, ledger, {"action": "gather"})                                    # turn 4
+    act(world, d, ledger, {"tool": "gather"})                                    # turn 4
     assert active(ledger, world, FactKind.PLANTING) == []                          # retired on gather
     assert len(active(ledger, world, FactKind.GROWTH)) == 1                        # growth stays
 
 
 def test_brews_best_and_allergy():
     world, d, ledger = setup()
-    world.inventory.add_plants({"p1": 6, "p5": 5, "p8": 6, "p3": 1})
-    act(world, d, ledger, {"action": "brew", "recipe": {"p1": 2, "p5": 1, "p8": 2}})   # +S 2%
+    world.inventory.add_plants({"mint": 6, "chamomile": 5, "rosemary": 6, "nettle": 1})
+    act(world, d, ledger, {"action": "brew", "recipe": {"mint": 2, "chamomile": 1, "rosemary": 2}})   # +S 2%
     best = active(ledger, world, FactKind.BEST)
     assert [r["text"] for r in best] == [
-        "Best valid S potion for the current goal so far: #1 (p1=2, p5=1, p8=2) → +S 2%."
+        "Best valid S potion for the current goal so far: #1 (chamomile=1, mint=2, rosemary=2) → +S 2%."
     ]
-    act(world, d, ledger, {"action": "brew", "recipe": {"p1": 2, "p5": 2, "p8": 2}})   # +S 5%
+    act(world, d, ledger, {"action": "brew", "recipe": {"mint": 2, "chamomile": 2, "rosemary": 2}})   # +S 5%
     assert [r["id"] for r in active(ledger, world, FactKind.BEST)] == ["best:1:#2"]
-    act(world, d, ledger, {"action": "brew", "recipe": {"p1": 2, "p5": 2, "p8": 2, "p3": 1}})  # allergic
+    act(world, d, ledger, {"action": "brew", "recipe": {"mint": 2, "chamomile": 2, "rosemary": 2, "nettle": 1}})  # allergic
     assert [r["id"] for r in active(ledger, world, FactKind.BEST)] == ["best:1:#2"]
     brews = [r["text"] for r in active(ledger, world, FactKind.BREW)]
-    assert brews[2] == "Potion #3 (turn 3): p1=2, p3=1, p5=2, p8=2 → +S 5%."
+    assert brews[2] == "Potion #3 (turn 3): chamomile=2, mint=2, nettle=1, rosemary=2 → +S 5%."
 
 
 def test_goal_switch():
     world, d, ledger = setup(allergy=None)
-    world.inventory.add_plants({"p1": 2, "p5": 3, "p8": 2})
-    new = act(world, d, ledger, {"action": "brew", "recipe": {"p1": 2, "p5": 3, "p8": 2}})  # +S 10%
+    world.inventory.add_plants({"mint": 2, "chamomile": 3, "rosemary": 2})
+    new = act(world, d, ledger, {"action": "brew", "recipe": {"mint": 2, "chamomile": 3, "rosemary": 2}})  # +S 10%
     kinds = {f.kind: f for f in new}
     assert kinds[FactKind.GOAL_DONE].text == (
         "Goal 1 (brew a strength (S) potion of at least +10% as fast as you can) is finished."
@@ -86,5 +86,5 @@ def test_goal_switch():
 
 def test_observe_reports_each_fact_once():
     world, d, ledger = setup()
-    act(world, d, ledger, {"action": "plant", "plots": {"1": "p7"}})
+    act(world, d, ledger, {"action": "plant", "plots": {"1": "basil"}})
     assert act(world, d, ledger, {"action": "skip"}) == []

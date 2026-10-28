@@ -2,6 +2,8 @@ import json
 
 import pytest
 
+from environment.brewer import PLANTS
+
 from environment.world import World
 from input import parse_args
 from ledger import Ledger
@@ -32,11 +34,11 @@ def test_folders_and_params(config):
     out = RunOutput(config, rid="20261027-120000-abcd")
     assert out.dir == config.runs_dir / "random" / "20261027-120000-abcd"
     assert (out.dir / "compactions").is_dir() and out.temp.is_dir()
-    out.write_params(config, {"growth_times": {"p1": 3}})
+    out.write_params(config, {"growth_times": {"mint": 3}})
     params = json.loads((out.dir / "params.json").read_text(encoding="utf-8"))
     assert params["run_id"] == "20261027-120000-abcd"
     assert params["goals"][0] == {"kind": "target", "stat": "S", "turns": None, "target": 10}
-    assert params["growth_times"] == {"p1": 3}
+    assert params["growth_times"] == {"mint": 3}
 
 
 def test_summary_after_turn_cap(config):
@@ -65,8 +67,8 @@ def test_logs_and_final_files(config):
     d, ledger = Dispatcher(world), Ledger()
     out.log_facts(ledger.observe(world))
 
-    world.inventory.add_plants({"p1": 2, "p5": 3, "p8": 2})
-    call = {"action": "brew", "recipe": {"p1": 2, "p5": 3, "p8": 2}}
+    world.inventory.add_plants({"mint": 2, "chamomile": 3, "rosemary": 2})
+    call = {"action": "brew", "recipe": {"mint": 2, "chamomile": 3, "rosemary": 2}}
     out.log_message(world.turn, "environment", "[Turn 1]\nGarden: ...")
     out.log_message(world.turn, "agent", "I will brew strength.")
     result = d.handle(call)
@@ -92,6 +94,6 @@ def test_logs_and_final_files(config):
 
     state = json.loads((out.dir / "final_state.json").read_text(encoding="utf-8"))
     assert state["inventory"]["potions"][0]["effect"] == {"positive": {"S": 10}, "negative": {}}
-    assert set(state["garden"]["growth_times"]) == {f"p{i}" for i in range(1, 9)}
+    assert set(state["garden"]["growth_times"]) == set(PLANTS)
     assert out.kb_path.is_file()
     world.kb.close()

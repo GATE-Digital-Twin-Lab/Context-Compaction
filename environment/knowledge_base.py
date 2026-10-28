@@ -46,7 +46,7 @@ class Outcome:
     effect: str
 
     def render(self) -> str:
-        """E.g. '(higher) p2, p4, odd p6 → +I'."""
+        """E.g. '(higher) elderberry, sage, odd dill → +I'."""
         parts = []
         for plant, label in self.labels.items():
             if label in ("higher", "lower", 'odd', "even"):
@@ -120,14 +120,17 @@ class KnowledgeBase:
 
     # --- writes ------------------------------------------------------------
 
-    def log_garden(self, state: GardenState, growth_times: Mapping[str, int]) -> GardenLogResult:
-        """Log growth times of ready plants and plantings of all occupied plots (new ones only)."""
+    def log_garden(
+        self, state: GardenState, growth_times: Mapping[str, int], also_ready: Iterable[str] = ()
+    ) -> GardenLogResult:
+        """Log growth times of ready plants (and of also_ready: plants gathered this turn) and
+        plantings of all occupied plots (new ones only)."""
         known_growth = self.growth_times()
         known_plantings = self.plantings()
         new_growth = {
-            r.plant: growth_times[r.plant]
-            for r in state.ready
-            if known_growth.get(r.plant) is None
+            plant: growth_times[plant]
+            for plant in [r.plant for r in state.ready] + list(also_ready)
+            if known_growth.get(plant) is None
         }
         occupied = [(r.plot, r.plant) for r in state.ready] + [(g.plot, g.plant) for g in state.growing]
         new_plantings = {plot: plant for plot, plant in sorted(occupied) if plot not in known_plantings}

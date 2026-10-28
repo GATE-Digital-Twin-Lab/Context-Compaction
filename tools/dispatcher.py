@@ -9,12 +9,12 @@ from tools.base import ToolError, ToolResult
 
 ACTIONS: dict[str, Callable[[World, dict], ToolResult]] = {
     "plant": plant.run,
-    "gather": gather.run,
     "log": log.run,
     "brew": brew.run,
     "skip": skip.run,
 }
 FREE_TOOLS: dict[str, Callable[[World, dict], ToolResult]] = {
+    "gather": gather.run,
     "kb_lookup": kb_lookup.run,
     "inventory": inventory.run,
 }

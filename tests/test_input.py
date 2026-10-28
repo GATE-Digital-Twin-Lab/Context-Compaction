@@ -19,10 +19,10 @@ def test_defaults_are_valid_and_seeds_recorded():
 def test_explicit_values():
     config = parse_args([
         "--garden-size", "8", "--growth-min", "3", "--growth-max", "5", "--env-seed", "7",
-        "--goals", "time:S:30, target:i:10", "--allergy", "p3+p5", "--turn-cap", "90",
+        "--goals", "time:S:30, target:i:10", "--allergy", "nettle+chamomile", "--turn-cap", "90",
     ])
     assert config.goals == (Goal(GoalKind.TIME, "S", turns=30), Goal(GoalKind.TARGET, "I", target=10))
-    assert config.to_dict()["allergy"] == ["p3", "p5"]
+    assert config.to_dict()["allergy"] == ["chamomile", "nettle"]
     assert (config.garden_size, config.growth_min, config.growth_max, config.env_seed) == (8, 3, 5, 7)
 
 
@@ -34,15 +34,15 @@ def test_invalid_goals(text):
 
 def test_allergy_parsing():
     assert parse_allergy("none") is None
-    assert parse_allergy("p5+p3").plants == {"p3", "p5"}
+    assert parse_allergy("chamomile+nettle").plants == {"nettle", "chamomile"}
     with pytest.raises(ValueError):
-        parse_allergy("p3")
+        parse_allergy("nettle")
 
 
 @pytest.mark.parametrize(
     "argv, message",
     [
-        (["--goals", "target:S:10", "--allergy", "p1+p5"], "impossible"),
+        (["--goals", "target:S:10", "--allergy", "mint+chamomile"], "impossible"),
         (["--agent", "llm"], "--llm-name is required"),
         (["--agent", "llm", "--llm-name", "m", "--prompt-file", "missing.txt"], "Prompt file not found"),
         (["--garden-size", "0"], "--garden-size"),

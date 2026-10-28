@@ -1,4 +1,4 @@
-"""Log action: {"action": "log", "garden": true, "potions": [{"id": 3, "labels": {"p5": "higher"}}]}."""
+"""Log action: {"action": "log", "garden": true, "potions": [{"id": 3, "labels": {"chamomile": "higher"}}]}."""
 
 from environment.knowledge_base import LogError
 from environment.world import World
