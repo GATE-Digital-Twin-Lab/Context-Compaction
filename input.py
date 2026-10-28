@@ -18,8 +18,11 @@ class ExperimentConfig:
     # agent
     agent: str
     llm_name: str | None
-    temperature: float
-    max_tokens: int
+    llm_url: str
+    thinking: bool
+    temperature: float | None   # None: the model's recommended default (as served)
+    top_p: float | None         # None: the model's recommended default (as served)
+    max_tokens: int             # per reply, thinking included
     llm_seed: int
     # garden
     garden_size: int
@@ -97,8 +100,12 @@ def build_parser() -> argparse.ArgumentParser:
     a = p.add_argument_group("agent")
     a.add_argument("--agent", choices=AGENTS, default="random")
     a.add_argument("--llm-name", help="model name (required for --agent llm)")
-    a.add_argument("--temperature", type=float, default=0.7)
-    a.add_argument("--max-tokens", type=int, default=1024)
+    a.add_argument("--llm-url", default="http://127.0.0.1:8080", help="OpenAI-compatible server (scripts/serve_llm.sh)")
+    a.add_argument("--thinking", choices=("on", "off"), default="on",
+                   help="model thinking; it is discarded after every reply either way")
+    a.add_argument("--temperature", type=float, help="default: the model's recommended value")
+    a.add_argument("--top-p", type=float, help="default: the model's recommended value")
+    a.add_argument("--max-tokens", type=int, default=32768, help="per reply, thinking included")
     a.add_argument("--llm-seed", type=int, help="default: random, recorded in params.json")
     g = p.add_argument_group("garden")
     g.add_argument("--garden-size", type=int, default=10)
@@ -156,7 +163,10 @@ def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
     return ExperimentConfig(
         agent=args.agent,
         llm_name=args.llm_name,
+        llm_url=args.llm_url,
+        thinking=args.thinking == "on",
         temperature=args.temperature,
+        top_p=args.top_p,
         max_tokens=args.max_tokens,
         llm_seed=args.llm_seed if args.llm_seed is not None else new_seed(),
         garden_size=args.garden_size,
@@ -188,8 +198,10 @@ def _check(args: argparse.Namespace) -> None:
         raise ValueError("Need 1 <= --growth-min <= --growth-max.")
     if args.turn_cap < 1:
         raise ValueError("--turn-cap must be >= 1.")
-    if args.temperature < 0:
+    if args.temperature is not None and args.temperature < 0:
         raise ValueError("--temperature must be >= 0.")
+    if args.top_p is not None and not 0 < args.top_p <= 1:
+        raise ValueError("--top-p must be in (0, 1].")
     if args.max_tokens < 1:
         raise ValueError("--max-tokens must be >= 1.")
     if not 0 < args.compaction_trigger <= 1:

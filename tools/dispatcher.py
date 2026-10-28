@@ -50,6 +50,8 @@ class Dispatcher:
             try:
                 call = json.loads(call)
             except json.JSONDecodeError:
+                if "{" not in call:
+                    raise ToolError("No JSON call found: end your reply with one JSON call.") from None
                 raise ToolError("Malformed JSON.") from None
         if not isinstance(call, dict):
             raise ToolError("A call must be a JSON object.")

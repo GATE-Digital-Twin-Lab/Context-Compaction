@@ -150,7 +150,7 @@ The user sets the **initial conditions** and the **goals**:
 ## Compaction
 
 - Triggered when the context passes a **fraction of the model's context window** (`--compaction-trigger`, default 0.8, of `--context-window` tokens). The check runs **only between turns**, after an action and its response are complete, so compaction never cuts an action in half.
-- **Blind by default:** the agent is never told how full its context is or when compaction will happen, just as a person doesn't know when they will forget something. Logging is therefore insurance. A *warned* variant (the agent sees its context usage and can log just before compaction) is an optional later experiment.
+- **Informed but blind by default:** the system prompt tells the agent that older parts of the conversation may be summarised without notice, but it is never told how full its context is or when compaction will happen, just as a person knows they forget but not when. Logging is therefore insurance. An *uninformed* variant (compaction is never mentioned) is a possible ablation. A *warned* variant (the agent sees its context usage and can log just before compaction) is an optional later experiment.
 - With about 3 goals per episode, at least one compaction happens.
 - The same garden can be run with **0, 1, …, k compactions** for comparison.
 
@@ -177,7 +177,7 @@ The inventory, logged facts and the plant catalogue are always available through
 
 ## Planning
 
-Planning is free (0 turns) and is **not** given a dedicated tool or notepad: the agent writes its plan in its own reasoning, so the plan is another fact compaction can destroy. Recommended agent loop: **plan → execute → re-plan** when an observation contradicts the plan.
+Planning is free (0 turns) and is **not** given a dedicated tool or notepad: the agent writes its plan in its visible notes (thinking is discarded after each reply), so the plan is another fact compaction can destroy. Recommended agent loop: **plan → execute → re-plan** when an observation contradicts the plan.
 
 ## Interaction format
 
@@ -191,11 +191,15 @@ Every turn has four steps:
    Garden: free: 1, 2, 6; growing: 3 (p2, 2 turns left), 4, 5; ready: 7 (waiting 2), 8 (p5, waiting 0)
    Choose your action.
    ```
-2. **Agent:** writes **visible reasoning** (its plan, kept in the conversation), may call **free tools** any number of times, then submits **exactly one action**:
+2. **Agent:** thinks privately, then writes a reply of **visible notes** (whatever it wants to keep) followed by **one call**. It may call **free tools** any number of times (one per reply), then submits **exactly one action**:
    ```
-   <reasoning in plain text: what I know, my plan, why this action>
+   (thinking: discarded after the reply)
+   Notes: I = p2+p4+p6; p2 drives intensity (1→2%, 2→5%). Plan: check the KB on p5, p8 first.
    {"tool": "kb_lookup", "plants": ["p5", "p8"]}               ← optional, free, repeatable
-   {"action": "brew", "recipe": {"p1": 2, "p5": 4, "p8": 2}}   ← exactly one
+   ```
+   ```
+   Notes: ...
+   {"action": "brew", "recipe": {"p1": 2, "p5": 4, "p8": 2}}   ← exactly one per turn
    ```
 3. **Action result** (environment):
    ```
@@ -203,7 +207,17 @@ Every turn has four steps:
    ```
 4. **Time advances** to the next turn, and the loop repeats from step 1.
 
-The reasoning must be **ordinary visible text in the assistant message**, not hidden "thinking" tokens. Many chat templates of reasoning models strip earlier thinking from the history, which would delete the agent's plan regardless of compaction and contaminate the measurement.
+**Thinking and notes.** The agent is a reasoning model and thinks before every reply. Its thinking is **never sent back**: the environment builds the history itself and keeps only the visible reply, cut after the first call (anything the model writes after the call, such as an invented result, is dropped). The thinking is kept in `transcript.md` for analysis only. Information therefore lives in three tiers:
+
+| Tier | Cost | Lasts |
+|---|---|---|
+| Thinking | free | the current reply only |
+| Visible notes (and the environment's replies) | free, but they fill the context | until compaction removes or summarises them |
+| Knowledge base | 1 turn per Log | permanent, but coarse (labels only) |
+
+Derived knowledge (growth times worked out from the waiting counters, the best potion so far, hypotheses about the rules, the plan) survives the reply only if the agent writes it into its notes. The system prompt states this but does **not** prescribe a notes format: an agent that restates its whole state every reply keeps it in the newest message, at the price of a faster-filling context, and that choice is part of what is observed.
+
+Thinking is dropped from **every** reply, including replies within one turn (e.g. kb_lookup → brew); anything needed for the next call goes in the notes. *Possible variant:* keep thinking until the turn's action and drop it at the turn's end (depends on how each chat template treats old thinking). A thinking-off variant, where all reasoning is visible text, is kept as a comparison.
 
 The garden state and action results **deliberately omit** the current goal, its deadline or turns remaining, the allergy, past results and the best result so far. Repeating any of these every turn would protect them from compaction and defeat the test.
 
@@ -246,7 +260,7 @@ A separate garden-view tool is not needed: the garden state is shown at the star
 ### Episode flow
 
 1. **Initialisation:** sample each plant's growth time from U(a, b); empty garden of N plots; empty inventory; KB holds the catalogue p1–p8.
-2. **System prompt:** the visible rules of the world: actions and their costs, free tools, 3–4 distinct plants per recipe, the effects dictionary, the log label vocabulary, and that time is limited. The hidden brewing rules and growth times are **not** included.
+2. **System prompt:** the visible rules of the world: actions and their costs, free tools, 3–4 distinct plants per recipe, the effects dictionary, the log label vocabulary, that time is limited, the reply format (notes, then one JSON call), and how its memory works (thinking is discarded after each reply; the conversation may be summarised without notice; only the knowledge base is permanent). The hidden brewing rules and growth times are **not** included.
 3. **User opening message:** garden size, allergy (if any), first goal.
 4. **Turn loop** (turn t):
    1. The environment shows `[Turn t]` with the garden state and asks for an action.

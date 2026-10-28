@@ -50,7 +50,7 @@ def world_state(world: World) -> dict:
     }
 
 
-def summary(world: World) -> dict:
+def summary(world: World, stop_reason: str | None = None) -> dict:
     """Per-goal results, including the best potion's details."""
     goals = []
     for result in world.results:
@@ -71,6 +71,7 @@ def summary(world: World) -> dict:
     return {
         "turns_played": world.turn - 1,
         "episode_over": world.episode_over,
+        "stop_reason": stop_reason,
         "goals": goals,
         "goal_in_progress": in_progress.to_dict() if in_progress else None,
         "goals_not_started": [g.to_dict() for g in not_started],
@@ -120,6 +121,10 @@ class RunOutput:
     def log_call(self, turn: int, call: Any, result: ToolResult) -> None:
         append_jsonl(self.dir / "actions.jsonl", {"turn": turn, "call": call, **asdict(result)})
 
+    def log_llm_call(self, turn: int, meta: dict[str, Any]) -> None:
+        """Token counts, timing and the raw reply of one model call."""
+        append_jsonl(self.dir / "llm_calls.jsonl", {"turn": turn, **meta})
+
     def log_facts(self, facts: list[Fact]) -> None:
         for fact in facts:
             append_jsonl(self.dir / "ledger.jsonl", {**asdict(fact), "recoverable": fact.recoverable})
@@ -128,6 +133,6 @@ class RunOutput:
         """Context before/after, token counts, turn and ledger snapshot of one compaction."""
         write_json(self.dir / "compactions" / f"{index:03d}.json", data)
 
-    def write_final(self, world: World) -> None:
+    def write_final(self, world: World, stop_reason: str | None = None) -> None:
         write_json(self.dir / "final_state.json", world_state(world))
-        write_json(self.dir / "summary.json", summary(world))
+        write_json(self.dir / "summary.json", summary(world, stop_reason))

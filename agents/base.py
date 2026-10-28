@@ -1,13 +1,20 @@
 """Agent interface: the turn loop only talks to agents through this."""
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Any
+
+
+class ContextFull(Exception):
+    """The agent's context cannot hold another reply; the episode stops."""
 
 
 @dataclass(frozen=True)
 class AgentReply:
-    text: str          # the full message as written (reasoning + call)
+    text: str          # the message as kept in the conversation (notes + call)
     call: str | dict   # the single tool call to execute
+    thinking: str = ""                                   # discarded after the reply; logged only
+    meta: dict[str, Any] = field(default_factory=dict)   # model call details (tokens, timing, ...)
 
 
 class Agent(ABC):
@@ -28,6 +35,10 @@ class Agent(ABC):
     @abstractmethod
     def _reply(self) -> AgentReply:
         """Produce the next reply from self.messages."""
+
+    def info(self) -> dict[str, Any]:
+        """Setup details recorded in params.json."""
+        return {}
 
     def state(self) -> dict:
         """Everything needed to continue after a restore (for checkpoints)."""

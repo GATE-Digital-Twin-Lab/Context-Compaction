@@ -9,13 +9,15 @@ The experiments run in the **Potion Garden**, a small fictional world in which a
 ```
 README.md
 requirements.txt
-scripts/                    shell scripts that launch runs; every parameter set here or overridden on the command line
+scripts/                    shell scripts that launch runs and the model server; every parameter set here or overridden on the command line
 main.py                     entry point: builds all components from the inputs and runs one episode
 input.py                    command-line arguments, validation, and everything related to experiment input
 utils.py                    generic helpers not tied to a specific concept
 output.py                   writes the final outputs to runs/<agent>/<timestamp>/
 LLM/
-  init.py                   model setup, prompting, calls to the model, parsing of its replies
+  client.py                 chat client for an OpenAI-compatible server (llama-server, vLLM, Ollama)
+  parsing.py                finds the one JSON call in a reply and cuts off anything written after it
+  agent.py                  the LLM agent: thinking is discarded after every reply, only notes + call are kept
   episode.py                the turn loop: garden state → agent → action → result → (compaction) → next turn
 environment/                the hidden world: garden and growth timers, brewer rules, knowledge base, inventory, goals, turn clock
 tools/                      one file per agent-facing tool (plant, gather, log, brew, skip, kb_lookup, inventory); thin wrappers around environment/
@@ -46,14 +48,25 @@ Parameters (`python -c "from input import build_parser; build_parser().print_hel
 
 | Group | Parameters |
 |---|---|
-| Agent | `--agent` (llm / random / oracle), `--llm-name`, `--temperature`, `--max-tokens`, `--llm-seed` |
+| Agent | `--agent` (llm / random / oracle), `--llm-name`, `--llm-url`, `--thinking` (on / off), `--temperature`, `--top-p`, `--max-tokens` (per reply, thinking included), `--llm-seed` |
 | Garden | `--garden-size`, `--growth-min`, `--growth-max`, `--env-seed` |
 | User | `--goals` (e.g. `time:S:30,target:I:10`), `--allergy` (e.g. `p3+p5` or `none`) |
 | Episode | `--turn-cap`, `--prompt-file` |
 | Compaction | `--compactor`, `--context-window` (tokens), `--compaction-trigger` (fraction of the window, default 0.8; checked only between turns) |
 | Output | `--runs-dir`, `--temp-dir` |
 
-Seeds that are not given are drawn at random and recorded in `params.json`, so every run can be repeated.
+Seeds that are not given are drawn at random and recorded in `params.json`, so every run can be repeated. Temperature and top-p that are not given are left to the model's recommended values, which the server reads from the GGUF; `params.json` records what the server reports (`llm_server.default_sampling`).
+
+### LLM agent
+
+The model is served by llama-server with an OpenAI-compatible API. Start it first, then run with `--agent llm`:
+
+```
+scripts/serve_llm.sh                                   # Nemotron-3-Nano-30B-A3B Q8_0 on GPUs 0 and 1, 256k context
+scripts/run_experiment.sh --agent llm --llm-name nemotron-3-nano-30b-a3b-q8
+```
+
+Context shift is disabled in the server, so it never drops old tokens on its own. If the conversation no longer fits, the episode stops with `stop_reason: "context full"` in `summary.json`.
 
 ### Resuming an interrupted run
 
@@ -74,11 +87,12 @@ One folder per run. `<agent>` is the LLM name (e.g. `qwen3-8b`) or the non-LLM a
 | File | Contents |
 |---|---|
 | `params.json` | all experiment inputs: initial prompt, garden size, sampled growth times, LLM parameters, turn cap, goals, allergy, seeds, compaction settings |
-| `transcript.md` | the agent's full thought process: every reasoning step and message, in order |
+| `transcript.md` | the agent's full thought process: every message in order, including the discarded thinking (marked as such) |
 | `actions.jsonl` | one line per turn: turn number, action, result, errors |
 | `final_state.json` | final inventory, garden and knowledge base |
-| `summary.json` | per-goal results: best potion brewed, turns used, success or failure, allergy violations |
+| `summary.json` | per-goal results: best potion brewed, turns used, success or failure, allergy violations; why the episode stopped early, if it did |
 | `ledger.jsonl` | every needed fact with the turn it appeared |
+| `llm_calls.jsonl` | LLM agent only: one line per model call with token counts, finish reason, timing and the raw reply (before cutting) |
 | `compactions/` | per compaction: context before and after, token counts, turn, and the ledger snapshot of facts the agent should still know |
 
 ### `temp/<agent>/<timestamp>/`
@@ -92,6 +106,6 @@ Working data needed while the run is in progress: the knowledge base (`knowledge
 - [x] Environment implementation and tests (`python -m pytest`)
 - [x] Turn loop, checkpointing and resume, random agent, `scripts/run_experiment.sh`
 - [ ] Oracle agent and parameter tuning (a, b, N, goal budgets)
-- [ ] LLM agent; how the local model is served is *to be decided* (e.g. Ollama, vLLM, llama.cpp or Transformers)
+- [x] LLM agent served by llama-server (`scripts/serve_llm.sh`); thinking on and discarded after every reply
 - [ ] Compaction methods
 - [ ] Evaluation plan

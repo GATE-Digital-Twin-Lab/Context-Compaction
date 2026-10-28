@@ -1,7 +1,7 @@
 """The turn loop: compaction check → turn → end of turn → checkpoint."""
 
 import checkpoint
-from agents.base import Agent
+from agents.base import Agent, ContextFull
 from environment.world import TurnEnd, World
 from input import ExperimentConfig
 from ledger import Ledger
@@ -47,7 +47,11 @@ def play_turn(world: World, agent: Agent, dispatcher: Dispatcher, out: RunOutput
 
     for _ in range(MAX_CALLS_PER_TURN):
         reply = agent.respond()
+        if reply.thinking:
+            out.log_message(turn, "agent (thinking, discarded)", reply.thinking)
         out.log_message(turn, "agent", reply.text)
+        if reply.meta:
+            out.log_llm_call(turn, reply.meta)
         result = dispatcher.handle(reply.call)
         out.log_call(turn, reply.call, result)
         agent.observe(result.text)
@@ -70,10 +74,16 @@ def play_turn(world: World, agent: Agent, dispatcher: Dispatcher, out: RunOutput
 def run_episode(
     config: ExperimentConfig, world: World, agent: Agent, out: RunOutput, ledger: Ledger, compactions: int = 0
 ) -> None:
-    """Play until the episode ends; a checkpoint is saved after every completed turn."""
+    """Play until the episode ends (or the context is full); a checkpoint is saved after every completed turn."""
     dispatcher = Dispatcher(world)
+    stop_reason = None
     while not world.episode_over:
         compactions = maybe_compact(config, agent, compactions)
-        play_turn(world, agent, dispatcher, out, ledger)
+        try:
+            play_turn(world, agent, dispatcher, out, ledger)
+        except ContextFull as err:
+            stop_reason = "context full"
+            out.log_message(world.turn, "environment", f"Episode stopped: the context is full ({err}).")
+            break
         checkpoint.save(out.temp, out.dir, world, ledger, agent.state(), compactions)
-    out.write_final(world)
+    out.write_final(world, stop_reason)

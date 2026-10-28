@@ -10,7 +10,7 @@ from environment.world import World
 from ledger import Ledger
 
 CHECKPOINT = "checkpoint.json"
-LOG_FILES = ("transcript.md", "actions.jsonl", "ledger.jsonl")
+LOG_FILES = ("transcript.md", "actions.jsonl", "ledger.jsonl", "llm_calls.jsonl")
 VERSION = 1
 
 

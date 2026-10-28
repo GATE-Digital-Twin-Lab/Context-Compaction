@@ -7,6 +7,8 @@ from agents.base import Agent
 from agents.random_agent import RandomAgent
 from environment.world import World
 from input import ExperimentConfig, parse_command
+from LLM.agent import LLMAgent
+from LLM.client import ChatClient
 from LLM.episode import run_episode
 from ledger import Ledger
 from output import RunOutput
@@ -15,6 +17,10 @@ from output import RunOutput
 def make_agent(config: ExperimentConfig) -> Agent:
     if config.agent == "random":
         return RandomAgent(seed=config.llm_seed)
+    if config.agent == "llm":
+        client = ChatClient(config.llm_url, config.llm_name, config.max_tokens,
+                            config.temperature, config.top_p, config.thinking)
+        return LLMAgent(client, config.prompt_file.read_text(encoding="utf-8"), seed=config.llm_seed)
     raise NotImplementedError(f"The {config.agent!r} agent is not implemented yet.")
 
 
@@ -25,7 +31,7 @@ def start(config: ExperimentConfig) -> RunOutput:
         config.allergy, config.turn_cap, config.env_seed, kb_path=str(out.kb_path),
     )
     agent, ledger = make_agent(config), Ledger()
-    out.write_params(config, {"growth_times": world.garden.growth_times})
+    out.write_params(config, {"growth_times": world.garden.growth_times, **agent.info()})
     out.log_facts(ledger.observe(world))
     checkpoint.save(out.temp, out.dir, world, ledger, agent.state(), compactions=0)
     run_episode(config, world, agent, out, ledger)
