@@ -1,5 +1,6 @@
 """Writes game/js/data.js from the Python sources (plants, stat sets, lore, labels, system prompt), so the
-game never drifts from the environment. Run from the repository root after changing any of them:
+game never drifts from the environment, and takes the setup defaults from the most recent LLM run, so a
+human plays the same garden as the agent. Run from the repository root after changing any of them:
 
     python3 game/export_data.py
 """
@@ -17,10 +18,11 @@ from environment.knowledge_base import LABELS  # noqa: E402
 from environment.lore import LORE  # noqa: E402
 from LLM.episode import MAX_CALLS_PER_TURN  # noqa: E402
 
-DEFAULTS = {  # scripts/run_experiment.sh
+SCRIPT_DEFAULTS = {  # scripts/run_experiment.sh, used when there is no LLM run yet
     "garden_size": 10,
     "growth_min": 2,
     "growth_max": 6,
+    "env_seed": None,
     "goals": "target:I:10",
     "allergy": "none",
     "lore": True,
@@ -28,7 +30,39 @@ DEFAULTS = {  # scripts/run_experiment.sh
 }
 
 
+def goal_text(goal: dict) -> str:
+    """{'kind': 'target', 'stat': 'I', 'target': 10, ...} -> 'target:I:10' (the --goals syntax)."""
+    value = goal["turns"] if goal["kind"] == "time" else goal["target"]
+    return f"{goal['kind']}:{goal['stat']}:{value}"
+
+
+def llm_defaults() -> tuple[dict, str]:
+    """The game's setup defaults: the parameters of the most recent LLM run (same garden, same seed),
+    or the script defaults if there is none."""
+    runs = []
+    for path in (ROOT / "runs").glob("*/*/params.json"):
+        params = json.loads(path.read_text(encoding="utf-8"))
+        if params.get("agent") == "llm":
+            runs.append((params["run_id"], params, path.parent.relative_to(ROOT)))
+    if not runs:
+        return SCRIPT_DEFAULTS, "scripts/run_experiment.sh"
+    _, params, run_dir = max(runs, key=lambda r: r[0])  # run ids start with a timestamp
+    allergy = params["allergy"]
+    defaults = {
+        "garden_size": params["garden_size"],
+        "growth_min": params["growth_min"],
+        "growth_max": params["growth_max"],
+        "env_seed": params["env_seed"],
+        "goals": ",".join(goal_text(g) for g in params["goals"]),
+        "allergy": "+".join(allergy) if allergy else "none",
+        "lore": params.get("lore") is not False,  # runs from before --lore existed had no lore field
+        "turn_cap": params["turn_cap"],
+    }
+    return defaults, f"the LLM run {run_dir}"
+
+
 def main() -> None:
+    defaults, source = llm_defaults()
     data = {
         "PLANTS": list(PLANTS),
         "MIN_PLANTS": MIN_PLANTS,
@@ -41,7 +75,8 @@ def main() -> None:
         "MAX_FAILURES": 3,
         "MAX_CALLS_PER_TURN": MAX_CALLS_PER_TURN,
         "SYSTEM_PROMPT": (ROOT / "prompts" / "system.txt").read_text(encoding="utf-8"),
-        "DEFAULTS": DEFAULTS,
+        "DEFAULTS": defaults,
+        "DEFAULTS_SOURCE": source,
     }
     body = json.dumps(data, indent=2, ensure_ascii=False)
     out = ROOT / "game" / "js" / "data.js"
@@ -51,7 +86,7 @@ def main() -> None:
         'if (typeof module !== "undefined") module.exports = PG_DATA;\n',
         encoding="utf-8",
     )
-    print(f"Wrote {out.relative_to(ROOT)}")
+    print(f"Wrote {out.relative_to(ROOT)} (setup defaults from {source}: {defaults})")
 
 
 if __name__ == "__main__":

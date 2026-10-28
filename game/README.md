@@ -4,7 +4,7 @@ A browser version of the Potion Garden environment, played by a human instead of
 
 ## Playing
 
-Open `game/index.html` in a browser (double-click works, no server or build step). The setup dialog takes the same parameters as `scripts/run_experiment.sh`; the same env seed gives the same hidden growth times as a Python run, so a human can play the exact garden an agent played.
+Open `game/index.html` in a browser (double-click works, no server or build step). The setup dialog takes the same parameters as `scripts/run_experiment.sh`; the same env seed gives the same hidden growth times as a Python run, so a human can play the exact garden an agent played. Its defaults are the parameters of the most recent LLM run (read from `runs/*/*/params.json` by `export_data.py`, seed included; the script defaults if there is no LLM run). Run `python3 game/export_data.py` after a new LLM run to update them.
 
 | Control | Call it sends | Cost |
 |---|---|---|

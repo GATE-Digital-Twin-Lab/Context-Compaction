@@ -4,7 +4,6 @@
 (() => {
   const { Game, PLANTS, LABELS, DATA, pyDumps, gardenView, describeGoal } = PG;
   const SAVE_KEY = "potion-garden/save-v1";
-  const CONFIG_KEY = "potion-garden/config-v1";
   const $ = (id) => document.getElementById(id);
 
   let game = null;
@@ -560,14 +559,15 @@
 
   // --- setup and briefing ----------------------------------------------------------------------
 
+  // The form always starts from the LLM agent's parameters (export_data.py), so by default a human
+  // plays the same garden, with the same seed, as the agent did.
   function openSetup() {
-    let last = {};
-    try { last = JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch { /* first game */ }
-    const d = { ...DATA.DEFAULTS, ...last };
+    const d = DATA.DEFAULTS;
     const f = $("setupForm");
     for (const key of ["garden_size", "turn_cap", "growth_min", "growth_max", "goals", "allergy"]) f.elements[key].value = d[key];
-    f.elements.env_seed.value = "";
+    f.elements.env_seed.value = d.env_seed ?? "";
     f.elements.lore.checked = d.lore;
+    $("setupSource").textContent = `Defaults: the parameters of ${DATA.DEFAULTS_SOURCE}.`;
     $("setupError").textContent = "";
     $("btnSetupCancel").hidden = !game;
     $("dlgSetup").showModal();
@@ -591,7 +591,6 @@
       const seedText = f.env_seed.value.trim();
       if (seedText && !/^\d+$/.test(seedText)) throw new Error("The seed must be a whole number (or empty for random).");
       const env_seed = seedText ? Number(seedText) : Math.floor(Math.random() * 2 ** 31);
-      try { localStorage.setItem(CONFIG_KEY, JSON.stringify(raw)); } catch { /* not saved */ }
       game = Game.create({ ...raw, goals, allergy, env_seed });
     } catch (err) {
       $("setupError").textContent = err.message;
