@@ -42,6 +42,7 @@
       </div>
 
       <div class="workbench">
+        <div class="stack">
         <!-- Inventory -->
         <div class="panel">
           <div class="panel-head">
@@ -52,6 +53,20 @@
           <div class="chips" id="invPlants"></div>
           <div class="sub">Potions <span class="hint">drag into the log book</span></div>
           <div class="chips" id="invPotions"></div>
+        </div>
+
+        <!-- Knowledge base lookup -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Knowledge base</h2>
+            <span class="hint">pick plants to look up</span>
+          </div>
+          <div class="chips" id="lookupPlants"></div>
+          <div class="panel-foot">
+            <span class="spacer"></span>
+            <button class="free" id="btnLookup" title='{"tool": "kb_lookup", ...}'>Look up <span class="cost">free</span></button>
+          </div>
+        </div>
         </div>
 
         <!-- Cauldron -->
@@ -88,20 +103,12 @@
     <aside class="panel convo-panel">
       <div class="panel-head">
         <h2>Conversation</h2>
-        <span class="hint">everything the agent would see; nothing is ever summarised</span>
+        <span class="hint">everything the agent would see, nothing is ever summarised; hover a message for its exact text</span>
       </div>
       <div class="convo" id="convo"></div>
       <div class="reply">
         <textarea id="notes" rows="2" placeholder="Your notes (sent with your next call, like the agent's visible notes). New facts: … Plan: …"></textarea>
-        <div class="lookup">
-          <div class="chips small" id="lookupPlants"></div>
-          <button class="free small" id="btnLookup" title='{"tool": "kb_lookup", ...}'>Look up <span class="cost">free</span></button>
-        </div>
-        <div class="reply-row">
-          <input id="rawCall" type="text" spellcheck="false" placeholder='Or type a raw call: {"action": "skip"}'>
-          <button class="ghost small" id="btnRaw">Send</button>
-          <button class="action" id="btnSkip" title='{"action": "skip"}'>Skip <span class="cost">1 turn</span></button>
-        </div>
+        <button class="action" id="btnSkip" title='{"action": "skip"}'>Skip <span class="cost">1 turn</span></button>
       </div>
     </aside>
   </main>
@@ -136,7 +143,7 @@
       <button class="tab" data-tab="prompt">System prompt (what the agent is told)</button>
     </div>
     <div class="tab-body" id="tabHowto">
-      <p>You play the agent. You get exactly the agent's messages: the system prompt, the user's opening message, and the environment's replies. The controls send the same JSON calls the agent would send, and every call appears in the conversation.</p>
+      <p>You play the agent. You get exactly the agent's messages: the system prompt, the user's opening message, and the environment's replies. The controls send the same JSON calls the agent would send, and every call appears in the conversation. The conversation is shown in a readable form; hover a message to see the exact text the agent gets, which is also what the downloaded transcript contains.</p>
       <table class="map">
         <tr><th>Control</th><th>Call it sends</th><th>Cost</th></tr>
         <tr><td>Seed packets → plots, then <b>Plant</b></td><td><code>{"action": "plant", "plots": {...}}</code></td><td>1 turn</td></tr>

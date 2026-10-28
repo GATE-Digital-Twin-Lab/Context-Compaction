@@ -12,10 +12,9 @@ Open `game/index.html` in a browser (double-click works, no server or build step
 | Drag plants into the cauldron (several recipes = one batch), then **Brew** | `{"action": "brew", "recipe(s)": ...}` | 1 turn |
 | Garden switch and/or potions dragged into the log book with labels, then **Log** | `{"action": "log", ...}` | 1 turn |
 | **Skip** | `{"action": "skip"}` | 1 turn |
-| **Gather**, **Look up**, inventory **Ask** | `{"tool": "gather" / "kb_lookup" / "inventory"}` | free |
-| Raw call box | any text, parsed exactly like an agent reply's call | â€” |
+| **Gather**, knowledge base **Look up**, inventory **Ask** | `{"tool": "gather" / "kb_lookup" / "inventory"}` | free |
 
-The notes box is the agent's visible notes: it is sent with your next call and stays in the conversation.
+The notes box is the agent's visible notes: it is sent with your next call and stays in the conversation. The conversation is shown in a readable form (coloured by kind: garden, planting, harvest, cauldron, knowledge base); hover a message to see the exact text the agent gets, which is also what the downloaded `transcript.md` contains.
 
 The board shows only what the agent can see: a plot shows its plant only once its planting is logged, turns left only once the growth time is logged too, and potions never show their recipe or effect. The goal, the allergy and brew results appear only in the conversation. Errors cost no turn; 3 failed attempts in a turn skip it; 20 calls without an action skip it.
 
@@ -42,4 +41,4 @@ python3 game/check_parity.py    # brewer for all 102,816 recipes with counts 1â€
                                 # and 60 random episodes through the real turn loop, message by message
 ```
 
-Rule changes in `environment/brewer.py` (`_RULES`) and message wording in `tools/` have to be ported by hand to `js/engine.js`; `check_parity.py` reports any difference. Known gaps it does not cover: in raw calls typed by hand, plot keys in a plant call are processed in ascending order (JavaScript object order) instead of the order written, and `2.0` is read as the whole number 2.
+Rule changes in `environment/brewer.py` (`_RULES`) and message wording in `tools/` have to be ported by hand to `js/engine.js`; `check_parity.py` reports any difference. The engine still accepts calls as raw text (the parity check sends malformed ones), but the game itself only sends calls built by its controls.

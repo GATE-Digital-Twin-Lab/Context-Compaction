@@ -179,12 +179,6 @@
     render();
   }
 
-  function rawAction() {
-    const text = $("rawCall").value.trim();
-    if (!text) return;
-    if (send(text)) $("rawCall").value = "";
-  }
-
   // --- drafts -------------------------------------------------------------------------
 
   function stage(plot, plant) {
@@ -234,7 +228,7 @@
     $("btnBrew").disabled = over || !n;
     $("btnBrew").innerHTML = `Brew${n > 1 ? " " + n + " potions" : ""} <span class="cost">1 turn</span>`;
     $("btnLog").disabled = over || (!ui.logGarden && !ui.entries.length);
-    for (const id of ["btnGather", "btnInventory", "btnLookup", "btnSkip", "btnRaw", "btnAddRecipe"]) $(id).disabled = over;
+    for (const id of ["btnGather", "btnInventory", "btnLookup", "btnSkip", "btnAddRecipe"]) $(id).disabled = over;
     $("logGarden").checked = ui.logGarden;
   }
 
@@ -261,7 +255,7 @@
     }
     for (const r of view.ready) {
       cells[r.plot] = `<div class="plot ready"><span class="num">${r.plot}</span>${r.plant ? glyph(r.plant, "glyph") : BUD}
-        ${r.plant ? `<div class="label">${r.plant}</div>` : ""}<div class="meta">ready · waiting ${r.waiting}</div></div>`;
+        ${r.plant ? `<div class="label">${r.plant}</div>` : ""}<div class="meta">waiting ${r.waiting}</div></div>`;
     }
     $("garden").innerHTML = Object.keys(cells).map(Number).sort((a, b) => a - b).map((p) => cells[p]).join("");
   }
@@ -316,7 +310,7 @@
   }
 
   function renderLookup() {
-    $("lookupPlants").innerHTML = PLANTS.map((p) => `<span class="chip${ui.lookup.includes(p) ? " on" : ""}" data-look="${p}">${p}</span>`).join("");
+    $("lookupPlants").innerHTML = PLANTS.map((p) => `<span class="chip pick${ui.lookup.includes(p) ? " on" : ""}" data-look="${p}">${glyph(p)}${p}</span>`).join("");
   }
 
   function renderConvo() {
@@ -327,20 +321,157 @@
       ui.rendered = 0;
       ui.lastTurn = null;
     }
-    const roles = { user: "User", environment: "Environment", agent: "You" };
     let html = "";
     for (const m of messages.slice(ui.rendered)) {
       if (m.turn !== ui.lastTurn) {
-        html += `<div class="turn-sep">turn ${m.turn}</div>`;
+        html += `<div class="turn-sep">Turn ${m.turn}</div>`;
         ui.lastTurn = m.turn;
       }
-      html += `<div class="msg ${m.role}${m.error ? " failed" : ""}"><div class="who">${roles[m.role] || m.role}</div><div class="body">${esc(m.content)}</div></div>`;
+      html += messageHtml(m);
     }
     if (html) {
       box.insertAdjacentHTML("beforeend", html);
       box.scrollTop = box.scrollHeight;
     }
     ui.rendered = messages.length;
+  }
+
+  // --- readable conversation ---------------------------------------------------------------
+  // Each message is shown in a readable form; its exact text (what the agent gets, and what the
+  // downloaded transcript holds) is in the tooltip.
+
+  const plantTag = (p) => (PLANTS.includes(p) ? `<span class="pl">${glyph(p)}${p}</span>` : `<span class="pl">${esc(p)}</span>`);
+  const recipeHtml = (r) => Object.entries(r).map(([p, n]) => `${plantTag(p)}<b class="qty">×${esc(n)}</b>`).join(" ");
+  const item = (html, cls = "") => `<span class="item ${cls}">${html}</span>`;
+
+  /** "1, 2, 3, 5" -> "1–3, 5". */
+  function ranges(list) {
+    const nums = list.split(", ").map(Number);
+    const out = [];
+    for (let i = 0; i < nums.length; i++) {
+      let j = i;
+      while (j + 1 < nums.length && nums[j + 1] === nums[j] + 1) j++;
+      out.push(j > i ? `${nums[i]}–${nums[j]}` : `${nums[i]}`);
+      i = j;
+    }
+    return out.join(", ");
+  }
+
+  // Labels and the effect in a knowledge-base statement: "dill, (higher) elderberry, sage → +I".
+  const statementHtml = (text) => esc(text)
+    .replace(/\((higher|lower|odd|even)\)/g, "<i>$1</i>")
+    .replace(/→ ([+-])(\w)$/, (_, sign, stat) => `→ <span class="fx ${sign === "+" ? "pos" : "neg"}">${sign === "-" ? "−" : "+"}${stat}</span>`)
+    .replace(/→ none$/, `→ <span class="fx none">none</span>`);
+
+  function effectHtml(e) {
+    const [pos] = Object.entries(e.positive || {}), [neg] = Object.entries(e.negative || {});
+    if (pos) return `<span class="fx pos">+${pos[0]} ${pos[1]}%</span>`;
+    if (neg) return `<span class="fx neg">−${neg[0]} ${neg[1]}%</span>`;
+    return `<span class="fx none">no effect</span>`;
+  }
+
+  /** [kind, title, details] for one of the agent's calls. */
+  function describeCall(call) {
+    switch (call.action || call.tool) {
+      case "plant":
+        return ["plant", "Plant", Object.entries(call.plots || {}).map(([plot, p]) => item(`plot ${esc(plot)} ${plantTag(p)}`)).join("")];
+      case "brew": {
+        const recipes = call.recipes || [call.recipe];
+        return ["brew", recipes.length > 1 ? `Brew ${recipes.length} potions` : "Brew", recipes.map((r) => `<div>${recipeHtml(r)}</div>`).join("")];
+      }
+      case "log": {
+        const parts = call.garden ? [item("the garden")] : [];
+        for (const e of call.potions || []) {
+          const labels = Object.entries(e.labels || {}).map(([p, l]) => `<i>${esc(l)}</i> ${plantTag(p)}`).join(" ");
+          parts.push(item(`potion #${esc(e.id)}${labels ? " · " + labels : ""}`));
+        }
+        return ["log", "Log", parts.join("")];
+      }
+      case "skip": return ["skip", "Skip", ""];
+      case "gather": return ["gather", "Gather", ""];
+      case "kb_lookup": return ["lookup", "Look up", (call.plants || []).map(plantTag).join(" ")];
+      case "inventory": return ["lookup", "Check inventory", ""];
+      default: return ["plain", esc(call.action || call.tool), ""];
+    }
+  }
+
+  // Plot lists from the garden line: "3 (elderberry, 2 turns left), 5, 7 (waiting 2)".
+  const plotItems = (list, cls) => list === "none"
+    ? `<span class="none">none</span>`
+    : (list.match(/\d+(?: \([^)]*\))?/g) || []).map((x) => {
+      const [, plot, info] = x.match(/(\d+)(?: \((.*)\))?/);
+      const bits = (info || "").split(", ").filter(Boolean).map((b) => (PLANTS.includes(b) ? plantTag(b) : esc(b)));
+      return item(`<b>${plot}</b>${bits.length ? " " + bits.join(" · ") : ""}`, cls);
+    }).join("");
+
+  /** [kind, html] for one environment message. */
+  function describeResult(text, error) {
+    let m;
+    if (error) return ["error", `<div class="line">${esc(text)}</div>`];
+    if ((m = text.match(/^\[Turn \d+\]\nGarden: free: (.*); growing: (.*); ready: (.*)\nChoose your action\.$/))) {
+      return ["garden", `<div class="row"><span class="key ready">Ready</span>${plotItems(m[3], "ready")}</div>
+        <div class="row"><span class="key">Growing</span>${plotItems(m[2], "growing")}</div>
+        <div class="row"><span class="key">Free</span>${m[1] === "none" ? `<span class="none">none</span>` : `<span class="free-list">${ranges(m[1])}</span>`}</div>`];
+    }
+    if ((m = text.match(/^Planted: (.*?)\.(?: Failed: (.*)\.)?$/))) {
+      const plots = (t, cls) => [...t.matchAll(/plot (-?\d+) \(([^)]*)\)/g)].map(([, n, x]) => item(`plot ${n} ${PLANTS.includes(x) ? plantTag(x) : esc(x)}`, cls)).join("");
+      return ["plant", `<div class="row"><span class="key">Planted</span>${m[1] === "nothing" ? `<span class="none">nothing</span>` : plots(m[1])}</div>
+        ${m[2] ? `<div class="row"><span class="key bad">Failed</span>${plots(m[2], "bad")}</div>` : ""}`];
+    }
+    if ((m = text.match(/^Gathered: (.*)\. Plots now free: (.*)\.$/))) {
+      const got = m[1].split(", ").map((x) => { const [n, p] = x.split(" "); return item(`${plantTag(p)}<b class="qty">${n}</b>`); }).join("");
+      return ["gather", `<div class="row"><span class="key">Gathered</span>${got}</div><div class="row"><span class="key">Now free</span>${esc(m[2])}</div>`];
+    }
+    if (text === "Gathered nothing.") return ["gather", `<div class="line">Nothing was ready to gather.</div>`];
+    const brews = text.split("\n").map((l) => l.match(/^Brewed (\{[^{}]*\}) → (\{.*\}) \(potion #(\d+)\)$/));
+    if (brews.every(Boolean)) {
+      return ["brew", brews.map(([, r, e, id]) => `<div class="row"><span class="key">Potion #${id}</span>${recipeHtml(JSON.parse(r))} → ${effectHtml(JSON.parse(e))}</div>`).join("")];
+    }
+    if ((m = text.match(/^Logged: (.*)\.$/s))) {
+      if (m[1] === "nothing new") return ["log", `<div class="line">Logged: nothing new.</div>`];
+      const LORE_NOTE = " (the old herbals hold new lore about its plants: read it with kb_lookup)";
+      return ["log", m[1].split("; ").map((part) => {
+        const lore = part.endsWith(LORE_NOTE);
+        const body = statementHtml(lore ? part.slice(0, -LORE_NOTE.length) : part);
+        return `<div class="row">${item("✓", "ok")} ${body}${lore ? ` <span class="lore-new">new lore: read it with Look up</span>` : ""}</div>`;
+      }).join("")];
+    }
+    if (text.startsWith("Growth: ")) {
+      return ["lookup", text.split("\n").map((line) => {
+        if ((m = line.match(/^(\w+): ?(.*)$/))) return `<div class="section"><span class="key">${m[1]}</span>${esc(m[2])}</div>`;
+        if (line.startsWith("- ")) return `<div class="bullet">${statementHtml(line.slice(2))}</div>`;
+        return `<div class="line">${esc(line)}</div>`;
+      }).join("")];
+    }
+    if ((m = text.match(/^plants: (.*); potions: (.*)$/))) {
+      const plants = m[1] === "none" ? `<span class="none">none</span>` : m[1].split(", ").map((x) => { const [p, n] = x.split(": "); return item(`${plantTag(p)}<b class="qty">${n}</b>`); }).join("");
+      return ["lookup", `<div class="row"><span class="key">Plants</span>${plants}</div><div class="row"><span class="key">Potions</span>${esc(m[2])}</div>`];
+    }
+    if (text === "Skipped.") return ["skip", `<div class="line">Time passes.</div>`];
+    return ["plain", `<div class="line">${esc(text)}</div>`];
+  }
+
+  const KIND_NAMES = { garden: "Garden", plant: "Planting", gather: "Harvest", brew: "Cauldron", log: "Knowledge base", lookup: "Lookup", skip: "Skip", error: "Error", plain: "Environment" };
+
+  function messageHtml(m) {
+    let kind, who, body;
+    try {
+      if (m.role === "agent") {
+        const lines = m.content.split("\n");
+        const [k, title, details] = describeCall(JSON.parse(lines.pop()));
+        const notes = lines.join("\n").trim();
+        [kind, who] = [k, "You"];
+        body = `${notes ? `<div class="notes">${esc(notes)}</div>` : ""}<div class="call"><span class="tag">${title}</span>${details}</div>`;
+      } else if (m.role === "user") {
+        [kind, who, body] = ["user", "User", `<div class="line">${esc(m.content)}</div>`];
+      } else {
+        [kind, body] = describeResult(m.content, m.error);
+        who = KIND_NAMES[kind];
+      }
+    } catch {
+      [kind, who, body] = ["plain", m.role, `<div class="line">${esc(m.content)}</div>`];
+    }
+    return `<div class="msg ${m.role} k-${kind}" title="${esc(m.content)}"><div class="who">${who}</div><div class="body">${body}</div></div>`;
   }
 
   // The system prompt as a small subset of Markdown: headings, lists, examples.
@@ -497,8 +628,6 @@
     $("btnGather").onclick = () => send({ tool: "gather" });
     $("btnInventory").onclick = () => send({ tool: "inventory" });
     $("btnSkip").onclick = () => send({ action: "skip" });
-    $("btnRaw").onclick = rawAction;
-    $("rawCall").onkeydown = (e) => { if (e.key === "Enter") rawAction(); };
     $("notes").onkeydown = (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) $("notes").blur(); };
     $("btnAddRecipe").onclick = () => { ui.recipes.push({}); ui.active = ui.recipes.length - 1; render(); };
     $("logGarden").onchange = (e) => { ui.logGarden = e.target.checked; render(); };
