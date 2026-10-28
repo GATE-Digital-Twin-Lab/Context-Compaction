@@ -2,6 +2,7 @@ import pytest
 
 from environment.brewer import PLANTS
 from environment.goals import Goal, GoalKind
+from environment.lore import LORE
 from environment.world import World
 from tools.dispatcher import Dispatcher
 from tools.observation import turn_header
@@ -101,6 +102,41 @@ def test_gather_then_replant_in_one_turn(world):
     assert act(d, {"action": "plant", "plots": {"1": "mint"}}) == "Planted: plot 1 (mint)."
 
 
+def test_brew_several_potions_in_one_turn(world):
+    d = Dispatcher(world)
+    world.inventory.add_plants({"elderberry": 3, "sage": 2, "dill": 2, "mint": 1})
+    text = act(d, {"action": "brew", "recipes": [
+        {"elderberry": 1, "sage": 1, "dill": 1},
+        {"elderberry": 2, "sage": 1, "dill": 1, "mint": 1},
+    ]})
+    assert text == (
+        'Brewed {"elderberry": 1, "sage": 1, "dill": 1} → {"positive": {"I": 2}, "negative": {}} (potion #1)\n'
+        'Brewed {"elderberry": 2, "sage": 1, "dill": 1, "mint": 1} → {"positive": {"I": 5}, "negative": {}} (potion #2)'
+    )
+    assert world.turn == 2 and not world.inventory.plants   # one turn, everything used
+
+
+def test_multi_brew_is_all_or_nothing(world):
+    d = Dispatcher(world)
+    world.inventory.add_plants({"elderberry": 2, "sage": 2, "dill": 2})
+    two = [{"elderberry": 1, "sage": 1, "dill": 1}, {"elderberry": 2, "sage": 1, "dill": 1}]
+    failed = d.handle({"action": "brew", "recipes": two})
+    assert failed.error and not failed.ends_turn
+    assert failed.text == "Not enough plants for these recipes together: need 3 elderberry, have 2. Nothing was brewed."
+    bad = d.handle({"action": "brew", "recipes": [two[0], {"elderberry": 1}]})
+    assert bad.text == "Recipe 2: A recipe needs 3–4 distinct plants."
+    assert dict(world.inventory.plants) == {"elderberry": 2, "sage": 2, "dill": 2} and not world.inventory.potions
+    assert d.handle({"action": "brew", "recipe": two[0], "recipes": two}).text.startswith('Give either "recipe"')
+
+
+def test_multi_brew_reaches_a_target(world):
+    world.goals[0] = Goal(GoalKind.TARGET, "I", target=5)
+    d = Dispatcher(world)
+    world.inventory.add_plants({"elderberry": 3, "sage": 2, "dill": 2})
+    act(d, {"action": "brew", "recipes": [{"elderberry": 1, "sage": 1, "dill": 1}, {"elderberry": 2, "sage": 1, "dill": 1}]})
+    assert world.results and world.results[0].success and world.results[0].best_intensity == 5
+
+
 def test_brew_texts(world):
     d = Dispatcher(world)
     world.inventory.add_plants({"mint": 2, "chamomile": 4, "rosemary": 2})
@@ -109,11 +145,14 @@ def test_brew_texts(world):
     )
     failed = d.handle({"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}})
     assert failed.error and not failed.ends_turn
-    assert failed.text == "Not enough plants: need 2 mint, have 0; need 4 chamomile, have 0; need 2 rosemary, have 0."
+    assert failed.text == (
+        "Not enough plants: need 2 mint, have 0; need 4 chamomile, have 0; need 2 rosemary, have 0. Nothing was brewed."
+    )
     assert d.handle({"action": "brew", "recipe": {"mint": 1}}).text == "A recipe needs 3–4 distinct plants."
 
 
 def test_log_potions_and_lookup(world):
+    world.lore = False  # lore has its own test
     d = Dispatcher(world)
     world.inventory.add_plants({"mint": 1, "elderberry": 4, "sage": 3, "dill": 3})
     act(d, {"action": "brew", "recipe": {"mint": 1, "elderberry": 1, "dill": 1}})
@@ -136,6 +175,30 @@ def test_log_potions_and_lookup(world):
     assert d.handle({"tool": "inventory"}).text == (
         "plants: sage: 1; potions: #1 (logged), #2 (logged), #3 (logged)"
     )
+
+
+def test_logging_unlocks_lore_read_with_lookup(world):
+    d = Dispatcher(world)
+    world.inventory.add_plants({"mint": 1, "elderberry": 2, "sage": 1, "dill": 2})
+    act(d, {"action": "brew", "recipes": [{"mint": 1, "elderberry": 1, "dill": 1}, {"elderberry": 1, "sage": 1, "dill": 1}]})
+    assert d.handle({"tool": "kb_lookup", "plants": ["dill"]}).text.endswith("Lore: none yet.")
+    text = act(d, {"action": "log", "potions": [{"id": 1}]})
+    assert text == ("Logged: potion #1: dill, elderberry, mint → none "
+                    "(the old herbals hold new lore about its plants: read it with kb_lookup).")
+    assert d.handle({"tool": "kb_lookup", "plants": ["dill"]}).text.endswith("Lore: " + LORE[("dill", "elderberry")])
+    assert d.handle({"tool": "kb_lookup", "plants": ["mint"]}).text.endswith("Lore: none yet.")
+    act(d, {"action": "log", "potions": [{"id": 2}]})                      # adds dill+sage, elderberry+sage
+    assert world.kb.lore("sage") == [LORE[("dill", "sage")], LORE[("elderberry", "sage")]]
+    assert act(d, {"action": "log", "potions": [{"id": 2}]}) == "Logged: potion #2: already known."   # nothing new
+
+
+def test_no_lore_when_switched_off(world):
+    world.lore = False
+    d = Dispatcher(world)
+    world.inventory.add_plants({"elderberry": 1, "sage": 1, "dill": 1})
+    act(d, {"action": "brew", "recipe": {"elderberry": 1, "sage": 1, "dill": 1}})
+    assert act(d, {"action": "log", "potions": [{"id": 1}]}) == "Logged: potion #1: dill, elderberry, sage → +I."
+    assert "Lore" not in d.handle({"tool": "kb_lookup", "plants": ["sage"]}).text and world.kb.lore() == []
 
 
 @pytest.mark.parametrize(

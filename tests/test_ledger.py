@@ -88,3 +88,14 @@ def test_observe_reports_each_fact_once():
     world, d, ledger = setup()
     act(world, d, ledger, {"action": "plant", "plots": {"1": "basil"}})
     assert act(world, d, ledger, {"action": "skip"}) == []
+
+
+def test_unlocked_lore_is_a_recoverable_fact():
+    world, d, ledger = setup()
+    world.inventory.add_plants({"elderberry": 1, "sage": 1, "dill": 1})
+    act(world, d, ledger, {"action": "brew", "recipe": {"elderberry": 1, "sage": 1, "dill": 1}})
+    assert active(ledger, world, FactKind.LORE) == []
+    act(world, d, ledger, {"action": "log", "potions": [{"id": 1}]})
+    lore = active(ledger, world, FactKind.LORE)
+    assert [r["id"] for r in lore] == ["lore:dill+elderberry", "lore:dill+sage", "lore:elderberry+sage"]
+    assert all(r["recoverable"] and r["logged"] for r in lore)

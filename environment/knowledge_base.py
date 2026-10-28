@@ -19,6 +19,14 @@ CREATE TABLE IF NOT EXISTS outcomes (
     potion_id INTEGER,
     turn INTEGER
 );
+CREATE TABLE IF NOT EXISTS lore(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    plant_a TEXT NOT NULL,
+    plant_b TEXT NOT NULL,
+    text TEXT NOT NULL,
+    turn INTEGER,
+    UNIQUE(plant_a, plant_b)
+);
 CREATE TABLE IF NOT EXISTS outcome_plants(
     outcome_id INTEGER NOT NULL REFERENCES outcomes(id),
     plant TEXT NOT NULL,
@@ -72,7 +80,7 @@ class KnowledgeBase:
     def close(self) -> None:
         self._db.close()
 
-    _TABLES = ("plants", "plantings", "outcomes", "outcome_plants")
+    _TABLES = ("plants", "plantings", "outcomes", "outcome_plants", "lore")
 
     def dump(self) -> dict[str, list[list]]:
         """All rows of every table (for checkpoints)."""
@@ -84,7 +92,7 @@ class KnowledgeBase:
             for table in reversed(self._TABLES):
                 self._db.execute(f"DELETE FROM {table}")
             for table in self._TABLES:
-                for row in data[table]:
+                for row in data.get(table, []):  # checkpoints from before a table existed
                     marks = ", ".join("?" * len(row))
                     self._db.execute(f"INSERT INTO {table} VALUES ({marks})", row)
 
@@ -118,7 +126,30 @@ class KnowledgeBase:
             result.append(Outcome(dict(rows), effect))
         return result
 
+    def lore(self, plant: str | None = None) -> list[str]:
+        """Unlocked lore lines in unlocking order, optionally only those naming a plant."""
+        query, args = "SELECT text FROM lore", ()
+        if plant is not None:
+            query, args = query + " WHERE plant_a = ? OR plant_b = ?", (plant, plant)
+        return [r[0] for r in self._db.execute(query + " ORDER BY id", args)]
+
+    def lore_entries(self) -> list[tuple[str, str, str, int]]:
+        """(plant_a, plant_b, text, turn unlocked) in unlocking order."""
+        return [tuple(r) for r in self._db.execute("SELECT plant_a, plant_b, text, turn FROM lore ORDER BY id")]
+
     # --- writes ------------------------------------------------------------
+
+    def unlock_lore(self, lines: Mapping[tuple[str, str], str], turn: int) -> list[tuple[str, str]]:
+        """Store lore lines (pair -> text); return the pairs that were new."""
+        new = []
+        for (a, b), text in lines.items():
+            cur = self._db.execute(
+                "INSERT OR IGNORE INTO lore (plant_a, plant_b, text, turn) VALUES (?, ?, ?, ?)", (a, b, text, turn)
+            )
+            if cur.rowcount:
+                new.append((a, b))
+        self._db.commit()
+        return new
 
     def log_garden(
         self, state: GardenState, growth_times: Mapping[str, int], also_ready: Iterable[str] = ()

@@ -16,5 +16,8 @@ def run(world: World, args: dict) -> ToolResult:
         growth, outcomes = world.lookup(plant)
         grows = f"grows in {turns(growth)}" if growth is not None else "growth time unknown"
         known = "; ".join(o.render() for o in outcomes) or "none"
-        lines.append(f"{plant}: {grows}. Interactions: {known}.")
+        line = f"{plant}: {grows}. Interactions: {known}."
+        if world.lore:
+            line += " Lore: " + (" ".join(world.kb.lore(plant)) or "none yet.")
+        lines.append(line)
     return ToolResult("\n".join(lines))

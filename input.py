@@ -33,6 +33,7 @@ class ExperimentConfig:
     # user
     goals: tuple[Goal, ...]
     allergy: Allergy | None
+    lore: bool                  # logging potions unlocks herbal lore
     # episode
     turn_cap: int
     prompt_file: Path
@@ -118,6 +119,8 @@ def build_parser() -> argparse.ArgumentParser:
     u = p.add_argument_group("user")
     u.add_argument("--goals", default="target:I:10,time:S:40,target:D:10",
                    help="comma-separated, e.g. 'time:S:30,target:I:10'")
+    u.add_argument("--lore", choices=("on", "off"), default="on",
+                   help="logging a potion unlocks herbal lore about its plants (read with kb_lookup)")
     u.add_argument("--allergy", default="none", help="two plants, e.g. 'nettle+chamomile', or 'none'")
     e = p.add_argument_group("episode")
     e.add_argument("--turn-cap", type=int, default=150)
@@ -179,6 +182,7 @@ def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
         env_seed=args.env_seed if args.env_seed is not None else new_seed(),
         goals=goals,
         allergy=allergy,
+        lore=args.lore == "on",
         turn_cap=args.turn_cap,
         prompt_file=args.prompt_file,
         compactor=args.compactor,

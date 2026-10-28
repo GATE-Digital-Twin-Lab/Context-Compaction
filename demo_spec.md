@@ -20,7 +20,7 @@ A simulated environment for generating agent episodes, so we can study **what a 
 |---|---|
 | **Plant** | Plants any number of plants of any types in free plots |
 | **Log** | Writes any number of facts to the knowledge base |
-| **Brew** | Brews one potion from the inventory; consumes the plants used. An infeasible brew costs 0 turns |
+| **Brew** | Brews **any number of potions** from the inventory in one action; consumes the plants used. All or nothing: the inventory must cover all recipes together, otherwise nothing is brewed and the attempt costs 0 turns. Lets the agent test a batch of combinations after a large harvest without paying a turn per potion |
 | **Skip** | Does nothing; time passes |
 
 Free (0-turn) tools: **Gather** (harvests **all** ready plots into the inventory, freeing them, so they can be replanted in the same turn), **KB lookup**, **inventory lookup**. Gather was an action in earlier versions; making it free removes a pure bookkeeping turn and simplifies planning for small models.
@@ -64,7 +64,13 @@ The quantities, the magnitudes and which potion is the best so far exist **only 
 
 User goals and the allergy are **not** loggable in this version; the agent must remember them. Making the allergy loggable (so protecting it becomes the agent's choice) is a possible later variant.
 
-Lookups are free and return, per plant, its growth time (if logged) and all logged outcome statements involving it (a relational join).
+Lookups are free and return, per plant, its growth time (if logged) and all logged outcome statements involving it (a relational join). With lore on, the lookup also shows the unlocked lore lines naming the plant.
+
+**Herbal lore** (`--lore on`, the default):
+- Each pair of plants that appears together in some stat's plant set has one hand-written lore line (17 of the 28 pairs; `environment/lore.py`), e.g. *"Basil and chamomile are old companions; the herbwives of the valley always bundle them together."* Lines state the **affinity only**, never the stat or the quantities; pairs that share no set have no lore (no negative lore).
+- **Logging a potion** (including a dud) unlocks the lines for every complementary pair among its plants. The text is shown **only by kb_lookup**; the log reply just says that new lore was found (`(the old herbals hold new lore about its plants: read it with kb_lookup)`), without naming the pairs. The agent is told in the system prompt that lore exists and how to get it.
+- What it reveals: every 3-plant recipe contains at least one complementary pair, so most first logs unlock something. 10 trios are mutually complementary: 8 lie inside a real stat set and 2 are false leads ({basil, chamomile, mint}, {mint, nettle, rosemary}). Lore narrows the search for plant sets but says nothing about quantities, so S and W stay hard. elderberry + dill share two sets (I and W) and have a single line.
+- Effect on the study: logging gains a second motive (discovery, besides insurance against compaction). `--lore off` removes it, so the two can be compared. Unlocked lore lives in the KB and is a **recoverable** fact.
 
 ## The logging trade-off (core mechanic)
 
@@ -164,6 +170,7 @@ The user sets the **initial conditions** and the **goals**:
 | Failed / no-effect recipes | conversation only |
 | Planting map (what is planted where) | conversation, **unless logged**; recoverable with one garden log |
 | Observed growth times | conversation, **unless logged**; recoverable when the plant is next ready |
+| Herbal lore | knowledge base once unlocked (by logging a potion); recoverable with a free kb_lookup |
 | The agent's plan / schedule | conversation only |
 
 The inventory, logged facts and the plant catalogue are always available through free lookups.
@@ -222,6 +229,8 @@ Derived knowledge (growth times worked out from the waiting counters, the best p
 - suggests a short notes format, `New facts: …` (with exact numbers) then `Plan: …`, written when a fact is learned. It does **not** ask the agent to restate its whole state every reply; an agent that does so keeps it in the newest message, at the price of a faster-filling context, and that choice is part of what is observed;
 - gives a four-step decision routine (new, known, at most three options, decide) and asks for decisive play: decide once, a no-effect brew is information, keep every plot growing, plant several plots of a plant to vary quantities.
 
+Example recipes in the system prompt never contain a stat's plant set (`tests/test_prompt.py` checks this); an earlier version used the cheapest +20% S recipe as its example and so leaked the S set.
+
 For Qwen3.8, `--reasoning-effort medium` is used: its template's default (`xhigh`) adds an instruction to "consider plausible alternatives", which works against the decision routine; `medium` adds nothing.
 
 Thinking is dropped from **every** reply, including replies within one turn (e.g. kb_lookup → brew); anything needed for the next call goes in the notes. *Possible variant:* keep thinking until the turn's action and drop it at the turn's end (depends on how each chat template treats old thinking). A thinking-off variant, where all reasoning is visible text, is kept as a comparison.
@@ -234,7 +243,7 @@ The garden state and action results **deliberately omit** the current goal, its 
 |---|---|
 | Plant | `{"action": "plant", "plots": {"3": "elderberry", "4": "elderberry", "5": "basil"}}` |
 | Log | `{"action": "log", "garden": true, "potions": [{"id": 3, "labels": {"chamomile": "higher", "rosemary": "even", "mint": "even"}}]}` (either part optional) |
-| Brew | `{"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}}` |
+| Brew | `{"action": "brew", "recipes": [{"mint": 2, "chamomile": 4, "rosemary": 2}, {"elderberry": 2, "sage": 1, "dill": 1}]}` (or `"recipe": {...}` for one potion) |
 | Skip | `{"action": "skip"}` |
 
 **Log parts** (see Knowledge base): `"garden": true` logs growth times of ready plants and planting records of all occupied plots, filled in by the environment. `"potions"` logs chosen potions with the agent's labels (`odd`, `even`, `higher`, `lower`, `present`); the environment adds the plant set and effect.
@@ -255,10 +264,10 @@ A separate garden-view tool is not needed: the garden state is shown at the star
 |---|---|---|
 | Plant | `Planted: plot 3 (elderberry), plot 4 (elderberry). Failed: plot 5 (occupied), plot 12 (does not exist), plot 6 (unknown plant lavender).` | **Partial success:** valid plots are planted, the others are reported with the reason. Costs the turn. |
 | Gather | `Gathered: +2 elderberry, +1 basil. Plots now free: 3, 4, 7.` (or `Gathered nothing.`) | **Free, never fails.** Collects **all** ready plots (counts only, not per plot), updates the inventory, and removes the planting records of the gathered plots. |
-| Brew | `Brewed {"mint": 2, "chamomile": 4, "rosemary": 2} → {"positive": {"S": 20}, "negative": {}} (potion #4)` | Failures (`Not enough plants: need 4 chamomile, have 2.` · `A recipe needs 3–4 distinct plants.`) cost 0 turns; 3 failures → forced Skip. |
+| Brew | `Brewed {"mint": 2, "chamomile": 4, "rosemary": 2} → {"positive": {"S": 20}, "negative": {}} (potion #4)`, one line per potion | **All or nothing.** Failures (`Not enough plants for these recipes together: need 4 chamomile, have 2. Nothing was brewed.` · `Recipe 2: A recipe needs 3–4 distinct plants.`) cost 0 turns; 3 failures → forced Skip. |
 | Skip | `Skipped.` | – |
 | Log | `Logged: growth elderberry = 4 turns, basil = 3 turns; plantings: plot 3 (elderberry), plot 5 (basil); potion #3: (higher) chamomile, even rosemary, even mint → +S.` | **All-or-nothing:** if any potion entry is invalid (unknown potion ID, a label for a plant the potion does not contain, or a label outside the vocabulary), nothing is logged, including the garden part. A failed Log costs **0 turns** and counts toward the 3-failure limit. Plants the agent leaves unlabelled default to `present`. The garden part alone never fails (it may log nothing new). An exact duplicate (same plant set, effect and labels) is reported as `potion #3: already known` and the potion is marked logged. |
-| KB lookup | `chamomile: grows in 4 turns. Interactions: (higher) chamomile, even rosemary, even mint → +S; …` | All known info for the plant: growth time (if logged) and all logged outcome statements involving it, **in the order they were logged** (the last one is the agent's latest belief). |
+| KB lookup | `chamomile: grows in 4 turns. Interactions: (higher) chamomile, even rosemary, even mint → +S; …` | All known info for the plant: growth time (if logged), all logged outcome statements involving it, **in the order they were logged** (the last one is the agent's latest belief), and (lore on) the unlocked lore lines naming it, or `Lore: none yet.` |
 | Inventory | `plants: elderberry: 3, chamomile: 1, basil: 1; potions: #1 (logged), #2, #3` | Potion details are never shown here; they live only in the conversation. |
 
 - **Errors** (malformed JSON, failed brews, failed logs) cost **0 turns**. After **3 failed attempts** in one turn the environment forces a Skip.

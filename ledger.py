@@ -16,9 +16,10 @@ class FactKind(StrEnum):
     BEST = "best"
     PLANTING = "planting"
     GROWTH = "growth"
+    LORE = "lore"
 
 
-RECOVERABLE = {FactKind.PLANTING, FactKind.GROWTH}
+RECOVERABLE = {FactKind.PLANTING, FactKind.GROWTH, FactKind.LORE}
 
 
 @dataclass(frozen=True)
@@ -83,6 +84,8 @@ class Ledger:
                 logged = plot in plantings
             elif fact.kind is FactKind.GROWTH:
                 logged = fact.id.split(":")[1] in growth
+            elif fact.kind is FactKind.LORE:
+                logged = True
             rows.append({**asdict(fact), "recoverable": fact.recoverable, "logged": logged})
         return rows
 
@@ -132,5 +135,8 @@ class Ledger:
         for plant, turn in sorted(self._grown.items()):
             g = world.garden.growth_times[plant]
             add(f"growth:{plant}", FactKind.GROWTH, f"{plant} grows in {g} turn{'s' if g != 1 else ''}.", turn)
+
+        for a, b, text, turn in world.kb.lore_entries():
+            add(f"lore:{a}+{b}", FactKind.LORE, f"Lore on {a} and {b}: {text}", turn)
 
         return facts

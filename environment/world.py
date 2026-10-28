@@ -1,14 +1,16 @@
 """The complete world state: garden, inventory, knowledge base, goals and turn clock."""
 
 import random
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 
-from environment.brewer import PLANTS, brew, validate_recipe
+from environment.brewer import PLANTS, RecipeError, brew, validate_recipe
 from environment.garden import Garden, GatherResult, PlantResult, sample_growth_times
 from environment.goals import Allergy, Goal, GoalKind, GoalResult, goal_intensity, score_goal, validate_allergy
 from environment.inventory import Inventory, Potion
 from environment.knowledge_base import LABELS, GardenLogResult, KnowledgeBase, LogError, Outcome, effect_label
+from environment.lore import LORE, pairs_among
 from environment.view import GardenView, garden_view
 
 
@@ -25,6 +27,7 @@ class PotionLog:
     potion_id: int
     outcome: Outcome
     new: bool  # False: exact duplicate, already known
+    new_lore: int = 0  # lore lines this log unlocked for the potion's plants
 
 
 @dataclass(frozen=True)
@@ -48,6 +51,7 @@ class World:
     goals: list[Goal]
     allergy: Allergy | None
     turn_cap: int
+    lore: bool = True  # logging potions unlocks herbal lore
     turn: int = 1
     goal_index: int = 0
     goal_start: int = 1
@@ -65,13 +69,14 @@ class World:
         turn_cap: int,
         seed: int,
         kb_path: str = ":memory:",
+        lore: bool = True,
     ) -> "World":
         if not goals:
             raise ValueError("An episode needs at least one goal.")
         validate_allergy(allergy, goals)
         growth = sample_growth_times(PLANTS, *growth_range, random.Random(seed))
         kb = KnowledgeBase(kb_path, catalogue=[(p, None) for p in PLANTS])
-        return cls(Garden(size, growth), Inventory(), kb, list(goals), allergy, turn_cap)
+        return cls(Garden(size, growth), Inventory(), kb, list(goals), allergy, turn_cap, lore)
 
     def to_dict(self) -> dict:
         """Complete state, including the knowledge base contents."""
@@ -82,6 +87,7 @@ class World:
             "goals": [g.to_dict() for g in self.goals],
             "allergy": sorted(self.allergy.plants) if self.allergy else None,
             "turn_cap": self.turn_cap,
+            "lore": self.lore,
             "turn": self.turn,
             "goal_index": self.goal_index,
             "goal_start": self.goal_start,
@@ -101,6 +107,7 @@ class World:
             goals=[Goal.from_dict(g) for g in data["goals"]],
             allergy=Allergy(frozenset(data["allergy"])) if data["allergy"] else None,
             turn_cap=data["turn_cap"],
+            lore=data.get("lore", False),
             turn=data["turn"],
             goal_index=data["goal_index"],
             goal_start=data["goal_start"],
@@ -130,9 +137,27 @@ class World:
 
     def brew(self, recipe: Mapping[str, int]) -> Potion:
         """Raises RecipeError or InfeasibleBrew (no turn cost) before changing anything."""
-        validate_recipe(recipe)
-        if shortages := self.inventory.shortages(recipe):
+        return self.brew_all([recipe])[0]
+
+    def brew_all(self, recipes: Sequence[Mapping[str, int]]) -> list[Potion]:
+        """Brew several potions in one action, all or nothing: every recipe must be valid and the
+        inventory must cover all of them together. Raises RecipeError or InfeasibleBrew before
+        changing anything."""
+        if not recipes:
+            raise RecipeError("Give at least one recipe.")
+        for i, recipe in enumerate(recipes, start=1):
+            try:
+                validate_recipe(recipe)
+            except RecipeError as err:
+                raise RecipeError(f"Recipe {i}: {err}" if len(recipes) > 1 else str(err)) from None
+        total: Counter[str] = Counter()
+        for recipe in recipes:
+            total.update(recipe)
+        if shortages := self.inventory.shortages(total):
             raise InfeasibleBrew(shortages)
+        return [self._brew_one(recipe) for recipe in recipes]
+
+    def _brew_one(self, recipe: Mapping[str, int]) -> Potion:
         self.inventory.consume(recipe)
         potion = self.inventory.add_potion(recipe, brew(recipe), self.turn)
         goal = self.current_goal
@@ -163,7 +188,11 @@ class World:
             effect = effect_label(potion.effect)
             new = self.kb.log_outcome(labels, effect, potion.id, self.turn)
             potion.logged = True
-            logs.append(PotionLog(potion.id, Outcome(labels, effect), new))
+            unlocked = 0
+            if self.lore:
+                pairs = pairs_among(potion.recipe)
+                unlocked = len(self.kb.unlock_lore({p: LORE[p] for p in pairs}, self.turn))
+            logs.append(PotionLog(potion.id, Outcome(labels, effect), new, unlocked))
         return LogResult(garden_result, logs)
 
     def skip(self) -> None:

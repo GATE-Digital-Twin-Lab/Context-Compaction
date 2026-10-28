@@ -50,7 +50,7 @@ Parameters (`python -c "from input import build_parser; build_parser().print_hel
 |---|---|
 | Agent | `--agent` (llm / random / oracle), `--llm-name`, `--llm-url`, `--thinking` (on / off), `--reasoning-effort`, `--temperature`, `--top-p`, `--max-tokens` (per reply, thinking included), `--llm-seed` |
 | Garden | `--garden-size`, `--growth-min`, `--growth-max`, `--env-seed` |
-| User | `--goals` (e.g. `time:S:30,target:I:10`), `--allergy` (e.g. `nettle+chamomile` or `none`) |
+| User | `--goals` (e.g. `time:S:30,target:I:10`), `--allergy` (e.g. `nettle+chamomile` or `none`), `--lore` (on / off: logging a potion unlocks herbal lore, read with kb_lookup) |
 | Episode | `--turn-cap`, `--prompt-file` |
 | Compaction | `--compactor`, `--context-window` (tokens), `--compaction-trigger` (fraction of the window, default 0.8; checked only between turns) |
 | Output | `--runs-dir`, `--temp-dir` |

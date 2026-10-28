@@ -30,5 +30,8 @@ def run(world: World, args: dict) -> ToolResult:
     if result.garden and result.garden.plantings:
         parts.append("plantings: " + ", ".join(f"plot {n} ({p})" for n, p in result.garden.plantings.items()))
     for log in result.potions:
-        parts.append(f"potion #{log.potion_id}: " + (log.outcome.render() if log.new else "already known"))
+        text = f"potion #{log.potion_id}: " + (log.outcome.render() if log.new else "already known")
+        if log.new_lore:
+            text += " (the old herbals hold new lore about its plants: read it with kb_lookup)"
+        parts.append(text)
     return ToolResult("Logged: " + ("; ".join(parts) if parts else "nothing new") + ".", ends_turn=True)

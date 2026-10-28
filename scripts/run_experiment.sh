@@ -26,6 +26,7 @@ ENV_SEED=""               # empty: random, recorded in params.json
 # --- user ---
 GOALS="target:I:10"       # one goal per episode while testing; several: "target:I:10,time:S:40"
 ALLERGY="none"            # e.g. nettle+chamomile
+LORE="on"                 # on | off: logging a potion unlocks herbal lore about its plants
 
 # --- episode ---
 TURN_CAP="150"
@@ -43,7 +44,7 @@ TEMP_DIR="temp"
 args=(
   --agent "$AGENT" --llm-url "$LLM_URL" --thinking "$THINKING" --max-tokens "$MAX_TOKENS"
   --garden-size "$GARDEN_SIZE" --growth-min "$GROWTH_MIN" --growth-max "$GROWTH_MAX"
-  --goals "$GOALS" --allergy "$ALLERGY"
+  --goals "$GOALS" --allergy "$ALLERGY" --lore "$LORE"
   --turn-cap "$TURN_CAP" --prompt-file "$PROMPT_FILE"
   --compactor "$COMPACTOR" --compaction-trigger "$COMPACTION_TRIGGER"
   --runs-dir "$RUNS_DIR" --temp-dir "$TEMP_DIR"
