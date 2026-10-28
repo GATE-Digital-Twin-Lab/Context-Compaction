@@ -40,6 +40,7 @@ Only the log action writes to it. The environment fills in the facts, so entries
 - "garden": true records the growth time of every plant type that is ready (or was gathered) this turn and is not yet recorded, and which plant is in every occupied plot not yet recorded. A plot's record is removed when the plot is gathered.
 - "potions" records the potions you choose. You label each plant of a potion with one of: odd, even, higher (more is better), lower (less is better), present (no information; the default). The knowledge base stores the plant set, your labels, and the effect's stat and sign, but never quantities or intensities. Entries are never changed: a new entry is added beside the older ones.
 - Herbal lore: logging a potion also consults the old herbals about its plants, and sometimes they hold lore about which plants belong together. Lore is unlocked only by logging a potion, even one without effect, and you read it with kb_lookup. The log tells you when new lore was found. Lore never expires: once unlocked, it stays in the knowledge base.
+- kb_lookup answers in three parts for all the plants you ask about together: "Growth:" (the logged growth time of each plant, or unknown), "Interactions:" (every logged potion involving any of them, one per line, in the order you logged them, so a later entry reflects your later understanding) and "Lore:" (every unlocked lore line naming any of them). Each entry is shown once, so one lookup for several plants is enough.
 
 # Your memory, and why logging matters
 
