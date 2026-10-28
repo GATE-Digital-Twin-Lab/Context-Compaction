@@ -203,9 +203,6 @@ class World:
     def view(self) -> GardenView:
         return garden_view(self.garden.state(self.turn), self.kb)
 
-    def lookup(self, plant: str) -> tuple[int | None, list[Outcome]]:
-        return self.kb.growth_times().get(plant), self.kb.outcomes(plant)
-
     # --- turn clock ------------------------------------------------------------
 
     def end_turn(self) -> TurnEnd:

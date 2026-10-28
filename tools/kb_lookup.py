@@ -11,13 +11,17 @@ def run(world: World, args: dict) -> ToolResult:
     catalogue = world.kb.catalogue()
     if unknown := [p for p in plants if p not in catalogue]:
         raise ToolError(f"Unknown plant {unknown[0]}.")
-    lines = []
-    for plant in plants:
-        growth, outcomes = world.lookup(plant)
-        grows = f"grows in {turns(growth)}" if growth is not None else "growth time unknown"
-        known = "; ".join(o.render() for o in outcomes) or "none"
-        line = f"{plant}: {grows}. Interactions: {known}."
-        if world.lore:
-            line += " Lore: " + (" ".join(world.kb.lore(plant)) or "none yet.")
-        lines.append(line)
-    return ToolResult("\n".join(lines))
+    plants = list(dict.fromkeys(plants))
+    growth = world.kb.growth_times()
+    grows = ", ".join(f"{p} {turns(growth[p])}" if p in growth else f"{p} unknown" for p in plants)
+    sections = [f"Growth: {grows}.", _listed("Interactions", [o.render() for o in world.kb.outcomes(*plants)], "none.")]
+    if world.lore:
+        sections.append(_listed("Lore", world.kb.lore(*plants), "none yet."))
+    return ToolResult("\n".join(sections))
+
+
+def _listed(title: str, items: list[str], empty: str) -> str:
+    """'Title: none.' or the title followed by one '- item' line per item (each shown once)."""
+    if not items:
+        return f"{title}: {empty}"
+    return "\n".join([f"{title}:"] + [f"- {item}" for item in items])

@@ -169,8 +169,19 @@ def test_log_potions_and_lookup(world):
     lookup = d.handle({"tool": "kb_lookup", "plants": ["sage", "rosemary"]})
     assert not lookup.ends_turn
     assert lookup.text == (
-        "sage: growth time unknown. Interactions: dill, elderberry, sage → +I; dill, (higher) elderberry, sage → +I.\n"
-        "rosemary: growth time unknown. Interactions: none."
+        "Growth: sage unknown, rosemary unknown.\n"
+        "Interactions:\n"
+        "- dill, elderberry, sage → +I\n"
+        "- dill, (higher) elderberry, sage → +I"
+    )
+    world.kb.log_garden(world.garden.state(world.turn), {"dill": 6}, also_ready=["dill"])
+    both = d.handle({"tool": "kb_lookup", "plants": ["dill", "elderberry", "rosemary", "dill"]}).text
+    assert both == (                                   # every interaction once, even if it names several plants
+        "Growth: dill 6 turns, elderberry unknown, rosemary unknown.\n"
+        "Interactions:\n"
+        "- dill, elderberry, mint → none\n"
+        "- dill, elderberry, sage → +I\n"
+        "- dill, (higher) elderberry, sage → +I"
     )
     assert d.handle({"tool": "inventory"}).text == (
         "plants: sage: 1; potions: #1 (logged), #2 (logged), #3 (logged)"
@@ -185,10 +196,13 @@ def test_logging_unlocks_lore_read_with_lookup(world):
     text = act(d, {"action": "log", "potions": [{"id": 1}]})
     assert text == ("Logged: potion #1: dill, elderberry, mint → none "
                     "(the old herbals hold new lore about its plants: read it with kb_lookup).")
-    assert d.handle({"tool": "kb_lookup", "plants": ["dill"]}).text.endswith("Lore: " + LORE[("dill", "elderberry")])
+    assert d.handle({"tool": "kb_lookup", "plants": ["dill"]}).text.endswith("Lore:\n- " + LORE[("dill", "elderberry")])
     assert d.handle({"tool": "kb_lookup", "plants": ["mint"]}).text.endswith("Lore: none yet.")
     act(d, {"action": "log", "potions": [{"id": 2}]})                      # adds dill+sage, elderberry+sage
     assert world.kb.lore("sage") == [LORE[("dill", "sage")], LORE[("elderberry", "sage")]]
+    assert d.handle({"tool": "kb_lookup", "plants": ["dill", "sage"]}).text.endswith(
+        "Lore:\n" + "\n".join("- " + LORE[pair] for pair in [("dill", "elderberry"), ("dill", "sage"), ("elderberry", "sage")])
+    )
     assert act(d, {"action": "log", "potions": [{"id": 2}]}) == "Logged: potion #2: already known."   # nothing new
 
 

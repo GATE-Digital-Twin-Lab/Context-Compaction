@@ -35,6 +35,10 @@ CREATE TABLE IF NOT EXISTS outcome_plants(
 """
 
 
+def _marks(values: tuple) -> str:
+    return ", ".join("?" * len(values))
+
+
 class LogError(ValueError):
     """Invalid log entry (e.g. a label outside the vocabulary)."""
 
@@ -93,8 +97,7 @@ class KnowledgeBase:
                 self._db.execute(f"DELETE FROM {table}")
             for table in self._TABLES:
                 for row in data.get(table, []):  # checkpoints from before a table existed
-                    marks = ", ".join("?" * len(row))
-                    self._db.execute(f"INSERT INTO {table} VALUES ({marks})", row)
+                    self._db.execute(f"INSERT INTO {table} VALUES ({_marks(row)})", row)
 
     # --- reads -------------------------------------------------------------
 
@@ -110,15 +113,13 @@ class KnowledgeBase:
     def plantings(self) -> dict[int, str]:
         return dict(self._db.execute("SELECT plot, plant FROM plantings ORDER BY plot"))
 
-    def outcomes(self, plant: str | None = None) -> list[Outcome]:
-        """Outcome statements in logging order, optionally only those involving a plant."""
+    def outcomes(self, *plants: str) -> list[Outcome]:
+        """Outcome statements in logging order, optionally only those involving any of some plants."""
         query = "SELECT id, effect FROM outcomes"
-        args: tuple = ()
-        if plant is not None:
-            query += " WHERE id IN (SELECT outcome_id FROM outcome_plants WHERE plant = ?)"
-            args = (plant,)
+        if plants:
+            query += f" WHERE id IN (SELECT outcome_id FROM outcome_plants WHERE plant IN ({_marks(plants)}))"
         result = []
-        for oid, effect in self._db.execute(query + " ORDER BY id", args).fetchall():
+        for oid, effect in self._db.execute(query + " ORDER BY id", plants).fetchall():
             rows = self._db.execute(
                 "SELECT plant, label FROM outcome_plants WHERE outcome_id = ? ORDER BY plant",
                 (oid,),
@@ -126,12 +127,12 @@ class KnowledgeBase:
             result.append(Outcome(dict(rows), effect))
         return result
 
-    def lore(self, plant: str | None = None) -> list[str]:
-        """Unlocked lore lines in unlocking order, optionally only those naming a plant."""
-        query, args = "SELECT text FROM lore", ()
-        if plant is not None:
-            query, args = query + " WHERE plant_a = ? OR plant_b = ?", (plant, plant)
-        return [r[0] for r in self._db.execute(query + " ORDER BY id", args)]
+    def lore(self, *plants: str) -> list[str]:
+        """Unlocked lore lines in unlocking order, optionally only those naming any of some plants."""
+        query = "SELECT text FROM lore"
+        if plants:
+            query += f" WHERE plant_a IN ({_marks(plants)}) OR plant_b IN ({_marks(plants)})"
+        return [r[0] for r in self._db.execute(query + " ORDER BY id", plants * 2)]
 
     def lore_entries(self) -> list[tuple[str, str, str, int]]:
         """(plant_a, plant_b, text, turn unlocked) in unlocking order."""
