@@ -27,6 +27,7 @@ checkpoint.py               per-turn checkpoints: saves the full state, restores
 agents/                     non-LLM agents for testing, parameter tuning and baselines (random, scripted oracle)
 prompts/                    system prompt and user-message templates as text files
 tests/                      unit tests (brewer rules, garden timing, logging edge cases)
+game/                       browser game: a human plays the agent with the same messages and calls (no LLM, no compaction); see game/README.md
 runs/                       results (see below)
 temp/                       working data during a run (see below)
 Papers/                     literature review (papers.xlsx)

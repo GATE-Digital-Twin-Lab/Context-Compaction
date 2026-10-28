@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Potion Garden</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" class="brand-icon" aria-hidden="true">
+        <path d="M12 3h8v3h-1v6l7 11a4 4 0 0 1-3.4 6H9.4A4 4 0 0 1 6 23l7-11V6h-1z" fill="var(--potion)" opacity=".9"/>
+        <path d="M8.5 21h15l1.6 2.6a2 2 0 0 1-1.7 3.1H8.6a2 2 0 0 1-1.7-3.1z" fill="var(--accent)"/>
+      </svg>
+      <h1>Potion Garden</h1>
+    </div>
+    <div class="turn-badge" id="turnBadge">Turn 1</div>
+    <nav class="top-actions">
+      <button class="ghost" id="btnBriefing">Briefing</button>
+      <button class="ghost" id="btnResults" hidden>Results</button>
+      <button class="ghost" id="btnNew">New game</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="board">
+      <!-- Garden -->
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Garden</h2>
+          <span class="hint">Drag a seed packet onto a free plot, or click a packet and then plots.</span>
+        </div>
+        <div class="seed-shelf" id="seedShelf"></div>
+        <div class="garden" id="garden"></div>
+        <div class="panel-foot">
+          <button class="free" id="btnGather" title='{"tool": "gather"}'>Gather ready plots <span class="cost">free</span></button>
+          <span class="spacer"></span>
+          <button class="ghost small" id="btnClearStaged">Clear</button>
+          <button class="action" id="btnPlant" title='{"action": "plant", ...}'>Plant <span class="cost">1 turn</span></button>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <!-- Inventory -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Inventory</h2>
+            <button class="free small" id="btnInventory" title='{"tool": "inventory"}'>Ask <span class="cost">free</span></button>
+          </div>
+          <div class="sub">Plants <span class="hint">drag into the cauldron</span></div>
+          <div class="chips" id="invPlants"></div>
+          <div class="sub">Potions <span class="hint">drag into the log book</span></div>
+          <div class="chips" id="invPotions"></div>
+        </div>
+
+        <!-- Cauldron -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Cauldron</h2>
+            <span class="hint">3–4 distinct plants per recipe</span>
+          </div>
+          <div id="recipes" class="recipes"></div>
+          <div class="panel-foot">
+            <button class="ghost small" id="btnAddRecipe">+ Recipe</button>
+            <span class="spacer"></span>
+            <button class="action" id="btnBrew" title='{"action": "brew", ...}'>Brew <span class="cost">1 turn</span></button>
+          </div>
+        </div>
+
+        <!-- Log book -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Log book</h2>
+            <span class="hint">click a plant to cycle its label</span>
+          </div>
+          <label class="toggle"><input type="checkbox" id="logGarden"> Garden <span class="hint">growth times of ready plants, and plantings</span></label>
+          <div id="logEntries" class="log-entries"></div>
+          <div class="panel-foot">
+            <span class="spacer"></span>
+            <button class="action" id="btnLog" title='{"action": "log", ...}'>Log <span class="cost">1 turn</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conversation -->
+    <aside class="panel convo-panel">
+      <div class="panel-head">
+        <h2>Conversation</h2>
+        <span class="hint">everything the agent would see; nothing is ever summarised</span>
+      </div>
+      <div class="convo" id="convo"></div>
+      <div class="reply">
+        <textarea id="notes" rows="2" placeholder="Your notes (sent with your next call, like the agent's visible notes). New facts: … Plan: …"></textarea>
+        <div class="lookup">
+          <div class="chips small" id="lookupPlants"></div>
+          <button class="free small" id="btnLookup" title='{"tool": "kb_lookup", ...}'>Look up <span class="cost">free</span></button>
+        </div>
+        <div class="reply-row">
+          <input id="rawCall" type="text" spellcheck="false" placeholder='Or type a raw call: {"action": "skip"}'>
+          <button class="ghost small" id="btnRaw">Send</button>
+          <button class="action" id="btnSkip" title='{"action": "skip"}'>Skip <span class="cost">1 turn</span></button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Dialogs -->
+  <dialog id="dlgSetup" class="dialog">
+    <form method="dialog" id="setupForm">
+      <h2>New episode</h2>
+      <p class="muted">The same parameters as <code>scripts/run_experiment.sh</code>. Same seed, same garden as an agent run.</p>
+      <div class="form-grid">
+        <label>Garden size <input name="garden_size" type="number" min="1" max="40" required></label>
+        <label>Turn cap <input name="turn_cap" type="number" min="1" required></label>
+        <label>Growth min <input name="growth_min" type="number" min="1" required></label>
+        <label>Growth max <input name="growth_max" type="number" min="1" required></label>
+        <label class="wide">Goals <input name="goals" type="text" required placeholder="target:I:10,time:S:40"></label>
+        <label class="wide">Allergy <input name="allergy" type="text" required placeholder="none or nettle+chamomile"></label>
+        <label>Env seed <input name="env_seed" type="text" placeholder="random"></label>
+        <label class="check"><input name="lore" type="checkbox"> Herbal lore</label>
+      </div>
+      <p class="form-error" id="setupError"></p>
+      <div class="dialog-foot">
+        <button type="button" class="ghost" id="btnSetupCancel">Cancel</button>
+        <button type="submit" class="action" id="btnSetupStart">Start</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgBriefing" class="dialog wide">
+    <h2>Briefing</h2>
+    <div class="tabs">
+      <button class="tab active" data-tab="howto">How to play</button>
+      <button class="tab" data-tab="prompt">System prompt (what the agent is told)</button>
+    </div>
+    <div class="tab-body" id="tabHowto">
+      <p>You play the agent. You get exactly the agent's messages: the system prompt, the user's opening message, and the environment's replies. The controls send the same JSON calls the agent would send, and every call appears in the conversation.</p>
+      <table class="map">
+        <tr><th>Control</th><th>Call it sends</th><th>Cost</th></tr>
+        <tr><td>Seed packets → plots, then <b>Plant</b></td><td><code>{"action": "plant", "plots": {...}}</code></td><td>1 turn</td></tr>
+        <tr><td>Plants → cauldron, then <b>Brew</b> (several recipes at once)</td><td><code>{"action": "brew", "recipes": [...]}</code></td><td>1 turn</td></tr>
+        <tr><td>Garden switch and/or potions → log book, then <b>Log</b></td><td><code>{"action": "log", "garden": true, "potions": [...]}</code></td><td>1 turn</td></tr>
+        <tr><td><b>Skip</b></td><td><code>{"action": "skip"}</code></td><td>1 turn</td></tr>
+        <tr><td><b>Gather</b></td><td><code>{"tool": "gather"}</code></td><td>free</td></tr>
+        <tr><td><b>Look up</b> (pick plants first)</td><td><code>{"tool": "kb_lookup", "plants": [...]}</code></td><td>free</td></tr>
+        <tr><td>Inventory <b>Ask</b></td><td><code>{"tool": "inventory"}</code></td><td>free</td></tr>
+      </table>
+      <p>The board shows only what the agent can see. A plot shows its plant only after you log the garden, and a potion never shows its recipe or effect. Your goal, your allergy and every brew result are only in the conversation, so write down what matters in your notes. The difference from the agent: nothing here is ever summarised or forgotten. There is no compaction.</p>
+      <p class="muted">Errors (bad recipes, not enough plants, invalid logs) cost no turn, but after 3 failed attempts in one turn the turn is skipped.</p>
+    </div>
+    <div class="tab-body prompt" id="tabPrompt" hidden></div>
+    <div class="dialog-foot">
+      <button class="action" id="btnBriefingClose">Let's grow</button>
+    </div>
+  </dialog>
+
+  <dialog id="dlgResults" class="dialog wide">
+    <h2 id="resultsTitle">Episode over</h2>
+    <div id="resultsBody"></div>
+    <div class="dialog-foot">
+      <button class="ghost" id="btnDlTranscript">Download transcript.md</button>
+      <button class="ghost" id="btnDlRun">Download run.json</button>
+      <span class="spacer"></span>
+      <button class="ghost" id="btnResultsClose">Close</button>
+      <button class="action" id="btnResultsNew">New game</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
