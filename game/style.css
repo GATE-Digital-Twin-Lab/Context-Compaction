@@ -14,6 +14,7 @@
   --soil-dark: #6d5139;
   --soil-free: #c7ad8b;
   --glow: #f2c94c;
+  --note: #b5577d;
   --harvest: #c98a12;
   --lookup: #23827d;
   --user: #b7862b;
@@ -44,8 +45,7 @@
     --user: #e0b25a;
     --env: #a3b2a8;
     --agent: #7fcf92;
-  --harvest: #e8b53c;
-  --lookup: #5cc4bd;
+    --note: #e38fb0;
     --harvest: #e8b53c;
     --lookup: #5cc4bd;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
@@ -71,6 +71,9 @@
   --user: #e0b25a;
   --env: #a3b2a8;
   --agent: #7fcf92;
+  --note: #e38fb0;
+  --harvest: #e8b53c;
+  --lookup: #5cc4bd;
   --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
   color-scheme: dark;
 }
@@ -380,6 +383,7 @@ button.free .cost { background: transparent; border: 1px solid currentColor; }
 .msg.k-lookup { --k: var(--lookup); }
 .msg.k-skip { --k: var(--muted); }
 .msg.k-error { --k: var(--warn); }
+.msg.k-note { --k: var(--note); }
 .msg.k-error .body { color: var(--warn); font-weight: 500; }
 .msg.agent { margin-left: 22px; border-left: none; border-right: 4px solid var(--k); border-radius: 10px 0 0 10px; }
 .msg.agent .who { text-align: right; }
@@ -444,6 +448,9 @@ button.free .cost { background: transparent; border: 1px solid currentColor; }
 
 .reply { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; display: flex; gap: 8px; align-items: stretch; }
 .reply textarea { flex: 1; min-width: 0; }
+.reply button { align-self: flex-end; }
+.skip-bar { display: flex; align-items: center; gap: 12px; }
+.skip-bar h2 { margin-bottom: 2px; }
 textarea, input[type="text"], input[type="number"] {
   font: inherit;
   color: var(--ink);

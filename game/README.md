@@ -11,12 +11,12 @@ Open `game/index.html` in a browser (double-click works, no server or build step
 | Drag seed packets onto plots (or click a packet, then plots), then **Plant** | `{"action": "plant", "plots": {...}}` | 1 turn |
 | Drag plants into the cauldron (several recipes = one batch), then **Brew** | `{"action": "brew", "recipe(s)": ...}` | 1 turn |
 | Garden switch and/or potions dragged into the log book with labels, then **Log** | `{"action": "log", ...}` | 1 turn |
-| **Skip** | `{"action": "skip"}` | 1 turn |
+| **Skip** (below the cauldron and log book) | `{"action": "skip"}` | 1 turn |
 | **Gather**, knowledge base **Look up**, inventory **Ask** | `{"tool": "gather" / "kb_lookup" / "inventory"}` | free |
 
-The notes box is the agent's visible notes: it is sent with your next call and stays in the conversation. The conversation is shown in a readable form (coloured by kind: garden, planting, harvest, cauldron, knowledge base); hover a message to see the exact text the agent gets, which is also what the downloaded `transcript.md` contains.
+The notes box is the agent's visible notes. **Add note** (or Enter) puts a note into the conversation at any time, for free; text still in the box when you make a move is sent with that move, like the agent's notes. Notes appear as `agent (note)` in the downloaded transcript. The conversation is shown in a readable form (coloured by kind: garden, planting, harvest, cauldron, knowledge base); hover a message to see the exact text the agent gets, which is also what the downloaded `transcript.md` contains.
 
-The board shows only what the agent can see: a plot shows its plant only once its planting is logged, turns left only once the growth time is logged too, and potions never show their recipe or effect. The goal, the allergy and brew results appear only in the conversation. Errors cost no turn; 3 failed attempts in a turn skip it; 20 calls without an action skip it.
+The board shows only what the agent can see: a plot shows its plant only once its planting is logged, turns left only once the growth time is logged too, and potions never show their amounts or effect. One deliberate exception: the log book offers labels only for the plants a potion contains, so it reveals a potion's plant set, which the agent has to remember. The goal, the allergy and brew results appear only in the conversation. Errors cost no turn; 3 failed attempts in a turn skip it; 20 calls without an action skip it.
 
 The game is saved in the browser (localStorage) after every call, so a reload continues where you were. At the end, the results dialog shows the per-goal scores (as in `summary.json`), every potion brewed and the hidden growth times, and offers `transcript.md` (same format as a run's) and `run.json` (params, summary, actions, final state) for comparison with agent runs.
 

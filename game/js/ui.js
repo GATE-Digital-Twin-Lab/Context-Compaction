@@ -161,7 +161,12 @@
   function logAction() {
     const call = { action: "log" };
     if (ui.logGarden) call.garden = true;
-    if (ui.entries.length) call.potions = ui.entries.map((e) => ({ id: e.id, labels: e.labels }));
+    if (ui.entries.length) {
+      call.potions = ui.entries.map((e) => {
+        const plants = potionPlants(e.id);
+        return { id: e.id, labels: Object.fromEntries(Object.entries(e.labels).filter(([p]) => plants.includes(p))) };
+      });
+    }
     if (!call.garden && !call.potions) return;
     const res = send(call);
     if (res && !res.error) {
@@ -169,6 +174,15 @@
       ui.entries = [];
       render();
     }
+  }
+
+  function addNote() {
+    const text = $("notes").value.trim();
+    if (!text || !game || game.over) return;
+    game.note(text);
+    $("notes").value = "";
+    save();
+    render();
   }
 
   function lookupAction() {
@@ -227,7 +241,7 @@
     $("btnBrew").disabled = over || !n;
     $("btnBrew").innerHTML = `Brew${n > 1 ? " " + n + " potions" : ""} <span class="cost">1 turn</span>`;
     $("btnLog").disabled = over || (!ui.logGarden && !ui.entries.length);
-    for (const id of ["btnGather", "btnInventory", "btnLookup", "btnSkip", "btnAddRecipe"]) $(id).disabled = over;
+    for (const id of ["btnGather", "btnInventory", "btnLookup", "btnSkip", "btnAddRecipe", "btnNote"]) $(id).disabled = over;
     $("logGarden").checked = ui.logGarden;
   }
 
@@ -295,17 +309,20 @@
     }).join("");
   }
 
+  // A potion's entry offers labels only for the plants it contains.
+  const potionPlants = (id) => PLANTS.filter((p) => p in (game.world.inventory.potions[id - 1]?.recipe || {}));
+
   function renderLog() {
     $("logEntries").innerHTML = ui.entries.length
       ? ui.entries.map((e, i) => {
-        const labs = PLANTS.map((p) => {
+        const labs = potionPlants(e.id).map((p) => {
           const l = e.labels[p];
           return `<button class="lab${l ? " set" : ""}" data-entry="${i}" data-lab="${p}">${l ? `<b>${l}</b> ` : ""}${p}</button>`;
         }).join("");
         return `<div class="entry"><div class="entry-head"><span class="dot"></span>Potion #${e.id}
           <button class="x" data-del-entry="${i}" title="Remove">×</button></div><div class="labels">${labs}</div></div>`;
       }).join("")
-      : `<span class="empty">Drop potions here. Label only plants the potion contains (${LABELS.join(", ")}); unlabelled ones count as present.</span>`;
+      : `<span class="empty">Drop potions here, then click their plants to label them (${LABELS.join(", ")}). Unlabelled plants count as present.</span>`;
   }
 
   function renderLookup() {
@@ -455,7 +472,9 @@
   function messageHtml(m) {
     let kind, who, body;
     try {
-      if (m.role === "agent") {
+      if (m.note) {
+        [kind, who, body] = ["note", "Your note", `<div class="line">${esc(m.content)}</div>`];
+      } else if (m.role === "agent") {
         const lines = m.content.split("\n");
         const [k, title, details] = describeCall(JSON.parse(lines.pop()));
         const notes = lines.join("\n").trim();
@@ -627,7 +646,13 @@
     $("btnGather").onclick = () => send({ tool: "gather" });
     $("btnInventory").onclick = () => send({ tool: "inventory" });
     $("btnSkip").onclick = () => send({ action: "skip" });
-    $("notes").onkeydown = (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) $("notes").blur(); };
+    $("btnNote").onclick = addNote;
+    $("notes").onkeydown = (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        addNote();
+      }
+    };
     $("btnAddRecipe").onclick = () => { ui.recipes.push({}); ui.active = ui.recipes.length - 1; render(); };
     $("logGarden").onchange = (e) => { ui.logGarden = e.target.checked; render(); };
     $("btnNew").onclick = openSetup;

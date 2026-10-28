@@ -97,6 +97,16 @@
           </div>
         </div>
       </div>
+
+      <!-- Skip -->
+      <div class="panel skip-bar">
+        <div>
+          <h2>Skip</h2>
+          <span class="hint">Do nothing this turn and let time pass.</span>
+        </div>
+        <span class="spacer"></span>
+        <button class="action" id="btnSkip" title='{"action": "skip"}'>Skip <span class="cost">1 turn</span></button>
+      </div>
     </section>
 
     <!-- Conversation -->
@@ -107,8 +117,8 @@
       </div>
       <div class="convo" id="convo"></div>
       <div class="reply">
-        <textarea id="notes" rows="2" placeholder="Your notes (sent with your next call, like the agent's visible notes). New facts: … Plan: …"></textarea>
-        <button class="action" id="btnSkip" title='{"action": "skip"}'>Skip <span class="cost">1 turn</span></button>
+        <textarea id="notes" rows="2" placeholder="Write a note… (Enter adds it, Shift+Enter for a new line)" title="Notes go into the conversation for free. Text left here when you make a move is sent with that move."></textarea>
+        <button class="free" id="btnNote">Add note <span class="cost">free</span></button>
       </div>
     </aside>
   </main>
@@ -159,7 +169,7 @@
       <p>Each turn you can use the free buttons as often as you like, then make one move that costs a turn. That move ends the turn.</p>
 
       <h3>What you can see</h3>
-      <p>You see only what the agent sees. A plot shows its plant only after you log the garden, and a potion never shows its recipe or effect. Ready plots glow. Your goal, the plants you must not combine and every brew result appear only in the conversation, so use the notes box to write down what matters; your notes are sent with your next move, like the agent's. Unlike the agent, you never forget: nothing in the conversation is summarised.</p>
+      <p>You see only what the agent sees. A plot shows its plant only after you log the garden, and a potion never shows its amounts or effect (the log book only lists which plants it contains, so you can label them). Ready plots glow. Your goal, the plants you must not combine and every brew result appear only in the conversation, so write down what matters in the notes box under the conversation: <b>Add note</b> puts a note in the conversation at any time, for free. Unlike the agent, you never forget: nothing in the conversation is summarised.</p>
 
       <h3>Mistakes</h3>
       <p>An invalid move, such as a recipe with too few plants or more plants than you have, costs no turn, and you are told what went wrong. After 3 mistakes in one turn, the turn is skipped.</p>

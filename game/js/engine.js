@@ -638,6 +638,11 @@ const PG = (() => {
       return res;
     }
 
+    /** A note written between calls: it stays in the conversation, costs nothing and is not a call. */
+    note(text) {
+      this.s.messages.push({ turn: this.s.world.turn, role: "agent", content: text.trim(), note: true });
+    }
+
     finishTurn() {
       const w = this.s.world;
       const turn = w.turn;
@@ -683,7 +688,7 @@ const PG = (() => {
           text += `\n## Turn ${m.turn}\n`;
           turn = m.turn;
         }
-        text += `\n**${m.role}**\n\n${m.content.trimEnd()}\n`;
+        text += `\n**${m.note ? "agent (note)" : m.role}**\n\n${m.content.trimEnd()}\n`;
       }
       return text;
     }
