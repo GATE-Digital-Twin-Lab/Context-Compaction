@@ -220,6 +220,9 @@ def test_llm_episode_outputs(tmp_path, monkeypatch):
     assert len(calls) == 12 and calls[-1]["call_index"] == 12 and calls[0]["raw_content"].endswith("made up")
     transcript = (out.dir / "transcript.md").read_text()
     assert "agent (thinking, discarded)" in transcript and "plants: made up" not in transcript
+    clean = (out.dir / "transcript_clean.md").read_text()
+    assert "thinking, discarded)**" not in clean and "private" not in clean
+    assert clean.count("**agent**") == transcript.count("**agent**") == 12
     params = json.loads((out.dir / "params.json").read_text())
     assert params["system_prompt"] == "SYSTEM PROMPT" and params["llm_server"] == {"n_ctx": 1000}
     assert params["temperature"] is None and params["thinking"] is True

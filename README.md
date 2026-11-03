@@ -12,7 +12,7 @@ requirements.txt
 scripts/                    shell scripts that launch runs and the model server; every parameter set here or overridden on the command line
 main.py                     entry point: builds all components from the inputs and runs one episode
 input.py                    command-line arguments, validation, and everything related to experiment input
-utils.py                    generic helpers not tied to a specific concept
+utils.py                    generic helpers not tied to a specific concept, incl. the clean transcript (also a command for older runs)
 output.py                   writes the final outputs to runs/<agent>/<timestamp>/
 LLM/
   client.py                 chat client for an OpenAI-compatible server (llama-server, vLLM, Ollama)
@@ -91,6 +91,7 @@ One folder per run. `<agent>` is the LLM name (e.g. `qwen3-8b`) or the non-LLM a
 |---|---|
 | `params.json` | all experiment inputs: initial prompt, garden size, sampled growth times, LLM parameters, turn cap, goals, allergy, seeds, compaction settings |
 | `transcript.md` | the agent's full thought process: every message in order, including the discarded thinking (marked as such) |
+| `transcript_clean.md` | the same without the thinking: only what stays in the agent's context. Written at the end of the run; for older runs, `python utils.py [RUN_DIR ...]` (default: every run under `runs/`) |
 | `actions.jsonl` | one line per turn: turn number, action, result, errors |
 | `final_state.json` | final inventory, garden and knowledge base |
 | `summary.json` | per-goal results: best potion brewed, turns used, success or failure, allergy violations; why the episode stopped early, if it did |

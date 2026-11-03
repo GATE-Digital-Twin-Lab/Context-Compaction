@@ -9,7 +9,7 @@ from environment.world import World
 from input import ExperimentConfig
 from ledger import Fact
 from tools.base import ToolResult
-from utils import append_jsonl, append_text, run_id, write_json
+from utils import append_jsonl, append_text, run_id, write_clean_transcript, write_json
 
 
 def potion_dict(potion: Potion) -> dict:
@@ -136,3 +136,4 @@ class RunOutput:
     def write_final(self, world: World, stop_reason: str | None = None) -> None:
         write_json(self.dir / "final_state.json", world_state(world))
         write_json(self.dir / "summary.json", summary(world, stop_reason))
+        write_clean_transcript(self.dir)

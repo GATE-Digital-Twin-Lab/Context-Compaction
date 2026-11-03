@@ -213,7 +213,7 @@ Every turn has four steps:
    ```
 4. **Time advances** to the next turn, and the loop repeats from step 1.
 
-**Thinking and notes.** The agent is a reasoning model and thinks before every reply. Its thinking is **never sent back**: the environment builds the history itself and keeps only the visible reply, cut after the first call (anything the model writes after the call, such as an invented result, is dropped). The thinking is kept in `transcript.md` for analysis only. Information therefore lives in three tiers:
+**Thinking and notes.** The agent is a reasoning model and thinks before every reply. Its thinking is **never sent back**: the environment builds the history itself and keeps only the visible reply, cut after the first call (anything the model writes after the call, such as an invented result, is dropped). The thinking is kept in `transcript.md` for analysis only; `transcript_clean.md` leaves it out and shows exactly what stays in the context. Information therefore lives in three tiers:
 
 | Tier | Cost | Lasts |
 |---|---|---|

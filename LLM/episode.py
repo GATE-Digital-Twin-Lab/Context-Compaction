@@ -8,6 +8,7 @@ from ledger import Ledger
 from output import RunOutput
 from tools.dispatcher import Dispatcher
 from tools.observation import turn_header
+from utils import THINKING_ROLE
 
 MAX_CALLS_PER_TURN = 20  # stops an agent that only uses free tools
 
@@ -48,7 +49,7 @@ def play_turn(world: World, agent: Agent, dispatcher: Dispatcher, out: RunOutput
     for _ in range(MAX_CALLS_PER_TURN):
         reply = agent.respond()
         if reply.thinking:
-            out.log_message(turn, "agent (thinking, discarded)", reply.thinking)
+            out.log_message(turn, THINKING_ROLE, reply.thinking)
         out.log_message(turn, "agent", reply.text)
         if reply.meta:
             out.log_llm_call(turn, reply.meta)
