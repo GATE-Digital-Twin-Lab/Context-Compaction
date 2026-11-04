@@ -81,10 +81,13 @@ def summary(world: World, stop_reason: str | None = None) -> dict:
 class RunOutput:
     """Creates the run folders and writes each output file."""
 
-    def __init__(self, config: ExperimentConfig, rid: str | None = None) -> None:
+    def __init__(
+        self, config: ExperimentConfig, rid: str | None = None, run_dir: Path | None = None, temp_dir: Path | None = None
+    ) -> None:
+        """run_dir and temp_dir override the default folders (e.g. a fork inside its parent run)."""
         self.run_id = rid or run_id()
-        self.dir = config.runs_dir / config.agent_label / self.run_id
-        self.temp = config.temp_dir / config.agent_label / self.run_id
+        self.dir = run_dir or config.runs_dir / config.agent_label / self.run_id
+        self.temp = temp_dir or config.temp_dir / config.agent_label / self.run_id
         (self.dir / "compactions").mkdir(parents=True, exist_ok=False)
         self.temp.mkdir(parents=True, exist_ok=False)
         self._transcript_turn: int | None = None

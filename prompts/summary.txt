@@ -1,0 +1,21 @@
+Your task is to write a detailed summary of the conversation so far. The summary will replace the conversation: the work continues from the summary alone, without the earlier messages. The system prompt and the knowledge base stay available; everything that exists only in the conversation is lost unless you write it into the summary. Capture everything needed to continue the work without losing progress.
+
+Before writing, go through the conversation chronologically. For each part, note the user's requests and constraints, what was done and why, what each action returned (exact values), what was learned, which beliefs were formed or abandoned, and what was planned next.
+
+Then write the summary with these sections:
+
+1. Goal and constraints: every goal, limit and constraint the user gave, quoted exactly.
+2. Rules learned: how the world works, as established by observations (not hypotheses).
+3. Observations and data: every action result with its exact inputs and outputs (all names, quantities, IDs and values), and the current state (what is where, since when, and what is in stock).
+4. Errors and corrections: mistakes that were made, and how they were noticed and corrected.
+5. Hypotheses and open questions: every current belief that goes beyond the observations, marked as confirmed (with the observations that confirm it), hypothesis (with its evidence) or refuted (with the observation that refutes it); then the open questions.
+6. User messages: every message from the user, verbatim. Environment and tool results are not user messages.
+7. Pending tasks: what is still to be done.
+8. Current work: precisely what was being worked on immediately before this summary.
+9. Next step: the immediate next step, consistent with the most recent plan.
+
+Rules:
+- Keep exact numbers, names and IDs; do not round, merge or generalise them.
+- Report only what the conversation shows. Do not invent facts or patterns, and do not claim what the knowledge base contains unless a log or lookup result in the conversation shows it.
+- Keep observations and interpretations apart: a result belongs in section 3, what it is believed to mean belongs in section 5.
+- Write only the summary, without any action or tool call.

@@ -1,0 +1,7 @@
+The conversation so far was summarised because it grew too long. {scope} The knowledge base is unchanged.
+
+<summary>
+{summary}
+</summary>
+
+Continue the work from where it left off.

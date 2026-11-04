@@ -44,7 +44,8 @@ def append_text(path: Path, text: str) -> None:
 # --- clean transcript: transcript.md without the discarded thinking ----------
 
 THINKING_ROLE = "agent (thinking, discarded)"
-ROLES = ("user", "environment", "agent", THINKING_ROLE)
+COMPACTION_ROLE = "compaction"   # marks where the context was compacted (not a message the agent sees)
+ROLES = ("user", "environment", "agent", THINKING_ROLE, COMPACTION_ROLE)
 CLEAN_NOTE = "Only what stays in the agent's context: the thinking, discarded after every reply, is left out."
 
 _BOUNDARY = re.compile(r"^(## Turn \d+|\*\*(" + "|".join(re.escape(r) for r in ROLES) + r")\*\*)$")
@@ -60,6 +61,21 @@ def clean_transcript(text: str) -> str:
             kept.append(line)
     title, _, rest = "\n".join(kept).partition("\n")
     return f"{title} (clean)\n\n{CLEAN_NOTE}\n{rest}"
+
+
+def transcript_blocks(text: str) -> list[tuple[int, str, str]]:
+    """(turn, role, content) of every message in a transcript.md, in order."""
+    blocks: list[tuple[int, str, list[str]]] = []
+    turn = 0
+    for line in text.split("\n"):
+        if match := _BOUNDARY.match(line):
+            if line.startswith("## Turn "):
+                turn = int(line.split()[-1])
+            else:
+                blocks.append((turn, match.group(2), []))
+        elif blocks:
+            blocks[-1][2].append(line)
+    return [(t, role, "\n".join(lines).strip("\n")) for t, role, lines in blocks]
 
 
 def write_clean_transcript(run_dir: Path) -> Path:
