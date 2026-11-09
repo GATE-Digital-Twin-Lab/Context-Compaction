@@ -495,7 +495,7 @@
   // The system prompt as a small subset of Markdown: headings, lists, examples.
   function promptHtml() {
     const inline = (s) => esc(s).replace(/(\{(?:[^{}]|\{[^{}]*\})*\})/g, "<code>$1</code>");
-    const isExample = (s) => /^(\[Turn|Garden:|New facts:|Plan:|\{)/.test(s);
+    const isExample = (s) => /^(\[Turn|Garden:|Results:|State:|Beliefs:|Plan:|\s|\{)/.test(s);
     let html = "", list = null;
     const close = () => { if (list) { html += `</${list}>`; list = null; } };
     for (const line of DATA.SYSTEM_PROMPT.split("\n")) {

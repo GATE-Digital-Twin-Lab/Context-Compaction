@@ -21,7 +21,7 @@ LLM/
   episode.py                the turn loop: garden state → agent → action → result → (compaction) → next turn
 environment/                the hidden world: garden and growth timers, brewer rules, knowledge base, inventory, goals, turn clock
 tools/                      one file per agent-facing tool (plant, gather, log, brew, skip, kb_lookup, inventory); thin wrappers around environment/
-compaction/                 compactors: summary.py (the model summarises its own context); fork.py (replay a run to a turn, compact, continue)
+compaction/                 compactors: summary.py (the model summarises its own context); fork.py (replay a run to a turn, compact, continue); atomizer.py (split a run's context into atoms)
 ledger.py                   records every needed fact when it appears; snapshots them at each compaction
 checkpoint.py               per-turn checkpoints: saves the full state, restores it after a crash (--resume)
 agents/                     non-LLM agents for testing, parameter tuning and baselines (random, replay of a recorded run, scripted oracle)
@@ -89,6 +89,14 @@ python -m compaction.fork runs/<agent>/<run_id> --at 50 [--keep-turns 5]
 
 Replays the run up to the end of turn 50 without model calls (and checks that the replay reproduces its transcript exactly), lets the model summarise its context except the last k turns (`--keep-turns`, default 5) with `prompts/summary.txt`, replaces the summarised part with the summary (`prompts/summary_continue.txt`) followed by the last k turns verbatim and lets the agent continue to the turn cap. The fork is written to `runs/<agent>/<run_id>/compactions/t050_summary/` with the usual run files; `compaction_summary.md` holds the summary, `compactions/001.json` the context before and after, and the transcripts mark the compaction point with a **compaction** entry. The model server must serve the run's model.
 
+### Splitting a run into atoms
+
+```
+python -m compaction.atomizer runs/<agent>/<run_id> [--turns 1-10] [--thinking]
+```
+
+Splits `transcript_clean.md` (what the agent had in its context) into atoms with the run's model: one call per turn, with the agent's instructions, the opening message and the previous turn as context, using `prompts/atomize.txt`. An atom is one self-contained statement with the role of its speaker and a kind (goal, observation, state, inference, plan); there is no scoring. Thinking is off unless `--thinking` is given, and the first attempt decodes greedily (`--temperature`, default 0). A reply that is malformed, or leaves a message with content (or a bulleted line) without an atom, is retried with the next seed at temperature 0.7; if no attempt covers everything, the most complete one is kept and the uncovered messages are recorded and flagged in `atoms.md`. Writes `atoms.jsonl`, `atoms.md` (every message followed by its atoms) and `atoms_calls.jsonl` into the run folder.
+
 ## Outputs
 
 ### `runs/<agent>/<timestamp>/`
@@ -100,12 +108,14 @@ One folder per run. `<agent>` is the LLM name (e.g. `qwen3-8b`) or the non-LLM a
 | `params.json` | all experiment inputs: initial prompt, garden size, sampled growth times, LLM parameters, turn cap, goals, allergy, seeds, compaction settings |
 | `transcript.md` | the agent's full thought process: every message in order, including the discarded thinking (marked as such) |
 | `transcript_clean.md` | the same without the thinking: only what stays in the agent's context. Written at the end of the run; for older runs, `python utils.py [RUN_DIR ...]` (default: every run under `runs/`) |
+| `notes.jsonl` | LLM agent only: the notes of every reply parsed into the reply schema (sections, sub-sections, one item per line), with departures from the schema. Written at the end of the run; for older runs, `python -m LLM.notes RUN_DIR ...` |
 | `actions.jsonl` | one line per turn: turn number, action, result, errors |
 | `final_state.json` | final inventory, garden and knowledge base |
 | `summary.json` | per-goal results: best potion brewed, turns used, success or failure, allergy violations; why the episode stopped early, if it did |
 | `ledger.jsonl` | every needed fact with the turn it appeared |
 | `llm_calls.jsonl` | LLM agent only: one line per model call with token counts, finish reason, timing and the raw reply (before cutting) |
 | `compactions/` | per compaction: context before and after, token counts, turn, and the ledger snapshot of facts the agent should still know; forks of the run (`t<turn>_summary/`, see above) |
+| `atoms.jsonl`, `atoms.md`, `atoms_calls.jsonl` | only after running the atomizer: the atoms of the clean transcript, a readable version, and the model calls |
 
 ### `temp/<agent>/<timestamp>/`
 

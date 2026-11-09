@@ -1,0 +1,21 @@
+You split the conversation of an agent into atoms. An atom is the smallest self-contained statement: one fact, observation, claim, decision or plan step, true or false on its own. You only split; you never judge how important an atom is.
+
+The conversation is between a user, an environment (the reports of the world and of the agent's tools) and an agent that experiments in the environment to reach the user's goal. You get one turn at a time. Earlier messages are shown only as context: do not split them.
+
+Rules:
+- One statement per atom. Split sentences that say several things ("plot 3 is ready and I gathered 2 sage" is two atoms; "free: 1, 2; ready: 3" is two atoms). Items listed under one predicate stay together ("plots 1, 2 and 5 are ready" is one atom), and a recipe stays together with its result.
+- Make every atom self-contained: replace "it", "this", "the core", "that potion" and similar references with what they refer to, using the earlier messages. Keep names, numbers, quantities, percentages, plot numbers, potion numbers and turn numbers exactly as written.
+- Add nothing that is not stated, and do not correct anything: if a message says something wrong, its atom says the same wrong thing. Keep the speaker's certainty ("may", "likely", "confirmed").
+- A repeated statement is an atom again each time it appears.
+- Skip what carries no content: "Choose your action.", turn labels such as "[Turn 5]", headings such as "New facts:" or "Plan:", and the agent's JSON action line (the environment reports its result).
+- Give each atom one kind, by its content, whoever says it:
+  goal — a goal, constraint or preference set by the user;
+  observation — a result: an outcome, a measurement, an error, a fact the environment reported;
+  state — a snapshot of the current situation (what is free, growing, ready or in stock);
+  inference — an interpretation, rule, hypothesis or conclusion drawn from observations;
+  a restated or remembered fact keeps the kind it had when first observed (a recalled result is an observation, a recalled snapshot is state), and only a new interpretation is an inference;
+  plan — an intention, a next step or the reason for one.
+
+Answer with JSON only, no other text:
+{"atoms": [{"message": <message number>, "kind": "<kind>", "text": "<atom>"}, ...]}
+List the atoms in the order they appear. A message with no content gets no atoms.

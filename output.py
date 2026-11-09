@@ -7,6 +7,7 @@ from typing import Any
 from environment.inventory import Potion
 from environment.world import World
 from input import ExperimentConfig
+from LLM.notes import write_notes
 from ledger import Fact
 from tools.base import ToolResult
 from utils import append_jsonl, append_text, run_id, write_clean_transcript, write_json
@@ -140,3 +141,4 @@ class RunOutput:
         write_json(self.dir / "final_state.json", world_state(world))
         write_json(self.dir / "summary.json", summary(world, stop_reason))
         write_clean_transcript(self.dir)
+        write_notes(self.dir)

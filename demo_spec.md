@@ -200,7 +200,19 @@ Every turn has four steps:
 2. **Agent:** thinks privately, then writes a reply of **visible notes** (whatever it wants to keep) followed by **one call**. It may call **free tools** any number of times (one per reply), then submits **exactly one action**:
    ```
    (thinking: discarded after the reply)
-   Notes: I = elderberry+sage+dill; elderberry drives intensity (1→2%, 2→5%). Plan: check the KB on chamomile, rosemary first.
+   Results:
+     Potions:
+     - #2 {"elderberry": 2, "sage": 1, "dill": 1} → +I 5%
+     …
+   Beliefs:
+     …
+     Hypotheses:
+     - elderberry drives the intensity of I (1 → 2%, 2 → 5%) (hypothesis)
+     …
+   Plan:
+     Next:
+     - look up chamomile and rosemary in the KB first
+     …
    {"tool": "kb_lookup", "plants": ["chamomile", "rosemary"]}               ← optional, free, repeatable
    ```
    ```
@@ -226,7 +238,7 @@ Derived knowledge (growth times worked out from the waiting counters, the best p
 **Guidance for small models.** A first run with a small model showed notes holding only plans, no logging at all (skipping instead), and long, indecisive thinking. The system prompt therefore:
 - explains why logging matters, with a worked example on made-up plants (A, B, C, stat X) so no hidden rule is leaked, and says a log costs the same as a skip, so the agent should never skip while something useful is unlogged;
 - lists the facts worth tracking (goal and constraints, which cannot be logged; plantings and growth times; every brew with exact numbers; the best potion so far; hypotheses and plan);
-- suggests a short notes format, `New facts: …` (with exact numbers) then `Plan: …`, written when a fact is learned. It does **not** ask the agent to restate its whole state every reply; an agent that does so keeps it in the newest message, at the price of a faster-filling context, and that choice is part of what is observed;
+- fixes the notes to a schema with four sections and their sub-sections, written in this order in every reply, one fact per `- ` line and `- none` for a sub-section with nothing new: **Results** (Potions, Growth, Lore), **State** (Garden, Inventory, Logged, Best), **Beliefs** (Confirmed, Hypotheses, Refuted) and **Plan** (Next, Then). Results, State and Beliefs hold only what is new or changed since the last reply; the plan is written in full every reply, so its history shows where it changed. The agent thus labels its own notes: every line belongs to one sub-section, a brew and the fact that it was logged go on separate lines, and a reviewer can follow the run section by section. `LLM/notes.py` parses the notes into `notes.jsonl` at the end of each run and records departures from the schema (missing or misplaced sub-sections, lines outside them); nothing is reported back to the agent. (Before this schema the notes were free text, `New facts: …` then `Plan: …`; runs made before it are not comparable with later ones.)
 - gives a four-step decision routine (new, known, at most three options, decide) and asks for decisive play: decide once, a no-effect brew is information, keep every plot growing, plant several plots of a plant to vary quantities.
 
 Example recipes in the system prompt never contain a stat's plant set (`tests/test_prompt.py` checks this); an earlier version used the cheapest +20% S recipe as its example and so leaked the S set.
