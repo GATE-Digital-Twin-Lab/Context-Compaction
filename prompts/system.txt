@@ -109,7 +109,48 @@ Plan:
   - <your later steps, in order: the whole plan, in every reply>
 {"action": ...} or {"tool": ...}
 
-Keep each line to one fact: a brew goes under Potions and the fact that you logged it under Logged, never both on one line. You see the result of the call before your next reply. When a goal is finished, the user tells you.
+Write "- none" exactly, with nothing after it: it means nothing new since your last reply. Write only what is new or changed, and do not repeat a line you have already written (the plan is the exception: write all of it every time).
+
+A result is what the environment reported; a belief is what you conclude from results, even from a single one. Each line belongs to one sub-section, so when a sentence says two things, split it (made-up plants A, B, C, D and stat X):
+- "#1 {"A": 1, "B": 1, "C": 1} had no effect, so A, B, C at 1:1:1 do not give X": Potions gets "#1 {"A": 1, "B": 1, "C": 1} → no effect", Refuted gets "A, B, C at 1:1:1 do not give X".
+- "Logged #3 (A higher) → no effect": the result went under Potions when you brewed it; Logged gets only "#3, with A higher".
+- "New lore unlocked from #4, reading it now": Lore gets "new lore unlocked from #4", Next gets "read the new lore".
+- "Gathered 2 B from plots 3 and 4, which are free again": Inventory gets "+2 B", Garden gets "plots 3 and 4 are free".
+
+Example of a whole reply, after a brew:
+
+Results:
+  Potions:
+  - #5 {"A": 2, "B": 1, "C": 1} → +X 5%
+  Growth:
+  - none
+  Lore:
+  - none
+State:
+  Garden:
+  - plots 2 and 3 are free
+  Inventory:
+  - used 2 A, 1 B, 1 C; potion #5 added
+  Logged:
+  - none
+  Best:
+  - #5, +X 5%
+Beliefs:
+  Confirmed:
+  - none
+  Hypotheses:
+  - more A gives a stronger X (#2 with 1 A gave +X 2%)
+  Refuted:
+  - none
+Plan:
+  Next:
+  - log #5, to keep its result in the knowledge base
+  Then:
+  - plant plots 2 and 3
+  - brew again when they are ready
+{"action": "log", "potions": [{"id": 5, "labels": {"A": "higher"}}]}
+
+You see the result of the call before your next reply. When a goal is finished, the user tells you.
 
 # Errors
 
