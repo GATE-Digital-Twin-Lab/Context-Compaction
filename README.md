@@ -18,6 +18,8 @@ LLM/
   client.py                 chat client for an OpenAI-compatible server (llama-server, vLLM, Ollama)
   parsing.py                finds the one JSON call in a reply and cuts off anything written after it
   agent.py                  the LLM agent: thinking is discarded after every reply, only notes + call are kept
+  notes.py                  parses every reply into the reply schema (notes.jsonl)
+  notes_review.py           steps through a run's replies for manual inspection (used in validation.ipynb)
   episode.py                the turn loop: garden state → agent → action → result → (compaction) → next turn
 environment/                the hidden world: garden and growth timers, brewer rules, knowledge base, inventory, goals, turn clock
 tools/                      one file per agent-facing tool (plant, gather, log, brew, skip, kb_lookup, inventory); thin wrappers around environment/
@@ -31,6 +33,7 @@ game/                       browser game: a human plays the agent with the same 
 runs/                       results (see below)
 temp/                       working data during a run (see below)
 Papers/                     literature review (papers.xlsx)
+validation.ipynb            manual inspection of the replies that do not follow the reply schema (Previous / Next)
 idea.md, conversation.md    research idea and notes from early discussions
 demo.md, demo_spec.md       first demo idea and the current environment specification
 ```
@@ -89,6 +92,10 @@ python -m compaction.fork runs/<agent>/<run_id> --at 50 [--keep-turns 5]
 
 Replays the run up to the end of turn 50 without model calls (and checks that the replay reproduces its transcript exactly), lets the model summarise its context except the last k turns (`--keep-turns`, default 5) with `prompts/summary.txt`, replaces the summarised part with the summary (`prompts/summary_continue.txt`) followed by the last k turns verbatim and lets the agent continue to the turn cap. The fork is written to `runs/<agent>/<run_id>/compactions/t050_summary/` with the usual run files; `compaction_summary.md` holds the summary, `compactions/001.json` the context before and after, and the transcripts mark the compaction point with a **compaction** entry. The model server must serve the run's model.
 
+### Inspecting the notes
+
+`validation.ipynb` steps through the replies of a run (`RUN`) that do not follow the reply schema, one per click: the reply as the agent wrote it, with the lines a problem names marked, next to how `LLM/notes.py` filed it. `browse(RUN, invalid_only=False)` steps through every reply. The notebook needs `ipykernel` and `ipywidgets` in the kernel's environment.
+
 ### Splitting a run into atoms
 
 ```
@@ -108,7 +115,7 @@ One folder per run. `<agent>` is the LLM name (e.g. `qwen3-8b`) or the non-LLM a
 | `params.json` | all experiment inputs: initial prompt, garden size, sampled growth times, LLM parameters, turn cap, goals, allergy, seeds, compaction settings |
 | `transcript.md` | the agent's full thought process: every message in order, including the discarded thinking (marked as such) |
 | `transcript_clean.md` | the same without the thinking: only what stays in the agent's context. Written at the end of the run; for older runs, `python utils.py [RUN_DIR ...]` (default: every run under `runs/`) |
-| `notes.jsonl` | LLM agent only: the notes of every reply parsed into the reply schema (sections, sub-sections, one item per line), with departures from the schema. Written at the end of the run; for older runs, `python -m LLM.notes RUN_DIR ...` |
+| `notes.jsonl` | LLM agent only: the notes of every reply parsed into the reply schema (sections, sub-sections, one item per line; a "- none" with a comment counts as empty and its comment is kept as a remark; a line whose sub-section heading was left out is filed under the next sub-section in the schema order, and the reply is marked invalid for inspection), with departures from the schema. Written at the end of the run; for older runs, `python -m LLM.notes RUN_DIR ...` |
 | `actions.jsonl` | one line per turn: turn number, action, result, errors |
 | `final_state.json` | final inventory, garden and knowledge base |
 | `summary.json` | per-goal results: best potion brewed, turns used, success or failure, allergy violations; why the episode stopped early, if it did |

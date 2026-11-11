@@ -23,6 +23,9 @@ NONE = "none"
 
 _HEADING = re.compile(r"^[#*_\s]*([A-Za-z]+)[*_\s]*:[*_\s]*(.*)$")
 _BULLET = re.compile(r"^[-*•]\s+(.*)$")
+# "none", optionally qualified ("none new", "none yet this turn") and/or followed by a comment in brackets:
+# the sub-section is empty. Other lines that start with "none" ("none of the sets gave S") are items.
+_NONE = re.compile(r"^none(?:\s+(?:new|yet|this turn))*\s*(?:\((.*)\))?[\s.]*$", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -37,6 +40,7 @@ class Notes:
     items: list[Item] = field(default_factory=list)
     empty: list[str] = field(default_factory=list)      # sub-sections written as "- none"
     missing: list[str] = field(default_factory=list)    # sub-sections not written at all
+    remarks: list[Item] = field(default_factory=list)   # "- none" lines with more text, e.g. "none (about to brew)"
     problems: list[str] = field(default_factory=list)   # other departures from the schema
 
     @property
@@ -65,13 +69,23 @@ def parse_notes(reply: str) -> Notes:
     last: int | None = None   # index of the last item, for wrapped lines
 
     def add(text: str) -> None:
-        nonlocal last
+        nonlocal last, section, sub
         text = text.strip()
         if sub is None:
-            notes.problems.append(f"line outside any sub-section: {text[:80]!r}")
-            return
-        if text.strip(" .").lower() == NONE:
+            # The heading was left out: the replies always follow the schema's order, so the line is filed
+            # under the next sub-section, provided that one is in the current section. The reply stays
+            # invalid, so it is flagged for inspection.
+            nxt = ORDER.index(seen[-1]) + 1 if seen and seen[-1] in ORDER else 0
+            if nxt == len(ORDER) or (section is not None and ORDER[nxt][0] != section):
+                notes.problems.append(f"line outside any sub-section: {text[:80]!r}")
+                return
+            section, sub = ORDER[nxt]
+            seen.append((section, sub))
+            notes.problems.append(f"{sub} heading left out: {text[:80]!r}")
+        if _NONE.match(text):
             notes.empty.append(sub)
+            if text.strip(" .").lower() != NONE:
+                notes.remarks.append(Item(section, sub, text))
             last = None
             return
         notes.items.append(Item(section, sub, text))
