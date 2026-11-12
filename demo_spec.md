@@ -1,99 +1,36 @@
-# Potion Garden Agent Demo — Specification
+# Potion Garden Agent Demo — Specification (version 3)
 
-*Working spec, superseding the first version in `demo.md`. Everything (plants, effects, rules) is fictional.*
+*Working spec for the redesign on branch `dev2`, built from the ideas in `demo.md`. It replaces version 2 (the world with lore lines, garden logging and labelled potion logs), which is in the git history up to commit `cae0dea`. Everything (plants, effects, sources, people) is fictional.*
+
+Marked **(default)**: a choice made while writing the spec that the design discussion did not settle explicitly; change it freely. Marked **(content)**: hidden content still to be written.
 
 ## Purpose
 
-A simulated environment for generating agent episodes, so we can study **what a tool-using agent forgets when its context is compacted**. The agent grows plants in a garden, learns the garden's properties, experiments with potions and pursues user goals under a time budget. The main measurement is information retention across compaction; potion quality is an auxiliary performance metric.
+A simulated environment in which a **language** agent is actually needed, used to study **what the agent forgets when its context is compacted**. The previous version was black-box optimisation over structured data, which a scripted search solves better than an LLM. In this version the agent:
+- turns a client's request, written in plain language, into a measurable goal;
+- searches and reads a corpus of old texts of uneven reliability, which imply facts but never state numbers;
+- runs experiments (growing plants in soils, brewing, mixing) to find exact values;
+- records evidence and claims in a structured notebook, and checks its beliefs against the data with a validator;
+- delivers one potion that satisfies the request.
+
+**Retention target.** The observations are recorded automatically and an expert can verify them. What cannot be verified afterwards is the agent's **thought process**: how it translated the request, interpreted the sources, formed and tested hypotheses, and decided. That chain is what compaction must preserve (see *Information and retention*). Accuracy is secondary: the goal is to keep the agent's information state, including wrong beliefs.
 
 ## World
 
-- **Garden:** each user has a garden with **N plots** (an array of size N); N is given by the user at the start. Every garden has its own growth time per plant type (because of soil, location, etc.): at initialisation each plant's growth time is sampled independently from a discrete uniform **U(a, b)** turns (a, b to be decided). Growth times are fixed for a given garden and plant and unknown to the agent; it must learn them.
-- **Seeds** are unlimited for every catalogue plant; the **inventory** has no size limit.
-- **Plants:** a fixed catalogue of plant types, all available for planting. The knowledge base starts with the catalogue (names only).
-- **Brewer:** a hidden, fixed equation that maps a recipe to effects (see Brewing rules).
-- **Time:** discrete turns. Every action costs exactly **1 turn**. Thinking, planning and knowledge-base lookups cost **0 turns**.
+### Plants, garden, soils
 
-## Actions (1 turn each, any number of items per action)
+- **Plants:** the same 8 as before: mint, elderberry, nettle, sage, chamomile, dill, basil, rosemary. Seeds are unlimited.
+- **Garden:** N plots (given by the episode), one plant per plot. Each episode starts with an empty garden and an empty inventory.
+- **Soils:** black, brown, yellow, unlimited. The agent chooses the soil for every planting. Soil affects **growing only**, never brewing:
+  - **growth time** is a fixed property of each (plant, soil) pair;
+  - **death:** a few (plant, soil) pairs never survive, and rarely a pair survives only with some probability. Most pairs always survive.
+  - A plant that dies is reported when it would have become ready: the garden line shows it as died, its plot becomes free, and the growth table records it.
+- **Time:** discrete turns; **a day is 10 turns**. Every action costs exactly 1 turn; thinking and free tools cost nothing (within the free-call budget, see *Tools*).
+- **One fixed world:** the stat rules, the secondary pairs, the growth times per soil, the death probabilities and the corpus are written together and do not change between episodes. The env seed only drives random deaths. Variation comes from the requests and the LLM seed.
 
-| Action | What it does |
-|---|---|
-| **Plant** | Plants any number of plants of any types in free plots |
-| **Log** | Writes any number of facts to the knowledge base |
-| **Brew** | Brews **any number of potions** from the inventory in one action; consumes the plants used. All or nothing: the inventory must cover all recipes together, otherwise nothing is brewed and the attempt costs 0 turns. Lets the agent test a batch of combinations after a large harvest without paying a turn per potion |
-| **Skip** | Does nothing; time passes |
+### Primary effects (unchanged rules)
 
-Free (0-turn) tools: **Gather** (harvests **all** ready plots into the inventory, freeing them, so they can be replanted in the same turn), **KB lookup**, **inventory lookup**. Gather was an action in earlier versions; making it free removes a pure bookkeeping turn and simplifies planning for small models.
-
-## Observations
-
-Every turn starts with the **garden state**: free plots, growing plots and ready plots.
-- **Ready plots** show how many turns they have been waiting since they became ready (starting at 0), e.g. *"ready: 11 (waiting 0), 17 (waiting 2)"*.
-- If a plot's planting was **logged**, its plant is named: *"11 (elderberry, waiting 0)"*. A growing plot whose planting **and** growth time are both logged also shows turns remaining: *"3 (elderberry, 2 turns left)"*.
-- If it was **not logged**, only plot numbers are given. The agent must remember what it planted where.
-- With the waiting counter the agent can work out a growth time itself: growth time = turns since planting − turns waiting.
-
-## Knowledge base
-
-Written only through the **Log** action. The agent decides **when** to log and **what**; the environment fills in the factual content, so logged facts are never hallucinated. A single Log action (1 turn) can contain both parts below.
-
-**Garden log** (all-or-nothing, filled in by the environment):
-- **Growth times** of every plant type that is **ready, or was gathered this turn**, and whose growth time is not yet known (gathering is free, so "gather, then log" in one turn must still record the growth times). A growth time is a fixed property of the plant in this garden, so it is the true value no matter how long the plant waited. Several plots with the same plant give one entry.
-- **Planting records** (plot → plant) for every **occupied** plot (growing **or** ready) not yet logged.
-  - Planting records describe the **current** garden: a record is **removed when its plot is gathered**, so a later planting in the same plot starts unlogged. Growth times are permanent.
-
-*Example:* 7 plots at turn 5, nothing logged; 1, 3, 6 free; 2 (elderberry) and 4 (sage, waiting 2) ready; 5 (chamomile) and 7 (basil) growing. A garden log adds growth elderberry and sage (true values) and plantings for plots 2, 4, 5, 7. If plot 5 becomes ready next turn, the agent sees `ready: 2 (elderberry, waiting 1), 4 (sage, waiting 3), 5 (chamomile, waiting 0)`. chamomile's growth time needs another garden log, and plots 2 and 4 waited one more turn because the agent did not gather them (gathering is free, so it could have gathered first and still logged both growth times).
-
-**Brew log** (per potion, chosen by the agent):
-- Every successful brew, **including a no-effect brew** (a dud), is kept in the inventory as an item (`potion #3`), **without** its details. A dud can be logged with effect **none**, so failed combinations can be recorded.
-- To log a potion the agent names it and provides its **own labels** for each plant from the restricted vocabulary **odd**, **even**, **higher is better**, **lower is better**, **present** (no information). The environment records the **plant set** and the **effect** (stat and sign).
-- Exact quantities and magnitudes are **never** stored; they exist only in the conversation.
-- Example entry: *"(higher is better) chamomile, even rosemary, even mint → +S"*. The vocabulary cannot express "exactly 2" or "mod 3", so the labels are the agent's approximate belief and can be wrong. For S, "even rosemary" also admits rosemary = 4, which gives nothing.
-- **Entries are append-only:** existing statements are never updated. A new statement for the same plant set and effect is added alongside the old ones, so the KB keeps the history of the agent's beliefs as they develop. Only an **exact duplicate** (same plant set, same effect, same labels word for word) is dropped.
-
-*Example:* at turn 20 the agent has brewed #1 (turn 8: mint=1, elderberry=1, dill=1 → no effect), #2 (turn 15: elderberry=1, sage=1, dill=1 → +I 2%) and #3 (turn 20: elderberry=2, sage=1, dill=1 → +I 5%). At turn 21 it logs all three with the labels it can justify:
-- #1 → `mint, elderberry, dill → none`
-- #2 → `elderberry, sage, dill → +I` (one data point, nothing to infer: all labels "present")
-- #3 → `(higher) elderberry, sage, dill → +I` (1 → 2 elderberry raised 2% → 5%)
-
-A later potion #4 that leads the agent to believe dill must be odd adds `(higher) elderberry, sage, (odd) dill → +I` as a fourth entry. Under the real rules dill has no effect, so this belief is wrong; labels are beliefs, not truths. Logging #3's labels again would be an exact duplicate and is dropped.
-
-The quantities, the magnitudes and which potion is the best so far exist **only in the conversation**. After compaction the agent may still know "more elderberry helps I" from the KB, but not that 2 elderberry gave 5%.
-
-**Consequence:** garden facts are **recoverable at a cost**. An agent that forgets what it planted can recover the planting map with one Log action, and growth times the next time a plant is ready. Forgetting garden facts therefore costs **time**, not information. Brew details, the allergy, goals and plans **cannot** be recovered.
-
-User goals and the allergy are **not** loggable in this version; the agent must remember them. Making the allergy loggable (so protecting it becomes the agent's choice) is a possible later variant.
-
-Lookups are free and return, per plant, its growth time (if logged) and all logged outcome statements involving it (a relational join). With lore on, the lookup also shows the unlocked lore lines naming the plant.
-
-**Herbal lore** (`--lore on`, the default):
-- Each pair of plants that appears together in some stat's plant set has one hand-written lore line (17 of the 28 pairs; `environment/lore.py`), e.g. *"Basil and chamomile are old companions; the herbwives of the valley always bundle them together."* Lines state the **affinity only**, never the stat or the quantities; pairs that share no set have no lore (no negative lore).
-- **Logging a potion** (including a dud) unlocks the lines for every complementary pair among its plants. The text is shown **only by kb_lookup**; the log reply just says that new lore was found (`(the old herbals hold new lore about its plants: read it with kb_lookup)`), without naming the pairs. The agent is told in the system prompt that lore exists and how to get it.
-- What it reveals: every 3-plant recipe contains at least one complementary pair, so most first logs unlock something. 10 trios are mutually complementary: 8 lie inside a real stat set and 2 are false leads ({basil, chamomile, mint}, {mint, nettle, rosemary}). Lore narrows the search for plant sets but says nothing about quantities, so S and W stay hard. elderberry + dill share two sets (I and W) and have a single line.
-- Effect on the study: logging gains a second motive (discovery, besides insurance against compaction). `--lore off` removes it, so the two can be compared. Unlocked lore lives in the KB and is a **recoverable** fact.
-
-## The logging trade-off (core mechanic)
-
-Logging is safe but costs a turn. Keeping facts in the conversation is free but at risk of compaction.
-- Batching saves time: an agent that remembers two growth times can log both in one action.
-- Bad timing costs plots: e.g. gather (free) → log → plant at turns K, K, K+1 leaves the freed plots idle for a turn instead of growing something new.
-
-So a good agent will deliberately keep some facts unlogged in its context. Those are exactly the facts compaction can destroy.
-
-## Brewing rules
-
-### General
-
-- A recipe uses **3 or 4 distinct plants**, each with quantity ≥ 1, written as `{plant: count}`.
-- **Infeasible brew:** not enough plants in the inventory. It costs **no turn** (nothing is consumed), and the agent must react appropriately.
-- Output: `{"positive": {"S": 5}, "negative": {}}`. A potion has **at most one effect**, positive or negative.
-- **Cancellation:** if a stat's positive and negative conditions both hold, they cancel, whatever the magnitudes.
-- **No effect:** both dictionaries are empty. This happens when no stat's plant set is complete, when neither condition holds, or when they cancel. The agent cannot tell which.
-- The agent does **not** know the intensity cap. It works in an open environment, aims for the maximum, and after reaching it can only refine what not to do.
-
-### Plants and stats
-
-8 plants and 5 stats. The plants are named for immersion: mint, elderberry, nettle, sage, chamomile, dill, basil, rosemary (in that order; internally the catalogue order is fixed, so a seed gives the same growth times as before the renaming). A stat is active only if **every** plant in its set is present (≥ 1).
+The five stats and their hidden rules stay as in version 2 (`environment/brewer.py`):
 
 | Stat | Plant set |
 |---|---|
@@ -103,227 +40,188 @@ So a good agent will deliberately keep some facts unlogged in its context. Those
 | D (dexterity) | nettle, sage, rosemary |
 | W (wisdom) | elderberry, chamomile, dill, basil |
 
-Any two sets together need ≥ 5 distinct plants, so with at most 4 per recipe **at most one stat can be active**.
+- A stat is active only if every plant of its set is present. Its positive and negative conditions depend on counts (e.g. S positive needs exactly 2 mint and rosemary % 3 = 2); if both hold, they cancel, whatever the magnitudes.
+- Base intensity levels: 2, 5, 10, 20%. **The base never exceeds 20%**, so any request above +20% needs secondary effects.
+- With at most 4 plants, at most one stat can be active. Mixing (below) can exceed 4 plants, so a mixed potion can carry **several primary effects**.
 
-### Conditions and intensity
+### Secondary effects
 
-Notation: N(p) = count of p; **!** = higher is better; **@** = lower is better (minimum 1). Plants not named in a rule do not affect intensity (they only need to be present).
+Secondary effects come from **pairs of plants**. A pair counts if both plants are present in the recipe, **whatever their counts**. Each listed pair contributes its modifier; two different pairs with the same label both count. Which pairs give which label is hidden **(content)**.
 
-| Stat | Positive (+) | Negative (−) |
+| Label | Modifier | How a source might describe it |
 |---|---|---|
-| I | N(elderberry)!, N(sage) % 2 = 1 | N(elderberry)!, N(sage) % 3 = 0 |
-| S | N(chamomile)!, N(rosemary) % 3 = 2, N(mint) = 2 | N(chamomile)!, N(rosemary) % 2 = 1 |
-| V | N(basil)!, N(basil) % 5 ≠ 0, N(nettle) % 2 = 0 | N(mint) = 2, N(basil)! |
-| D | N(rosemary)!, N(sage)@, N(sage) % 2 = 1 | N(rosemary)!, N(sage)!, N(sage) % 2 = 0 |
-| W | N(elderberry) = 2, N(dill)!, N(basil) % 2 = 1 | N(dill)!, N(basil) % 2 = 1, N(chamomile) % 2 = 0 |
+| fragrant | +25% | "the brew smelled of a spring meadow" |
+| warming | +50% | "a warmth spread through his chest" |
+| sweet | +100% | "tasted of honey" |
+| bitter | −25% | "bitter on the tongue; he barely felt it" |
+| murky | −50% | "cloudy, and the effect faded by noon" |
+| toxic | −100% | "the goat that drank it never rose again" |
 
-**Intensity levels:** 2, 5, 10, 20% (positive and negative alike). The driver score maps to a level: score 1 → 2%, 2 → 5%, 3 → 10%, ≥ 4 → 20%; score ≤ 0 → no effect.
-- Single driver (!): score = N(driver).
-- D positive (rosemary!, sage@): score = N(rosemary) − N(sage) + 1 (the larger the difference, the stronger).
-- D negative (rosemary!, sage!): score = N(rosemary) + N(sage) − 2.
+**Combination:**
+- Same-sign modifiers add up, with no cap: all three positives give +175%.
+- If positive and negative modifiers are both present, they **cancel completely**: no modifier at all (as with clashing primary conditions). This is the intended "antidote": a positive pair makes a toxic brew drinkable.
+- **Final intensity** = base × (1 + sum of modifiers), clamped at 0, rounded half away from zero (2.5 → 3, −2.5 → −3). A modifier applies to **every** primary effect of the potion, whatever its sign: sweet turns −S 20 into −S 40.
+- **Toxic** (or any net modifier ≤ −100%) removes the effect: the potion is undrinkable, and delivering it fails.
+- A **2-plant recipe** gives only a secondary effect (no stat set has 2 plants). It is a cheap probe of one pair.
 
-### Properties (brute-force check, counts 1–6 per plant)
+### Brewing and mixing
 
-| Stat | All-1s recipe gives | Share of recipes that are positive | Cheapest +20% recipe | Difficulty |
-|---|---|---|---|---|
-| I | +2% | 72 / 216 | elderberry=4, sage=1, dill=1 | easy |
-| S | −2% | **6 / 216** | mint=2, chamomile=4, rosemary=2 | hard (two exact conditions) |
-| V | nothing | 75 / 216 | mint=1, nettle=2, basil=4 | medium |
-| D | +2% | 72 / 216 | nettle=1, sage=1, rosemary=4 | easy |
-| W | nothing | 54 / 1,296 | elderberry=2, chamomile=1, dill=4, basil=1 | hard |
+- **Brew:** a recipe uses **2–4 distinct plants**, each with count ≥ 1. Several recipes can be brewed in one action, all or nothing.
+- **Mix:** combines potions from the inventory into one new potion. It is the same as brewing the **summed recipe** of the inputs: e.g. {sage 1, chamomile 1, nettle 1} + {nettle 1, mint 1, elderberry 1} = {nettle 2, sage 1, chamomile 1, mint 1, elderberry 1}. Primary and secondary effects are recomputed from the summed recipe, so new pairs across the inputs can create new secondary effects, and added plants can break a primary condition. There is **no plant limit**. The input potions are used up (their records stay in the notebook). Mixing costs 1 turn like brewing, and several mixes can go in one action.
+- Every potion is a **finite resource**: it is used up by mixing or by delivery.
+- **Output** (tool results keep the structured style): `Brewed {"mint": 2, "chamomile": 4, "rosemary": 2} → {"positive": {"S": 25}, "negative": {}, "secondary": ["fragrant"]} (potion #4)`. Only the final intensity is shown, not the base or the modifier values; the agent works the modifiers out by comparing potions.
 
-Traps: V with basil = 5 gives nothing; S with rosemary = 5 cancels. For S and W blind search is hopeless, so the agent must reason from the exact results it remembers.
+### Plant names and groups (content)
 
-## Users
+The corpus refers to plants by **folk names** ("the grey-leaved herb of the abbey wall" = sage) and **groups** ("pond plants", "hearth herbs"). A hidden table of names and groups is written first; the corpus and the requests are written from it.
 
-Users are **independent and isolated**: each episode starts with an empty garden, an empty inventory and a KB holding only the plant catalogue. Nothing carries over between users, which keeps episodes i.i.d. as LTT/PPI calibration requires.
+## Sources
 
-The user sets the **initial conditions** and the **goals**:
-- **Garden size** N.
-- **Allergy** (optional; some users have none): to a **combination of two plants**. Any recipe containing both is forbidden, and a potion that violates it counts as a failure for the goal.
-  - It is stated **at the start, as an initial condition** (users know their allergies). This makes it the oldest fact in the conversation, so it is the most exposed to compaction.
-  - The allergy **never makes a goal impossible**: the pair is never two plants that are both required for one of the user's goals. It can be **one required plant + one non-required plant**, e.g. chamomile + nettle for a strength goal.
-  - The agent knows only that a recipe needs 3–4 distinct plants, not which ones are required. It may therefore include a non-required 4th plant while exploring (e.g. find its best strength potion as {mint, chamomile, rosemary, nettle}). If that plant forms the allergic pair, the agent must discover that the potion also works without it.
-  - The allergy binds only if the agent's recipes actually include the non-required plant, so whether it matters depends on the agent's trajectory.
-  - For a W goal (4 required plants, no room for another plant) the allergy can never apply.
-- **Goals** (about 3 per episode, pursued one after another), each of one of two types:
-  - **Time-limited:** *"brew the best strength potion you can in 30 turns"*. Ends at the deadline; the score is the strongest valid potion of that stat brewed within the window.
-  - **Target:** *"brew a strength potion of at least +10% as fast as you can"*. Ends when a valid potion reaches the target; the score is the number of turns used. A global turn cap ends it as failed if the target is never reached.
-  - Since the agent does not know the intensity cap, an open-ended "brew the best" goal without a deadline would never end; both goal types avoid this.
-  - The garden, the inventory and the KB **carry over** between goals within an episode.
+- **Corpus:** one fixed set of short texts (herbals, records, notes, tales, pamphlets), plus distractor texts about unrelated things. Each source shows its **title, author and kind**. **(content)**
+- **Claims are implied, never numeric.** A source tells what happened ("my boy could suddenly carry two full buckets instead of one"); the agent infers the relation (a doubling: sweet, or a stronger base) and finds the exact values by experiment. Sources cover combinations, secondary effects, soils and plant groups. Some facts appear in no source and can only be found by experiment.
+- **Contradictions:** several sources may support a claim and one deny it.
+- **Reliability:** the kinds have a **known order**, stated in the system prompt, tied to the chance that a source of that kind is wrong. From most to least reliable, e.g. learned herbals > monastery records > healers' notes > village tales > merchants' pamphlets. The probabilities themselves are hidden **(content)**.
+- **Generation:** every source is written from a structured hidden claim (plants, relation, true or false, kind). This gives the answer key for each source.
+- **Retrieval:** BM25 over passages. `search` takes queries and returns the top-k passages with their source's title, author and kind. `read` returns whole sources, but only those returned by a `search` **in the current turn**; to read again in a later turn, the agent must search again.
 
-## Compaction
+## Requests
 
-- Triggered when the context passes a **fraction of the model's context window** (`--compaction-trigger`, default 0.8, of `--context-window` tokens). The check runs **only between turns**, after an action and its response are complete, so compaction never cuts an action in half.
-- **Informed but blind by default:** the system prompt tells the agent that older parts of the conversation may be summarised without notice, but it is never told how full its context is or when compaction will happen, just as a person knows they forget but not when. Logging is therefore insurance. An *uninformed* variant (compaction is never mentioned) is a possible ablation. A *warned* variant (the agent sees its context usage and can log just before compaction) is an optional later experiment.
-- With about 3 goals per episode, at least one compaction happens.
-- The same garden can be run with **0, 1, …, k compactions** for comparison.
+- **One request per episode** while testing, written in plain language, e.g. *"I am a stonecutter … I need to pack 10 oxen with stone, but I can barely pack 8. In a week we need to gather enough stone …"*. The request is part of the system prompt, so it is never compacted.
+- **Translation rules** the agent must apply:
+  - **Ratios:** from 8 to 10 oxen means at least +25%; from 5 to 7 means at least +40% (more is fine, less is not).
+  - **Glossary:** the system prompt maps symptoms and uses to stats, as a doctor maps symptoms to a disease. **(content)**
+  - **Deadlines** in days: "a week" means deliver by the end of day 7, i.e. turn 70. Requests without a deadline have a turn cap.
+  - **Vague constraints:** e.g. a client reacts badly to "the pond plants". Sources name the group's members. The request is designed so that one member is **required** for the goal (nettle for D) and the others must be avoided. The allergy itself cannot be observed by experiment; it is inferred from the request and the sources.
+- **Success** is judged on the delivered potion only:
+  - its intensity for the requested stat, after modifiers, meets the threshold (any positive intensity if none is given);
+  - other primary effects are ignored;
+  - it is drinkable (not toxic);
+  - its summed recipe contains no excluded plant;
+  - it is delivered before the deadline.
+- `deliver` **ends the goal**, as a success or a failure. There is one delivery and no feedback.
 
-## Facts worth remembering
+## Notebook
 
-| Fact | Where it lives unless logged |
+The notebook replaces the knowledge base. It holds typed records, indexed for exact lookups. Recording is **free** (within the free-call budget), all records are **append-only**, and every record has an id.
+
+**Written automatically by the environment:**
+
+| Record | Key and fields | When |
+|---|---|---|
+| `potion` (#k) | recipe (summed for mixes), origin (brew, or mix of #a + #b), primary effects, secondary labels, turn | at every brew or mix |
+| `growth` | key (plant, soil); growth time; counts planted, grew, died | updated when a plot becomes ready or its plant dies |
+
+The garden itself is not recorded: the garden line shows it every turn.
+
+**Written by the agent:**
+
+| Record | Required fields | Status |
+|---|---|---|
+| `claim` (c#) | the source id, plants, relation, value, the agent's trust | none: a claim reports what a source says, as the agent understands it |
+| `belief` (b#) | a statement in the validator's grammar | set **only by the validator**, recomputed against the data at every lookup |
+| `requirement` (r#) | the request phrase it comes from, and what it means (stat, threshold, deadline, excluded plants) | none |
+
+- Records are told apart by **origin**: claims cite a source, beliefs are the agent's own and are judged by data, and requirements come from the request. Claims and beliefs share one vocabulary of relations (pair → secondary label, recipe → effect, (plant, soil) → growth or survival), so a claim can be turned into a belief and tested.
+- **Corrections:** a new record with `replaces: <id>`; the old one stays, marked as replaced.
+- `kb_lookup` filters on record type and fields (e.g. potions with primary S; growth rows for sage). The more fields are given, the narrower the answer; broad lookups return many rows and fill the context. **(default)** At most 30 rows per lookup, with the total count shown.
+
+## Validator
+
+A free tool that checks statements against the notebook's **automatic records** (potions and growth), never against the hidden rules. It answers in three states, with the evidence:
+
+```
+{"status": "true" | "false" | "unknown", "for": [6, 18], "against": [], "tested": 7}
+```
+
+| Kind | True | False | Unknown |
+|---|---|---|---|
+| exact recipe gives X | that recipe was brewed with result X | it was brewed with another result | not brewed |
+| exists (some recipe containing F gives X) | one witness | never (the space is infinite with quantities) | no witness yet; reports how many were tested |
+| all / none (every recipe containing F gives / does not give X) | no counterexample in n tests (consistent, not proven; n is reported) | one counterexample | nothing tested |
+| relation (more P increases / decreases X) | ≥ 1 qualifying pair, and all such pairs agree | one pair disagrees | no qualifying pair |
+| rate ((plant, soil) survives with rate ≥ p) | the 95% binomial interval lies above p | it lies below p | otherwise |
+
+- **Qualifying pairs** for a relation differ **only** in the count of P and give the same stat. Pairs that also differ elsewhere are confounded and reported separately, never counted.
+- A `belief` record is a stored validator statement. Its status is the validator's answer at lookup time, so a belief in the notebook is never out of date.
+- The exact JSON grammar is fixed in the implementation.
+
+## Tools and actions
+
+### Free tools (0 turns)
+
+| Tool | Does | Budget |
+|---|---|---|
+| `search` | queries → top-k passages with source, title, author, kind | **counted** |
+| `record` | writes one or more claims, beliefs and requirements | **counted** |
+| `validate` | checks one or more statements | **counted** |
+| `read` | whole texts of sources returned by a search this turn | free |
+| `kb_lookup` | notebook records matching filters | free |
+| `inventory` | plant counts; potions by id | free |
+| `gather` | collects all ready plots; they are free at once | free |
+
+- **Budget:** `search`, `record` and `validate` together are limited to **5 calls per turn**. Every operation can be batched. **(default)** A batched call counts as one call. The budget resets every turn.
+- **Running out:** a 6th counted call costs no turn; the agent is told the budget is used up and that only reads, lookups, inventory, gather or an action remain this turn.
+
+### Actions (1 turn each, exactly one per turn)
+
+| Action | Syntax (sketch) |
 |---|---|
-| Current goal, which goals are done | conversation only (cannot be logged) |
-| Allergy (two-plant combination) | conversation only (cannot be logged) |
-| Exact quantities and magnitudes of brews | conversation only (KB statements use only odd / even / higher / lower labels) |
-| Best result so far | conversation only |
-| Failed / no-effect recipes | conversation only |
-| Planting map (what is planted where) | conversation, **unless logged**; recoverable with one garden log |
-| Observed growth times | conversation, **unless logged**; recoverable when the plant is next ready |
-| Herbal lore | knowledge base once unlocked (by logging a potion); recoverable with a free kb_lookup |
-| The agent's plan / schedule | conversation only |
+| plant | `{"action": "plant", "plots": {"3": {"plant": "sage", "soil": "yellow"}, "4": {"plant": "mint", "soil": "black"}}}` |
+| brew | `{"action": "brew", "recipes": [{"mint": 1, "basil": 1}, {"sage": 1, "dill": 1, "elderberry": 2}]}` |
+| mix | `{"action": "mix", "mixes": [[4, 9], [5, 6, 7]]}` |
+| deliver | `{"action": "deliver", "potion": 12}` |
+| skip | `{"action": "skip"}` |
 
-The inventory, logged facts and the plant catalogue are always available through free lookups.
+- Plant reports what was planted where (and in which soil); partial success as before.
+- Brew and mix are all or nothing; an infeasible brew or mix costs no turn.
+- Errors (malformed calls, infeasible brews or mixes, invalid records) cost no turn; after 3 failed attempts in one turn, the turn is skipped.
 
-## Measurement
+## Observations
 
-- **Main (retention):** at each compaction point, the simulator log gives the set of goal-relevant facts known so far. The loss is the **fraction of those facts lost** in the compacted context. Defining the facts at the compaction point keeps the loss independent of what the agent does afterwards, since its later actions change after compaction.
-- **Which facts count:** the retention loss focuses on **unrecoverable** facts (brew quantities and magnitudes, best result so far, failed recipes, allergy, current goal, plan). Garden facts (planting map, growth times) are recoverable at a turn cost, so forgetting them shows up in the performance metrics as wasted turns.
-- **Auxiliary (performance):** best potion achieved per goal, turns used, goals completed, idle plots, infeasible brews, allergy violations. Needs several runs per garden, because LLM strategy and randomness add noise.
+Every turn starts with the day, the turn and the garden:
 
-## Planning
+```
+[Day 3, turn 24]
+Garden: free: 1, 6; growing: 2 (sage, yellow, 1 turn left), 3 (mint, black, planted turn 22); ready: 4 (nettle, brown, waiting 0); died: 5 (basil, yellow)
+```
 
-Planning is free (0 turns) and is **not** given a dedicated tool or notepad: the agent writes its plan in its visible notes (thinking is discarded after each reply), so the plan is another fact compaction can destroy. Recommended agent loop: **plan → execute → re-plan** when an observation contradicts the plan.
+- Every plot shows its plant and soil. **(default)** A growing plot shows the turns left once its (plant, soil) growth time is in the notebook, and otherwise the turn it was planted. A ready plot shows how long it has waited. A plant that died is shown once.
+- The garden line deliberately omits the request, the deadline and any results.
 
-## Interaction format
+## The agent's memory and reply format
 
-### Turn structure
+- The agent is a reasoning model. Its **thinking is discarded** after every reply: it is long and tied to the current turn. Only the visible reply stays in the context.
+- The agent writes **structured notes** before its call, as in version 2. The schema will change: since observations are recorded automatically, the notes should carry the **thought process**, not repeat results:
+  - pointers to new records;
+  - interpretations of sources and of the request, with claim ids;
+  - beliefs with the validator's status;
+  - decisions with their reasons, citing ids.
 
-Every turn has four steps:
+  The schema is designed once the tools exist.
 
-1. **Garden state** (environment):
-   ```
-   [Turn 14]
-   Garden: free: 1, 2, 6; growing: 3 (elderberry, 2 turns left), 4, 5; ready: 7 (waiting 2), 8 (chamomile, waiting 0)
-   Choose your action.
-   ```
-2. **Agent:** thinks privately, then writes a reply of **visible notes** (whatever it wants to keep) followed by **one call**. It may call **free tools** any number of times (one per reply), then submits **exactly one action**:
-   ```
-   (thinking: discarded after the reply)
-   Results:
-     Potions:
-     - #2 {"elderberry": 2, "sage": 1, "dill": 1} → +I 5%
-     …
-   Beliefs:
-     …
-     Hypotheses:
-     - elderberry drives the intensity of I (1 → 2%, 2 → 5%) (hypothesis)
-     …
-   Plan:
-     Next:
-     - look up chamomile and rosemary in the KB first
-     …
-   {"tool": "kb_lookup", "plants": ["chamomile", "rosemary"]}               ← optional, free, repeatable
-   ```
-   ```
-   Notes: ...
-   {"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}}   ← exactly one per turn
-   ```
-3. **Action result** (environment):
-   ```
-   Brewed {"mint": 2, "chamomile": 4, "rosemary": 2} → {"positive": {"S": 20}, "negative": {}}  (potion #4)
-   ```
-4. **Time advances** to the next turn, and the loop repeats from step 1.
+## Information and retention
 
-**Thinking and notes.** The agent is a reasoning model and thinks before every reply. Its thinking is **never sent back**: the environment builds the history itself and keeps only the visible reply, cut after the first call (anything the model writes after the call, such as an invented result, is dropped). The thinking is kept in `transcript.md` for analysis only; `transcript_clean.md` leaves it out and shows exactly what stays in the context. Information therefore lives in three tiers:
+| Class | Examples | Recoverable by | Retention priority |
+|---|---|---|---|
+| Recorded observations | potions, growth rows, validator results | an exact `kb_lookup` or `validate` | low: the cost is a lookup, plus knowing it exists |
+| Read texts | passages and sources read | `search` again, if the agent remembers what to ask | medium: needs a pointer |
+| Context only | unrecorded interpretations, derived requirements, hypotheses being tested, why each plot was planted, the plan, what was searched and found useless | nothing | **high: what compaction must protect** |
 
-| Tier | Cost | Lasts |
-|---|---|---|
-| Thinking | free | the current reply only |
-| Visible notes (and the environment's replies) | free, but they fill the context | until compaction removes or summarises them |
-| Knowledge base | 1 turn per Log | permanent, but coarse (labels only) |
+Observations are **recoverable by design**; this is a deliberate change from version 2, where exact results existed only in the context. The retention study targets reasoning, not observations. How to define and label the retention target is open.
 
-Derived knowledge (growth times worked out from the waiting counters, the best potion so far, hypotheses about the rules, the plan) survives the reply only if the agent writes it into its notes.
+## Kept from version 2
 
-**Guidance for small models.** A first run with a small model showed notes holding only plans, no logging at all (skipping instead), and long, indecisive thinking. The system prompt therefore:
-- explains why logging matters, with a worked example on made-up plants (A, B, C, stat X) so no hidden rule is leaked, and says a log costs the same as a skip, so the agent should never skip while something useful is unlogged;
-- lists the facts worth tracking (goal and constraints, which cannot be logged; plantings and growth times; every brew with exact numbers; the best potion so far; hypotheses and plan);
-- fixes the notes to a schema with four sections and their sub-sections, written in this order in every reply, one fact per `- ` line and `- none` for a sub-section with nothing new: **Results** (Potions, Growth, Lore), **State** (Garden, Inventory, Logged, Best), **Beliefs** (Confirmed, Hypotheses, Refuted) and **Plan** (Next, Then). Results, State and Beliefs hold only what is new or changed since the last reply; the plan is written in full every reply, so its history shows where it changed. The agent thus labels its own notes: every line belongs to one sub-section, a brew and the fact that it was logged go on separate lines, and a reviewer can follow the run section by section. `LLM/notes.py` parses the notes into `notes.jsonl` at the end of each run and records departures from the schema (missing or misplaced sub-sections, lines outside them); nothing is reported back to the agent. (Before this schema the notes were free text, `New facts: …` then `Plan: …`; runs made before it are not comparable with later ones.)
-- gives a four-step decision routine (new, known, at most three options, decide) and asks for decisive play: decide once, a no-effect brew is information, keep every plot growing, plant several plots of a plant to vary quantities.
+The turn loop, the LLM client and agent (thinking discarded, cut after the first call), checkpointing and `--resume`, the run outputs (`params.json`, transcripts, `actions.jsonl`, `llm_calls.jsonl`, `summary.json`), and the primary brewing rules.
 
-Example recipes in the system prompt never contain a stat's plant set (`tests/test_prompt.py` checks this); an earlier version used the cheapest +20% S recipe as its example and so leaked the S set.
+**Removed:** the log action, garden logging, the potion label vocabulary, lore lines, the two-plant allergy, and the time-limited "brew the best" goals.
 
-For Qwen3.8, `--reasoning-effort medium` is used: its template's default (`xhigh`) adds an instruction to "consider plausible alternatives", which works against the decision routine; `medium` adds nothing.
-
-Thinking is dropped from **every** reply, including replies within one turn (e.g. kb_lookup → brew); anything needed for the next call goes in the notes. *Possible variant:* keep thinking until the turn's action and drop it at the turn's end (depends on how each chat template treats old thinking). A thinking-off variant, where all reasoning is visible text, is kept as a comparison.
-
-The garden state and action results **deliberately omit** the current goal, its deadline or turns remaining, the allergy, past results and the best result so far. Repeating any of these every turn would protect them from compaction and defeat the test.
-
-### Actions (cost 1 turn)
-
-| Action | Syntax |
-|---|---|
-| Plant | `{"action": "plant", "plots": {"3": "elderberry", "4": "elderberry", "5": "basil"}}` |
-| Log | `{"action": "log", "garden": true, "potions": [{"id": 3, "labels": {"chamomile": "higher", "rosemary": "even", "mint": "even"}}]}` (either part optional) |
-| Brew | `{"action": "brew", "recipes": [{"mint": 2, "chamomile": 4, "rosemary": 2}, {"elderberry": 2, "sage": 1, "dill": 1}]}` (or `"recipe": {...}` for one potion) |
-| Skip | `{"action": "skip"}` |
-
-**Log parts** (see Knowledge base): `"garden": true` logs growth times of ready plants and planting records of all occupied plots, filled in by the environment. `"potions"` logs chosen potions with the agent's labels (`odd`, `even`, `higher`, `lower`, `present`); the environment adds the plant set and effect.
-
-### Free tools (cost 0 turns)
-
-| Tool | Syntax | Returns |
-|---|---|---|
-| Gather | `{"tool": "gather"}` | collects all ready plots; they are free at once |
-| KB lookup | `{"tool": "kb_lookup", "plants": ["chamomile"]}` | all KB entries involving these plants |
-| Inventory | `{"tool": "inventory"}` | plant → count; potions by ID only (no details), marked logged / unlogged |
-
-A separate garden-view tool is not needed: the garden state is shown at the start of every turn, and the only free tool that changes it (gather) reports which plots it freed.
-
-### Environment responses
-
-| Action / tool | Response | Notes |
-|---|---|---|
-| Plant | `Planted: plot 3 (elderberry), plot 4 (elderberry). Failed: plot 5 (occupied), plot 12 (does not exist), plot 6 (unknown plant lavender).` | **Partial success:** valid plots are planted, the others are reported with the reason. Costs the turn. |
-| Gather | `Gathered: +2 elderberry, +1 basil. Plots now free: 3, 4, 7.` (or `Gathered nothing.`) | **Free, never fails.** Collects **all** ready plots (counts only, not per plot), updates the inventory, and removes the planting records of the gathered plots. |
-| Brew | `Brewed {"mint": 2, "chamomile": 4, "rosemary": 2} → {"positive": {"S": 20}, "negative": {}} (potion #4)`, one line per potion | **All or nothing.** Failures (`Not enough plants for these recipes together: need 4 chamomile, have 2. Nothing was brewed.` · `Recipe 2: A recipe needs 3–4 distinct plants.`) cost 0 turns; 3 failures → forced Skip. |
-| Skip | `Skipped.` | – |
-| Log | `Logged: growth elderberry = 4 turns, basil = 3 turns; plantings: plot 3 (elderberry), plot 5 (basil); potion #3: (higher) chamomile, even rosemary, even mint → +S.` | **All-or-nothing:** if any potion entry is invalid (unknown potion ID, a label for a plant the potion does not contain, or a label outside the vocabulary), nothing is logged, including the garden part. A failed Log costs **0 turns** and counts toward the 3-failure limit. Plants the agent leaves unlabelled default to `present`. The garden part alone never fails (it may log nothing new). An exact duplicate (same plant set, effect and labels) is reported as `potion #3: already known` and the potion is marked logged. |
-| KB lookup | `Growth: chamomile 4 turns, dill unknown.` / `Interactions:` / `- (higher) chamomile, even rosemary, even mint → +S` / … / `Lore:` / `- …` (one line each) | Grouped by category, not by plant: the growth time of every requested plant (or `unknown`), then every logged outcome statement involving any of them, **in the order they were logged** (the last one is the agent's latest belief), then (lore on) every unlocked lore line naming any of them. Each statement and lore line appears once, even when it names several requested plants. An empty category reads `Interactions: none.` / `Lore: none yet.` |
-| Inventory | `plants: elderberry: 3, chamomile: 1, basil: 1; potions: #1 (logged), #2, #3` | Potion details are never shown here; they live only in the conversation. |
-
-- **Errors** (malformed JSON, failed brews, failed logs) cost **0 turns**. After **3 failed attempts** in one turn the environment forces a Skip.
-- **Allergy violations are not flagged.** A brew containing the allergic pair succeeds normally (plants consumed, effect shown) but counts as a failure in scoring. A warning would re-insert the allergy into the context and undo the effect of compaction.
-
-### Episode flow
-
-1. **Initialisation:** sample each plant's growth time from U(a, b); empty garden of N plots; empty inventory; KB holds the plant catalogue (names only).
-2. **System prompt:** the visible rules of the world: actions and their costs, free tools, 3–4 distinct plants per recipe, the effects dictionary, the log label vocabulary, that time is limited, the reply format (notes, then one JSON call), and how its memory works (thinking is discarded after each reply; the conversation may be summarised without notice; only the knowledge base is permanent). The hidden brewing rules and growth times are **not** included.
-3. **User opening message:** garden size, allergy (if any), first goal.
-4. **Turn loop** (turn t):
-   1. The environment shows `[Turn t]` with the garden state and asks for an action.
-   2. The agent reasons, uses free tools, and submits one action.
-   3. The environment applies the action and returns the result (or forces a Skip after 3 failed attempts).
-   4. The environment checks the goal. A target goal reached by a valid brew ends now; a time-limited goal ends when its deadline passes.
-   5. Time advances to t + 1. A plant planted in turn t with growth time g becomes **ready at the start of turn t + g** and stays ready until gathered.
-   6. If the context has passed the compaction trigger, **compaction** runs (blind: the agent is not told).
-   7. A **checkpoint** of the complete state is saved (see Checkpointing).
-5. **Goal end:** the user sends *"Goal finished."* together with the next goal, without reporting the result.
-6. **Episode end:** after the last goal, or at the global turn cap.
-
-### Checkpointing
-
-Protects long runs against crashes (connection loss, out of memory, context overflow). It is prevention, not logging.
-- **After every completed turn** the complete state is saved to `temp/<agent>/<run_id>/checkpoint.json`: world (garden, inventory, goals, turn), knowledge base contents, ledger, agent state (conversation, random state), the byte sizes of the log files, and the number of compactions so far.
-- Only the **latest** checkpoint is kept. It is written to a temporary file and then renamed, so a crash while saving keeps the previous one.
-- **Resume** with `--resume runs/<agent>/<run_id>`. All parameters come from that run's `params.json` (no other options are accepted). The log files are cut back to their checkpointed sizes, later compaction files are removed, and the knowledge base is rebuilt from the checkpoint, so nothing from the interrupted turn remains.
-- The interrupted turn is **replayed from its start**; at most one turn is lost. The resumed run first re-checks compaction, so a crash caused by a full context compacts before retrying.
-
-### Evaluation and comparisons (parked)
-
-To be designed later. Notes so far:
-- Performance metrics per goal type (best intensity within the deadline; turns to reach the target).
-- Comparisons: different LLMs; different compaction thresholds (context sizes); different compactors.
-- Non-LLM baselines: a random agent, a heuristic search agent, and a scripted oracle that knows the hidden rules (upper bound).
+**Frozen:** the browser game (`game/`) and the oracle agent, which follow version 2. The compaction code (summary, fork, atomizer, notes) stays as it is until the new schema exists.
 
 ## Open items
 
-- [x] Brewer rules (see Brewing rules)
-- [x] Observation format and action syntax (see Interaction format)
-- [x] Environment responses and episode flow
-- [ ] Evaluation plan and baselines (parked)
-- [ ] Concrete allergy list (one required + one non-required plant for the user's goals)
-- [ ] Values of a, b for growth times; range of garden sizes N; time budgets per goal
-- [ ] Compaction trigger value and context window per model, and which compactors to try
-- [ ] Which local LLM plays the agent
-- [ ] Optional: a scripted reference planner that knows the hidden rules (upper bound for the auxiliary metric)
+- [ ] **(content)** Plant names and groups; the glossary; the pairs that give secondary effects; growth times and deaths per (plant, soil); the false-information chance per source kind; the corpus; 5–10 requests with their translations and success checks
+- [ ] The validator's exact grammar; the record fields and the relation vocabulary
+- [ ] `search` k and passage length; the `kb_lookup` row limit
+- [ ] The new reply schema (the thought process)
+- [ ] Defining and labelling the retention target; compaction method and guarantee (parked)
+- [ ] Multi-agent variant (parked idea)
