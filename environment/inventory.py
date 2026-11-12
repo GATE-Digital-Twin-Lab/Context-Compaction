@@ -9,13 +9,16 @@ from environment.brewer import Effect
 
 @dataclass
 class Potion:
-    """A brewed potion (a no-effect brew is a potion too)."""
+    """A brewed or mixed potion (a no-effect potion is a potion too). A mix stores the summed recipe
+    and the ids of its inputs; used potions (mixed away) stay listed for the records."""
 
     id: int
     recipe: dict[str, int]
     effect: Effect
     turn: int
     logged: bool = False
+    origin: tuple[int, ...] = ()  # empty: brewed; otherwise the ids of the mixed potions
+    used: bool = False            # used up by a mix (or a delivery)
 
     def to_dict(self) -> dict:
         return {
@@ -24,11 +27,21 @@ class Potion:
             "effect": self.effect.to_dict(),
             "turn": self.turn,
             "logged": self.logged,
+            "origin": list(self.origin),
+            "used": self.used,
         }
 
     @classmethod
     def from_dict(cls, data: Mapping) -> "Potion":
-        return cls(data["id"], dict(data["recipe"]), Effect.from_dict(data["effect"]), data["turn"], data["logged"])
+        return cls(
+            data["id"],
+            dict(data["recipe"]),
+            Effect.from_dict(data["effect"]),
+            data["turn"],
+            data["logged"],
+            tuple(data.get("origin", ())),
+            data.get("used", False),
+        )
 
 
 @dataclass
@@ -58,7 +71,17 @@ class Inventory:
         self.plants.subtract(recipe)
         self.plants = +self.plants  # drop zero counts
 
-    def add_potion(self, recipe: Mapping[str, int], effect: Effect, turn: int) -> Potion:
-        potion = Potion(len(self.potions) + 1, dict(recipe), effect, turn)
+    def add_potion(
+        self, recipe: Mapping[str, int], effect: Effect, turn: int, origin: tuple[int, ...] = ()
+    ) -> Potion:
+        potion = Potion(len(self.potions) + 1, dict(recipe), effect, turn, origin=origin)
         self.potions.append(potion)
         return potion
+
+    def potion(self, pid: int) -> Potion | None:
+        return self.potions[pid - 1] if 1 <= pid <= len(self.potions) else None
+
+    @property
+    def held(self) -> list[Potion]:
+        """Potions not used up."""
+        return [p for p in self.potions if not p.used]

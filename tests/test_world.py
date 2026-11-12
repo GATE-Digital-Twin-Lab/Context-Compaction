@@ -1,9 +1,9 @@
 import pytest
 
-from environment.brewer import RecipeError
+from environment.brewer import RecipeError, effect_of
 from environment.goals import Allergy, Goal, GoalKind, score_goal, validate_allergy
 from environment.knowledge_base import LogError
-from environment.world import InfeasibleBrew, World
+from environment.world import InfeasibleBrew, MixError, World
 
 STRENGTH_10 = Goal(GoalKind.TARGET, "S", target=10)
 INTEL_5_TURNS = Goal(GoalKind.TIME, "I", turns=5)
@@ -91,7 +91,7 @@ def test_failed_brews_change_nothing():
         world.brew({"mint": 2, "chamomile": 1, "rosemary": 2})
     assert err.value.shortages == {"rosemary": (2, 0)}
     with pytest.raises(RecipeError):
-        world.brew({"mint": 2, "chamomile": 1})
+        world.brew({"mint": 2})
     assert dict(world.inventory.plants) == {"mint": 2, "chamomile": 1}
     assert world.inventory.potions == []
 
@@ -179,3 +179,80 @@ def test_turn_cap_fails_open_target_goal():
     end = world.end_turn()
     assert end.episode_over and not end.finished.success
     assert len(world.results) == 1                     # the second goal never started
+
+
+# --- mixing ---------------------------------------------------------------------
+
+
+def brew_spec_pair(world: World):
+    world.inventory.add_plants({"sage": 1, "chamomile": 1, "nettle": 2, "mint": 1, "elderberry": 1})
+    return world.brew_all([{"sage": 1, "chamomile": 1, "nettle": 1}, {"nettle": 1, "mint": 1, "elderberry": 1}])
+
+
+def test_mix_sums_the_recipes_and_uses_up_the_inputs():
+    world = make_world()
+    brew_spec_pair(world)
+    (mixed,) = world.mix_all([[1, 2]])
+    assert mixed.id == 3 and mixed.origin == (1, 2) and mixed.turn == world.turn
+    assert mixed.recipe == {"sage": 1, "chamomile": 1, "nettle": 2, "mint": 1, "elderberry": 1}   # spec example
+    assert mixed.effect == effect_of(mixed.recipe)
+    assert [p.used for p in world.inventory.potions] == [True, True, False]
+    assert [p.id for p in world.inventory.held] == [3]
+
+
+@pytest.mark.parametrize(
+    "mixes, message",
+    [
+        ([], "Give at least one mix."),
+        ([[1]], "A mix needs at least 2 potions."),
+        ([[1, 9]], "Unknown potion #9."),
+        ([[1, 1]], "Potion #1 appears more than once."),
+        ([[1, 2], [2, 1]], "Mix 2: Potion #2 appears more than once."),
+    ],
+)
+def test_invalid_mixes_change_nothing(mixes, message):
+    world = make_world()
+    brew_spec_pair(world)
+    with pytest.raises(MixError, match=message):
+        world.mix_all(mixes)
+    assert len(world.inventory.potions) == 2 and not any(p.used for p in world.inventory.potions)
+
+
+def test_used_potion_cannot_be_mixed_again():
+    world = make_world()
+    brew_spec_pair(world)
+    world.inventory.add_plants({"mint": 1, "sage": 1})
+    world.brew({"mint": 1, "sage": 1})
+    world.mix_all([[1, 2]])
+    with pytest.raises(MixError, match="Potion #1 was already used up."):
+        world.mix_all([[1, 3]])
+
+
+def test_mix_reaches_a_target():
+    world = make_world(goals=(Goal(GoalKind.TARGET, "S", target=30),))
+    world.inventory.add_plants({"mint": 2, "chamomile": 5, "rosemary": 2, "nettle": 1})
+    world.brew_all([{"mint": 2, "chamomile": 4, "rosemary": 2}, {"chamomile": 1, "nettle": 1}])   # S 20; warming
+    world.end_turn()
+    assert not world.results
+    (mixed,) = world.mix_all([[1, 2]])
+    assert mixed.effect.positive == {"S": 30}
+    world.end_turn()
+    assert world.results[0].success and world.results[0].best_potion == 3
+
+
+def test_used_potions_are_not_scored():
+    world = make_world(goals=(Goal(GoalKind.TIME, "S", turns=5),))
+    world.inventory.add_plants({"mint": 2, "chamomile": 4, "rosemary": 2, "elderberry": 1, "dill": 1})
+    world.brew_all([{"mint": 2, "chamomile": 4, "rosemary": 2}, {"elderberry": 1, "dill": 1}])
+    world.mix_all([[1, 2]])   # adds elderberry + mint (bitter), dill + rosemary (bitter), dill + mint (sweet): cancel
+    result = score_goal(world.goals[0], world.inventory.potions, None, 1, world.turn)
+    assert result.best_potion == 3
+
+
+def test_mixed_potions_survive_a_checkpoint():
+    world = make_world()
+    brew_spec_pair(world)
+    world.mix_all([[2, 1]])
+    copy = World.from_dict(world.to_dict())
+    assert copy.inventory.potions == world.inventory.potions
+    assert copy.inventory.potions[2].origin == (2, 1)

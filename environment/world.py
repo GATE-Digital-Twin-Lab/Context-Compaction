@@ -5,7 +5,7 @@ from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 
-from environment.brewer import PLANTS, RecipeError, brew, validate_recipe
+from environment.brewer import PLANTS, Effect, RecipeError, brew, effect_of, validate_recipe
 from environment.garden import Garden, GatherResult, PlantResult, sample_growth_times
 from environment.goals import Allergy, Goal, GoalKind, GoalResult, goal_intensity, score_goal, validate_allergy
 from environment.inventory import Inventory, Potion
@@ -20,6 +20,10 @@ class InfeasibleBrew(Exception):
     def __init__(self, shortages: dict[str, tuple[int, int]]) -> None:
         super().__init__(shortages)
         self.shortages = shortages
+
+
+class MixError(ValueError):
+    """Invalid mix (unknown, used-up or repeated potion); costs no turn."""
 
 
 @dataclass(frozen=True)
@@ -159,7 +163,41 @@ class World:
 
     def _brew_one(self, recipe: Mapping[str, int]) -> Potion:
         self.inventory.consume(recipe)
-        potion = self.inventory.add_potion(recipe, brew(recipe), self.turn)
+        return self._add_potion(recipe, brew(recipe))
+
+    def mix_all(self, mixes: Sequence[Sequence[int]]) -> list[Potion]:
+        """Mix potions, all or nothing: each mix combines 2 or more distinct held potions into one
+        potion brewed from their summed recipe (no plant limit); the inputs are used up. A potion may
+        appear in only one mix. Raises MixError before changing anything."""
+        if not mixes:
+            raise MixError("Give at least one mix.")
+        seen: set[int] = set()
+        for i, ids in enumerate(mixes, start=1):
+            where = f"Mix {i}: " if len(mixes) > 1 else ""
+            if len(ids) < 2:
+                raise MixError(f"{where}A mix needs at least 2 potions.")
+            for pid in ids:
+                potion = self.inventory.potion(pid)
+                if potion is None:
+                    raise MixError(f"{where}Unknown potion #{pid}.")
+                if potion.used:
+                    raise MixError(f"{where}Potion #{pid} was already used up.")
+                if pid in seen:
+                    raise MixError(f"{where}Potion #{pid} appears more than once.")
+                seen.add(pid)
+        return [self._mix_one(ids) for ids in mixes]
+
+    def _mix_one(self, ids: Sequence[int]) -> Potion:
+        inputs = [self.inventory.potions[pid - 1] for pid in ids]
+        total: Counter[str] = Counter()
+        for potion in inputs:
+            total.update(potion.recipe)
+            potion.used = True
+        recipe = dict(total)
+        return self._add_potion(recipe, effect_of(recipe), origin=tuple(ids))
+
+    def _add_potion(self, recipe: Mapping[str, int], effect: Effect, origin: tuple[int, ...] = ()) -> Potion:
+        potion = self.inventory.add_potion(recipe, effect, self.turn, origin)
         goal = self.current_goal
         valid = self.allergy is None or not self.allergy.violated_by(recipe)
         if goal and goal.kind is GoalKind.TARGET and valid and goal_intensity(goal, potion) >= goal.target:

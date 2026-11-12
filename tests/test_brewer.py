@@ -2,7 +2,19 @@ import itertools
 
 import pytest
 
-from environment.brewer import STAT_SETS, Effect, RecipeError, brew, intensity
+from environment.brewer import (
+    MODIFIERS,
+    SECONDARY_PAIRS,
+    STAT_SETS,
+    Effect,
+    RecipeError,
+    apply_modifier,
+    brew,
+    effect_of,
+    intensity,
+    net_modifier,
+    secondary_labels,
+)
 
 
 def ones(stat: str) -> dict[str, int]:
@@ -19,7 +31,7 @@ def test_intensity(score, level):
 @pytest.mark.parametrize(
     "recipe",
     [
-        {"mint": 1, "elderberry": 1},                                 # too few plants
+        {"mint": 1},                                                  # too few plants
         {"mint": 1, "elderberry": 1, "nettle": 1, "sage": 1, "chamomile": 1},      # too many plants
         {"mint": 1, "elderberry": 1, "lavender": 1},                        # unknown plant
         {"mint": 0, "elderberry": 1, "nettle": 1},                        # zero count
@@ -101,13 +113,97 @@ def test_no_complete_set():
     assert brew({"mint": 1, "elderberry": 1, "dill": 1}).is_empty
 
 
-def test_extra_plant_does_not_change_effect():
+def test_extra_plant_adds_its_pairs():
     base = {"mint": 2, "chamomile": 4, "rosemary": 2}
-    assert brew({**base, "nettle": 5}) == brew(base)
+    assert brew({**base, "nettle": 5}) == Effect({"S": 30}, {}, ("warming",))   # chamomile + nettle
 
 
 def test_to_dict():
     assert brew({"elderberry": 2, "sage": 1, "dill": 1}).to_dict() == {
         "positive": {"I": 5},
         "negative": {},
+        "secondary": [],
     }
+
+
+# --- secondary effects ----------------------------------------------------------
+
+
+def test_secondary_pairs_design():
+    """11 pairs, none inside a stat set; a label's pairs share no plant; toxic has a single pair."""
+    inside = {frozenset(p) for s in STAT_SETS.values() for p in itertools.combinations(s, 2)}
+    assert len(SECONDARY_PAIRS) == 11 and not set(SECONDARY_PAIRS) & inside
+    by_label = {label: [p for p, l in SECONDARY_PAIRS.items() if l == label] for label in MODIFIERS}
+    assert {label: len(pairs) for label, pairs in by_label.items()} == {
+        "fragrant": 2, "warming": 2, "sweet": 2, "bitter": 2, "murky": 2, "toxic": 1,
+    }
+    assert all(not (a & b) for a, b, *_ in (ps for ps in by_label.values() if len(ps) == 2))
+
+
+@pytest.mark.parametrize("stat", STAT_SETS)
+def test_minimal_stat_recipe_has_no_secondary(stat):
+    assert brew(ones(stat)).secondary == ()
+
+
+@pytest.mark.parametrize(
+    "base, modifier, value",
+    [(2, 25, 3), (5, 25, 6), (2, -25, 2), (5, -50, 3), (10, 50, 15), (20, 175, 55), (20, -75, 5), (20, -100, 0)],
+)
+def test_apply_modifier_rounds_half_away_from_zero(base, modifier, value):
+    assert apply_modifier(base, modifier) == value
+
+
+def test_two_plant_probe_gives_only_a_secondary():
+    assert brew({"mint": 1, "sage": 3}) == Effect({}, {}, ("fragrant",))
+    assert brew({"mint": 1, "rosemary": 1}) == Effect()   # pair inside the S set
+
+
+def test_same_label_twice_counts_twice():
+    assert secondary_labels(["dill", "mint", "chamomile", "sage"]) == ("fragrant", "sweet", "sweet")
+    assert net_modifier(("fragrant", "sweet", "sweet")) == 225
+
+
+def test_modifier_applies_to_negative_effects():
+    # -S 20 (rosemary odd) with sage: fragrant + sweet = +125%
+    assert brew({"mint": 1, "chamomile": 4, "rosemary": 1, "sage": 1}) == Effect({}, {"S": 45}, ("fragrant", "sweet"))
+
+
+def test_positive_and_negative_modifiers_cancel():
+    effect = brew({"mint": 2, "chamomile": 4, "rosemary": 2, "dill": 1})
+    assert effect == Effect({"S": 20}, {}, ("sweet", "bitter")) and effect.drinkable
+
+
+def test_toxic_removes_the_effect():
+    effect = brew({"mint": 1, "nettle": 2, "basil": 4, "elderberry": 1})   # V 20 + bitter + toxic
+    assert effect == Effect({}, {}, ("bitter", "toxic")) and not effect.drinkable
+
+
+def test_positive_pair_is_an_antidote():
+    effect = brew({"elderberry": 1, "nettle": 1, "chamomile": 1})
+    assert effect.secondary == ("warming", "toxic") and effect.drinkable
+
+
+def test_net_minus_100_is_undrinkable_without_toxic():
+    assert not Effect(secondary=("murky", "murky")).drinkable
+    assert Effect(secondary=("murky", "bitter")).drinkable
+
+
+def test_from_dict_without_secondary():
+    assert Effect.from_dict({"positive": {"S": 5}, "negative": {}}) == Effect({"S": 5}, {})
+
+
+# --- mixing (summed recipes) -------------------------------------------------------
+
+
+def test_effect_of_has_no_plant_limit_and_several_stats():
+    recipe = {"elderberry": 4, "sage": 1, "dill": 1, "mint": 2, "chamomile": 4, "rosemary": 2}
+    effect = effect_of(recipe)
+    assert effect.positive == {"I": 20, "S": 20} and effect.negative == {}
+    assert effect.secondary == ("fragrant", "sweet", "sweet", "bitter", "bitter", "murky")   # mixed signs cancel
+    with pytest.raises(RecipeError):
+        brew(recipe)
+
+
+def test_added_plants_can_break_a_primary_condition():
+    assert brew({"elderberry": 4, "sage": 1, "dill": 1}).positive == {"I": 20}
+    assert effect_of({"elderberry": 4, "sage": 3, "dill": 1}).is_empty   # sage odd and divisible by 3: cancel

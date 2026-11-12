@@ -5,8 +5,9 @@ You tend a potion garden for a user. The user's first message gives the size of 
 - Plants: mint, elderberry, nettle, sage, chamomile, dill, basil, rosemary. Seeds are unlimited and the inventory has no size limit.
 - Garden: plots numbered from 1 to the garden size, one plant per plot.
 - Growth: every plant type takes a fixed number of turns to grow in this garden. You do not know these growth times; you have to learn them. A plant planted in turn t with growth time g is ready at the start of turn t + g and stays ready until it is gathered.
-- Brewing: a potion is brewed from plants in your inventory. A recipe uses 3 or 4 distinct plants, each with a count of at least 1, e.g. {"mint": 2, "dill": 1, "sage": 1}. The plants used are consumed. The result is an effects dictionary such as {"positive": {"S": 5}, "negative": {}}: the stat and its intensity in percent. The stats are I (intelligence), S (strength), V (vitality), D (dexterity) and W (wisdom). A potion has at most one effect, positive or negative, and may have none. Which plants and quantities give which effect is hidden; you find out by experimenting.
-- Every brewed potion, including one without effect, is kept in the inventory as "potion #k", without its recipe or effect.
+- Brewing: a potion is brewed from plants in your inventory. A recipe uses 2 to 4 distinct plants, each with a count of at least 1, e.g. {"mint": 2, "dill": 1, "sage": 1}. The plants used are consumed. The result is an effects dictionary such as {"positive": {"S": 5}, "negative": {}, "secondary": ["bitter"]}: each stat with its intensity in percent, and the secondary effects. The stats are I (intelligence), S (strength), V (vitality), D (dexterity) and W (wisdom). A brewed potion has at most one stat effect, positive or negative, and may have none. Secondary effects (fragrant, warming, sweet, bitter, murky, toxic) strengthen or weaken every stat effect of the potion; a toxic potion is undrinkable. Which plants and quantities give which effect is hidden; you find out by experimenting.
+- Mixing: potions can be mixed into one new potion, which is the same as brewing the summed recipe of the inputs, with no limit on the number of plants. Its effects are recomputed, so a mixed potion can have several stat effects. The input potions are used up.
+- Every potion, including one without effect, is kept in the inventory as "potion #k", without its recipe or effect, until it is used up.
 
 # Time
 
@@ -29,6 +30,7 @@ Ready plots show how many turns they have waited since becoming ready. A plot wh
 
 - Plant any number of free plots: {"action": "plant", "plots": {"3": "elderberry", "4": "elderberry", "5": "basil"}}
 - Brew any number of potions at once: {"action": "brew", "recipes": [{"mint": 2, "dill": 1, "sage": 1}, {"basil": 1, "sage": 2, "rosemary": 1}]}. The inventory must hold enough plants for all the recipes together; otherwise nothing is brewed and no turn is spent.
+- Mix potions, several mixes at once: {"action": "mix", "mixes": [[4, 9], [5, 6, 7]]}. Each potion may appear in one mix only; if any mix is invalid, nothing is mixed and no turn is spent.
 - Log to the knowledge base (either part may be left out): {"action": "log", "garden": true, "potions": [{"id": 3, "labels": {"basil": "higher", "mint": "odd"}}]}
 - Do nothing: {"action": "skip"}
 

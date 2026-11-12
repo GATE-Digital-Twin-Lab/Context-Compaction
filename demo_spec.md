@@ -46,16 +46,25 @@ The five stats and their hidden rules stay as in version 2 (`environment/brewer.
 
 ### Secondary effects
 
-Secondary effects come from **pairs of plants**. A pair counts if both plants are present in the recipe, **whatever their counts**. Each listed pair contributes its modifier; two different pairs with the same label both count. Which pairs give which label is hidden **(content)**.
+Secondary effects come from **pairs of plants**. A pair counts if both plants are present in the recipe, **whatever their counts**. Each listed pair contributes its modifier; two different pairs with the same label both count. Which pairs give which label is hidden.
 
-| Label | Modifier | How a source might describe it |
-|---|---|---|
-| fragrant | +25% | "the brew smelled of a spring meadow" |
-| warming | +50% | "a warmth spread through his chest" |
-| sweet | +100% | "tasted of honey" |
-| bitter | −25% | "bitter on the tongue; he barely felt it" |
-| murky | −50% | "cloudy, and the effect faded by noon" |
-| toxic | −100% | "the goat that drank it never rose again" |
+| Label | Modifier | Pairs (hidden) | How a source might describe it |
+|---|---|---|---|
+| fragrant | +25% | mint + sage; basil + rosemary | "the brew smelled of a spring meadow" |
+| warming | +50% | chamomile + nettle; basil + sage | "a warmth spread through his chest" |
+| sweet | +100% | dill + mint; chamomile + sage | "tasted of honey" |
+| bitter | −25% | elderberry + mint; dill + rosemary | "bitter on the tongue; he barely felt it" |
+| murky | −50% | elderberry + rosemary; dill + nettle | "cloudy, and the effect faded by noon" |
+| toxic | −100% | elderberry + nettle | "the goat that drank it never rose again" |
+
+**How the pairs were chosen:**
+- **No pair lies inside a stat set**, so the minimal recipe of a stat (exactly its set) never carries a secondary effect. Of the 28 pairs, 17 lie inside a stat set, which leaves **11**; all 11 are used. Two pairs per label would need 12, so **toxic has a single pair**: the one deadly pairing.
+- **Each pair gives one label**, and **a label's two pairs share no plant**: excluding one plant never removes both ways to make a label.
+- Each of I, S, V, D, extended with a 4th plant, has at least one boost and at least one drawback, and the best boosts differ (I +100%, S +125%, V +75%, D +150%).
+
+**Consequences:**
+- **W** already has 4 plants, so a W brew has no secondary effect; W can be boosted only by mixing.
+- Every pair outside a stat set carries a label, so a 2-plant probe of a pair inside a stat set always returns nothing.
 
 **Combination:**
 - Same-sign modifiers add up, with no cap: all three positives give +175%.
@@ -219,7 +228,8 @@ The turn loop, the LLM client and agent (thinking discarded, cut after the first
 
 ## Open items
 
-- [ ] **(content)** Plant names and groups; the glossary; the pairs that give secondary effects; growth times and deaths per (plant, soil); the false-information chance per source kind; the corpus; 5–10 requests with their translations and success checks
+- [x] **(content)** The pairs that give secondary effects (see *Secondary effects*)
+- [ ] **(content)** Plant names and groups; the glossary; growth times and deaths per (plant, soil); the false-information chance per source kind; the corpus; 5–10 requests with their translations and success checks
 - [ ] The validator's exact grammar; the record fields and the relation vocabulary
 - [ ] `search` k and passage length; the `kb_lookup` row limit
 - [ ] The new reply schema (the thought process)

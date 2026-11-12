@@ -109,8 +109,8 @@ def score_goal(
     """Score the potions brewed in [start, end]; allergic potions don't count."""
     best_id, best, violations = None, 0, 0
     for potion in potions:
-        if not start <= potion.turn <= end:
-            continue
+        if not start <= potion.turn <= end or potion.used:
+            continue  # used potions (mixed away) are no longer held
         if allergy is not None and allergy.violated_by(potion.recipe):
             violations += 1
             continue

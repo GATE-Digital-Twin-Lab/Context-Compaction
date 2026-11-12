@@ -62,10 +62,10 @@ def test_brews_best_and_allergy():
     ]
     act(world, d, ledger, {"action": "brew", "recipe": {"mint": 2, "chamomile": 2, "rosemary": 2}})   # +S 5%
     assert [r["id"] for r in active(ledger, world, FactKind.BEST)] == ["best:1:#2"]
-    act(world, d, ledger, {"action": "brew", "recipe": {"mint": 2, "chamomile": 2, "rosemary": 2, "nettle": 1}})  # allergic
+    act(world, d, ledger, {"action": "brew", "recipe": {"mint": 2, "chamomile": 2, "rosemary": 2, "nettle": 1}})  # allergic (+S 5% × warming)
     assert [r["id"] for r in active(ledger, world, FactKind.BEST)] == ["best:1:#2"]
     brews = [r["text"] for r in active(ledger, world, FactKind.BREW)]
-    assert brews[2] == "Potion #3 (turn 3): chamomile=2, mint=2, nettle=1, rosemary=2 → +S 5%."
+    assert brews[2] == "Potion #3 (turn 3): chamomile=2, mint=2, nettle=1, rosemary=2 → +S 8%."
 
 
 def test_goal_switch():

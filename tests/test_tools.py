@@ -110,8 +110,8 @@ def test_brew_several_potions_in_one_turn(world):
         {"elderberry": 2, "sage": 1, "dill": 1, "mint": 1},
     ]})
     assert text == (
-        'Brewed {"elderberry": 1, "sage": 1, "dill": 1} → {"positive": {"I": 2}, "negative": {}} (potion #1)\n'
-        'Brewed {"elderberry": 2, "sage": 1, "dill": 1, "mint": 1} → {"positive": {"I": 5}, "negative": {}} (potion #2)'
+        'Brewed {"elderberry": 1, "sage": 1, "dill": 1} → {"positive": {"I": 2}, "negative": {}, "secondary": []} (potion #1)\n'
+        'Brewed {"elderberry": 2, "sage": 1, "dill": 1, "mint": 1} → {"positive": {"I": 5}, "negative": {}, "secondary": ["fragrant", "sweet", "bitter"]} (potion #2)'
     )
     assert world.turn == 2 and not world.inventory.plants   # one turn, everything used
 
@@ -124,7 +124,7 @@ def test_multi_brew_is_all_or_nothing(world):
     assert failed.error and not failed.ends_turn
     assert failed.text == "Not enough plants for these recipes together: need 3 elderberry, have 2. Nothing was brewed."
     bad = d.handle({"action": "brew", "recipes": [two[0], {"elderberry": 1}]})
-    assert bad.text == "Recipe 2: A recipe needs 3–4 distinct plants."
+    assert bad.text == "Recipe 2: A recipe needs 2–4 distinct plants."
     assert dict(world.inventory.plants) == {"elderberry": 2, "sage": 2, "dill": 2} and not world.inventory.potions
     assert d.handle({"action": "brew", "recipe": two[0], "recipes": two}).text.startswith('Give either "recipe"')
 
@@ -141,14 +141,14 @@ def test_brew_texts(world):
     d = Dispatcher(world)
     world.inventory.add_plants({"mint": 2, "chamomile": 4, "rosemary": 2})
     assert act(d, {"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}}) == (
-        'Brewed {"mint": 2, "chamomile": 4, "rosemary": 2} → {"positive": {"S": 20}, "negative": {}} (potion #1)'
+        'Brewed {"mint": 2, "chamomile": 4, "rosemary": 2} → {"positive": {"S": 20}, "negative": {}, "secondary": []} (potion #1)'
     )
     failed = d.handle({"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}})
     assert failed.error and not failed.ends_turn
     assert failed.text == (
         "Not enough plants: need 2 mint, have 0; need 4 chamomile, have 0; need 2 rosemary, have 0. Nothing was brewed."
     )
-    assert d.handle({"action": "brew", "recipe": {"mint": 1}}).text == "A recipe needs 3–4 distinct plants."
+    assert d.handle({"action": "brew", "recipe": {"mint": 1}}).text == "A recipe needs 2–4 distinct plants."
 
 
 def test_log_potions_and_lookup(world):
@@ -244,3 +244,20 @@ def test_three_failures_force_a_skip_and_counter_resets(world):
     assert third.ends_turn and third.text == "Malformed JSON. 3 failed attempts: the turn is skipped."
     world.end_turn()
     assert not d.handle("{bad").ends_turn   # new turn: counter starts again
+
+
+def test_mix_texts_and_inventory(world):
+    d = Dispatcher(world)
+    world.inventory.add_plants({"sage": 1, "chamomile": 1, "nettle": 2, "mint": 1, "elderberry": 1})
+    act(d, {"action": "brew", "recipes": [{"sage": 1, "chamomile": 1, "nettle": 1}, {"nettle": 1, "mint": 1, "elderberry": 1}]})
+    text = act(d, {"action": "mix", "mixes": [[1, "2"]]})
+    assert text == (
+        'Mixed #1 + #2: {"sage": 1, "chamomile": 1, "nettle": 2, "mint": 1, "elderberry": 1} → '
+        '{"positive": {}, "negative": {}, "secondary": ["fragrant", "warming", "sweet", "bitter", "toxic"]} (potion #3)'
+    )
+    assert world.turn == 3
+    assert act(d, {"tool": "inventory"}) == "plants: none; potions: #3"
+    failed = d.handle({"action": "mix", "mixes": [[1, 3]]})
+    assert failed.error and not failed.ends_turn
+    assert failed.text == "Potion #1 was already used up. Nothing was mixed."
+    assert d.handle({"action": "mix", "mixes": [1, 3]}).text.startswith('"mixes" must be')

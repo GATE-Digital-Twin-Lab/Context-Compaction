@@ -93,7 +93,7 @@ def test_logs_and_final_files(config):
     assert summary["goal_in_progress"]["stat"] == "I" and summary["goals_not_started"] == []
 
     state = json.loads((out.dir / "final_state.json").read_text(encoding="utf-8"))
-    assert state["inventory"]["potions"][0]["effect"] == {"positive": {"S": 10}, "negative": {}}
+    assert state["inventory"]["potions"][0]["effect"] == {"positive": {"S": 10}, "negative": {}, "secondary": []}
     assert set(state["garden"]["growth_times"]) == set(PLANTS)
     assert out.kb_path.is_file()
     world.kb.close()
