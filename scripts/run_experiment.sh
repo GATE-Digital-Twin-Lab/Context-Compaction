@@ -23,7 +23,6 @@ ENV_SEED=""               # empty: random, recorded in params.json
 
 # --- user ---
 REQUEST="stonecutter"     # request id in content/requests.json
-LORE="on"                 # on | off: logging a potion unlocks herbal lore about its plants
 
 # --- episode ---
 TURN_CAP="150"
@@ -41,7 +40,7 @@ TEMP_DIR="temp"
 args=(
   --agent "$AGENT" --llm-url "$LLM_URL" --thinking "$THINKING" --max-tokens "$MAX_TOKENS"
   --garden-size "$GARDEN_SIZE"
-  --request "$REQUEST" --lore "$LORE"
+  --request "$REQUEST"
   --turn-cap "$TURN_CAP" --prompt-file "$PROMPT_FILE"
   --compactor "$COMPACTOR" --compaction-trigger "$COMPACTION_TRIGGER"
   --runs-dir "$RUNS_DIR" --temp-dir "$TEMP_DIR"

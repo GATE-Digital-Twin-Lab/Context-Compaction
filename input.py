@@ -30,7 +30,6 @@ class ExperimentConfig:
     env_seed: int
     # client
     request: Request            # the full request is stored, so a run never depends on the file again
-    lore: bool                  # logging potions unlocks herbal lore
     # episode
     turn_cap: int
     prompt_file: Path
@@ -91,8 +90,6 @@ def build_parser() -> argparse.ArgumentParser:
     u = p.add_argument_group("client")
     u.add_argument("--request", default="stonecutter", help="request id in the requests file")
     u.add_argument("--requests-file", type=Path, default=REQUESTS_FILE)
-    u.add_argument("--lore", choices=("on", "off"), default="on",
-                   help="logging a potion unlocks herbal lore about its plants (read with kb_lookup)")
     e = p.add_argument_group("episode")
     e.add_argument("--turn-cap", type=int, default=150, help="the episode ends here at the latest (or at the deadline)")
     e.add_argument("--prompt-file", type=Path, default=Path("prompts/system.txt"))
@@ -149,7 +146,6 @@ def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
         garden_size=args.garden_size,
         env_seed=args.env_seed if args.env_seed is not None else new_seed(),
         request=request,
-        lore=args.lore == "on",
         turn_cap=args.turn_cap,
         prompt_file=args.prompt_file,
         compactor=args.compactor,

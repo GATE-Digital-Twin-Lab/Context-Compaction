@@ -16,15 +16,15 @@ CALLS = [
     {"action": "skip"},
     {"tool": "gather"},
     {"action": "brew", "recipe": {"mint": 2, "chamomile": 3, "rosemary": 2}},   # +S 10%
-    {"action": "log", "potions": [{"id": 1, "labels": {"chamomile": "higher"}}]},
+    {"tool": "kb_lookup", "type": "potion", "effect": "+S"},
 ]
 MORE = [{"action": "plant", "plots": {"4": {"plant": "mint", "soil": "brown"}}}, {"action": "skip"}, {"tool": "gather"},
         {"action": "deliver", "potion": 1}]
 
 
-def new_world(kb_path=":memory:") -> World:
+def new_world() -> World:
     request = Request("s10", "text", "S", threshold=10, deadline_day=3, excluded=frozenset({"nettle"}))
-    world = World.create(7, request, 100, seed=0, kb_path=kb_path)
+    world = World.create(7, request, 100, seed=0)
     world.inventory.add_plants({"mint": 4, "chamomile": 3, "rosemary": 2})
     return world
 
@@ -58,29 +58,27 @@ def test_world_and_ledger_round_trip_then_continue_identically():
 def test_crash_mid_turn_restores_last_checkpoint(tmp_path):
     config = parse_args(["--runs-dir", str(tmp_path / "r"), "--temp-dir", str(tmp_path / "t"), "--env-seed", "0"])
     out = RunOutput(config)
-    world, ledger = new_world(str(out.kb_path)), Ledger()
+    world, ledger = new_world(), Ledger()
     out.log_facts(ledger.observe(world))
     play(world, ledger, CALLS)
     out.log_message(world.turn, "agent", "completed turn")
     checkpoint.save(out.temp, out.dir, world, ledger, {"messages": ["m1"]}, compactions=0)
     saved = world.to_dict()
 
-    # a turn that crashes halfway: KB written, logs appended, a compaction file created
-    world.kb.log_outcome({"mint": "odd", "chamomile": "present", "rosemary": "present"}, "+S", 1, world.turn)
+    # a turn that crashes halfway: world changed, logs appended, a compaction file created
+    world.inventory.add_plants({"sage": 3})
     out.log_message(world.turn, "agent", "half a turn")
     out.log_call(world.turn, {"action": "skip"}, Dispatcher(world).handle({"tool": "inventory"}))
     out.write_compaction(1, {"partial": True})
-    world.kb.close()
 
     cp = checkpoint.load(out.temp)
-    restored, restored_ledger = checkpoint.restore(cp, out.dir, out.kb_path)
-    assert restored.to_dict() == saved                          # KB file rebuilt from the checkpoint
+    restored, restored_ledger = checkpoint.restore(cp, out.dir)
+    assert restored.to_dict() == saved
     assert cp.agent == {"messages": ["m1"]}
     assert "half a turn" not in (out.dir / "transcript.md").read_text(encoding="utf-8")
     assert not (out.dir / "actions.jsonl").exists() or (out.dir / "actions.jsonl").read_text() == ""
     assert list((out.dir / "compactions").glob("*.json")) == []
     assert not (out.temp / "checkpoint.json.tmp").exists()
-    restored.kb.close()
 
 
 def test_load_without_checkpoint(tmp_path):

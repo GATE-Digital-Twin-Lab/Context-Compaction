@@ -1,7 +1,6 @@
 import pytest
 
 from environment.requests import Request
-from environment.lore import LORE
 from environment.world import World
 from tools.dispatcher import Dispatcher
 from tools.observation import turn_header
@@ -99,11 +98,10 @@ def test_gather_is_free_and_growth_is_recorded(world):
     assert world.turn == 3
     assert act(d, {"tool": "gather"}) == "Gathered: +1 sage. Cleared dead plants: 2. Plots now free: 1, 2."
     assert world.turn == 3                                                    # no turn spent
-    assert d.handle({"tool": "kb_lookup", "plants": ["sage", "elderberry", "mint"]}).text.startswith(
-        "Growth:\n"
-        "- sage in yellow: 2 turns (planted 1, grew 1, died 0)\n"
+    assert d.handle({"tool": "kb_lookup", "type": "growth"}).text == (
+        "2 growth records:\n"
         "- elderberry in brown: 2 turns (planted 1, grew 0, died 1)\n"
-        "- mint: no planting finished yet\n"
+        "- sage in yellow: 2 turns (planted 1, grew 1, died 0)"
     )
 
 
@@ -167,66 +165,73 @@ def test_brew_texts(world):
     assert d.handle({"action": "brew", "recipe": {"mint": 1}}).text == "A recipe needs 2–4 distinct plants."
 
 
-def test_log_potions_and_lookup(world):
-    world.lore = False  # lore has its own test
+def test_potion_lookups_filter_on_every_field(world):
     d = Dispatcher(world)
-    world.inventory.add_plants({"mint": 1, "elderberry": 4, "sage": 3, "dill": 3})
-    act(d, {"action": "brew", "recipe": {"mint": 1, "elderberry": 1, "dill": 1}})
-    act(d, {"action": "brew", "recipe": {"elderberry": 1, "sage": 1, "dill": 1}})
-    act(d, {"action": "brew", "recipe": {"elderberry": 2, "sage": 1, "dill": 1}})
-    text = act(d, {"action": "log", "potions": [{"id": 1}, {"id": 2}, {"id": 3, "labels": {"elderberry": "higher"}}]})
-    assert text == (
-        "Logged: potion #1: dill, elderberry, mint → none; potion #2: dill, elderberry, sage → +I; "
-        "potion #3: dill, (higher) elderberry, sage → +I."
-    )
-    assert act(d, {"action": "log", "potions": [{"id": 3, "labels": {"elderberry": "higher"}}]}) == (
-        "Logged: potion #3: already known."
-    )
-    lookup = d.handle({"tool": "kb_lookup", "plants": ["sage", "rosemary"]})
+    world.inventory.add_plants({"mint": 4, "chamomile": 8, "rosemary": 4, "sage": 2, "basil": 2})
+    act(d, {"action": "brew", "recipes": [
+        {"mint": 2, "chamomile": 4, "rosemary": 2},               # #1 +S 20
+        {"mint": 2, "chamomile": 4, "rosemary": 2, "basil": 1},   # #2 +S 25, fragrant
+        {"sage": 2, "basil": 1},                                  # #3 no stat, warming
+    ]})
+    act(d, {"action": "mix", "mixes": [[1, 3]]})                  # #4 +S 60: fragrant x2, warming, sweet
+    lookup = d.handle({"tool": "kb_lookup", "type": "potion", "effect": "+S", "intensity": 25})
     assert not lookup.ends_turn
     assert lookup.text == (
-        "Growth:\n- sage: no planting finished yet\n- rosemary: no planting finished yet\n"
-        "Interactions:\n"
-        "- dill, elderberry, sage → +I\n"
-        "- dill, (higher) elderberry, sage → +I"
-    )
-    both = d.handle({"tool": "kb_lookup", "plants": ["dill", "elderberry", "rosemary", "dill"]}).text
-    assert both.split("Interactions:\n")[1] == (      # every interaction once, even if it names several plants
-
-        "- dill, elderberry, mint → none\n"
-        "- dill, elderberry, sage → +I\n"
-        "- dill, (higher) elderberry, sage → +I"
-    )
-    assert d.handle({"tool": "inventory"}).text == (
-        "plants: sage: 1; potions: #1 (logged), #2 (logged), #3 (logged)"
+        "1 potion record:\n"
+        '- #2 (turn 1): {"mint": 2, "chamomile": 4, "rosemary": 2, "basil": 1} → '
+        '{"positive": {"S": 25}, "negative": {}, "secondary": ["fragrant"]}'
     )
 
+    def ids(**fields):
+        text = d.handle({"tool": "kb_lookup", "type": "potion", **fields}).text
+        return [int(line.split()[1][1:]) for line in text.splitlines()[1:]]
 
-def test_logging_unlocks_lore_read_with_lookup(world):
+    assert ids() == [1, 2, 3, 4]
+    assert ids(effect="+S") == [1, 2, 4] and ids(effect="none") == [3]
+    assert ids(secondary="fragrant") == [2, 4] and ids(contains=["sage", "chamomile"]) == [4]
+    assert ids(effect="+S", secondary="fragrant", contains=["basil"]) == [2, 4] and ids(effect="+S", intensity=60) == [4]
+    assert d.handle({"tool": "kb_lookup", "type": "potion", "effect": "-W"}).text == "No potion records match."
+    assert "(turn 2, mix of #1 + #3)" in d.handle({"tool": "kb_lookup", "type": "potion", "contains": ["sage", "rosemary"]}).text
+    assert "#1 (turn 1, used)" in d.handle({"tool": "kb_lookup", "type": "potion"}).text
+
+
+def test_growth_lookups(world):
     d = Dispatcher(world)
-    world.inventory.add_plants({"mint": 1, "elderberry": 2, "sage": 1, "dill": 2})
-    act(d, {"action": "brew", "recipes": [{"mint": 1, "elderberry": 1, "dill": 1}, {"elderberry": 1, "sage": 1, "dill": 1}]})
-    assert d.handle({"tool": "kb_lookup", "plants": ["dill"]}).text.endswith("Lore: none yet.")
-    text = act(d, {"action": "log", "potions": [{"id": 1}]})
-    assert text == ("Logged: potion #1: dill, elderberry, mint → none "
-                    "(the old herbals hold new lore about its plants: read it with kb_lookup).")
-    assert d.handle({"tool": "kb_lookup", "plants": ["dill"]}).text.endswith("Lore:\n- " + LORE[("dill", "elderberry")])
-    assert d.handle({"tool": "kb_lookup", "plants": ["mint"]}).text.endswith("Lore: none yet.")
-    act(d, {"action": "log", "potions": [{"id": 2}]})                      # adds dill+sage, elderberry+sage
-    assert world.kb.lore("sage") == [LORE[("dill", "sage")], LORE[("elderberry", "sage")]]
-    assert d.handle({"tool": "kb_lookup", "plants": ["dill", "sage"]}).text.endswith(
-        "Lore:\n" + "\n".join("- " + LORE[pair] for pair in [("dill", "elderberry"), ("dill", "sage"), ("elderberry", "sage")])
+    act(d, {"action": "plant", "plots": plots(p1="sage yellow", p2="sage yellow", p3="elderberry brown")})
+    act(d, {"action": "skip"})
+    assert d.handle({"tool": "kb_lookup", "type": "growth"}).text == (
+        "2 growth records:\n"
+        "- elderberry in brown: 2 turns (planted 1, grew 0, died 1)\n"
+        "- sage in yellow: 2 turns (planted 2, grew 2, died 0)"
     )
-    assert act(d, {"action": "log", "potions": [{"id": 2}]}) == "Logged: potion #2: already known."   # nothing new
+    assert d.handle({"tool": "kb_lookup", "type": "growth", "soil": "yellow"}).text.startswith("1 growth record:")
+    assert d.handle({"tool": "kb_lookup", "type": "growth", "plant": "mint"}).text == "No growth records match."
 
 
-def test_no_lore_when_switched_off(world):
-    world.lore = False
+def test_long_lookups_are_cut_at_30_rows(world):
     d = Dispatcher(world)
-    world.inventory.add_plants({"elderberry": 1, "sage": 1, "dill": 1})
-    act(d, {"action": "brew", "recipe": {"elderberry": 1, "sage": 1, "dill": 1}})
-    assert act(d, {"action": "log", "potions": [{"id": 1}]}) == "Logged: potion #1: dill, elderberry, sage → +I."
-    assert "Lore" not in d.handle({"tool": "kb_lookup", "plants": ["sage"]}).text and world.kb.lore() == []
+    world.inventory.add_plants({"mint": 35, "sage": 35})
+    act(d, {"action": "brew", "recipes": [{"mint": 1, "sage": 1}] * 35})
+    text = d.handle({"tool": "kb_lookup", "type": "potion", "contains": ["mint"]}).text
+    assert text.splitlines()[0] == "35 potion records, showing the first 30: give more fields to narrow the lookup:"
+    assert len(text.splitlines()) == 31
+
+
+@pytest.mark.parametrize(
+    "call, message",
+    [
+        ({"type": "plant"}, '"type" must be "potion" or "growth"'),
+        ({"type": "potion", "soil": "black"}, 'Unknown field "soil" for potion records'),
+        ({"type": "potion", "effect": "S"}, '"effect" must be like "+S"'),
+        ({"type": "potion", "intensity": 5}, '"intensity" needs an "effect"'),
+        ({"type": "potion", "secondary": "salty"}, "Unknown secondary 'salty'"),
+        ({"type": "potion", "contains": ["lavender"]}, "Unknown plant lavender."),
+        ({"type": "growth", "soil": "red"}, "Unknown soil 'red'"),
+    ],
+)
+def test_invalid_lookups(world, call, message):
+    result = Dispatcher(world).handle({"tool": "kb_lookup", **call})
+    assert result.error and message in result.text
 
 
 @pytest.mark.parametrize(
@@ -236,9 +241,9 @@ def test_no_lore_when_switched_off(world):
         ("[1, 2]", "A call must be a JSON object."),
         ({"action": "skip", "tool": "inventory"}, 'exactly one of "action" or "tool"'),
         ({"action": "dance"}, "Unknown action 'dance'"),
-        ({"tool": "kb_lookup", "plants": ["lavender"]}, "Unknown plant lavender."),
-        ({"action": "log"}, '"potions" must be a non-empty list'),
-        ({"action": "log", "potions": [{"id": 4}]}, "Unknown potion #4."),
+        ({"tool": "kb_lookup", "type": "potion", "contains": ["lavender"]}, "Unknown plant lavender."),
+        ({"action": "log"}, "Unknown action 'log'"),
+        ({"action": "deliver", "potion": 4}, "Unknown potion #4."),
         ({"action": "plant", "plots": {"x": {"plant": "mint", "soil": "brown"}}}, "A plot number must be a whole number"),
     ],
 )

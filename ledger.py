@@ -12,10 +12,11 @@ class FactKind(StrEnum):
     BEST = "best"
     PLANTING = "planting"
     GROWTH = "growth"
-    LORE = "lore"
 
 
-RECOVERABLE = {FactKind.PLANTING, FactKind.GROWTH, FactKind.LORE}
+# Recoverable without the context: potion and growth records by a notebook lookup, plantings from the
+# garden line. (The best potion is derived from the potion records.)
+RECOVERABLE = {FactKind.BREW, FactKind.BEST, FactKind.PLANTING, FactKind.GROWTH}
 
 
 @dataclass(frozen=True)
@@ -64,8 +65,7 @@ class Ledger:
         return new
 
     def snapshot(self, world: World) -> list[dict]:
-        """Active facts with whether the knowledge base holds them (plantings are in the garden line,
-        growth records and lore are written automatically)."""
+        """Active facts with whether the notebook or the garden line holds them."""
         rows = []
         for fact in self._active(world):
             logged = True if fact.recoverable else None
@@ -113,7 +113,5 @@ class Ledger:
             add(f"growth:{f.plant}:{f.soil}:{outcome}", FactKind.GROWTH,
                 f"{f.plant} in {f.soil} soil {outcome} after {g} turn{'s' if g != 1 else ''}.", f.done_turn)
 
-        for a, b, text, turn in world.kb.lore_entries():
-            add(f"lore:{a}+{b}", FactKind.LORE, f"Lore on {a} and {b}: {text}", turn)
 
         return facts

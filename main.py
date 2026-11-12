@@ -29,14 +29,13 @@ def make_agent(config: ExperimentConfig) -> Agent:
 def start(config: ExperimentConfig) -> RunOutput:
     out = RunOutput(config)
     world = World.create(
-        config.garden_size, config.request, config.turn_cap, config.env_seed, kb_path=str(out.kb_path), lore=config.lore,
+        config.garden_size, config.request, config.turn_cap, config.env_seed,
     )
     agent, ledger = make_agent(config), Ledger()
     out.write_params(config, {"soil_table": SOIL_TABLE, **agent.info()})
     out.log_facts(ledger.observe(world))
     checkpoint.save(out.temp, out.dir, world, ledger, agent.state(), compactions=0)
     run_episode(config, world, agent, out, ledger)
-    world.kb.close()
     return out
 
 
@@ -45,11 +44,10 @@ def resume(config: ExperimentConfig, run_dir) -> RunOutput:
     cp = checkpoint.load(out.temp)
     if cp is None:
         raise FileNotFoundError(f"No checkpoint in {out.temp}; start a new run instead.")
-    world, ledger = checkpoint.restore(cp, out.dir, out.kb_path)
+    world, ledger = checkpoint.restore(cp, out.dir)
     agent = make_agent(config)
     agent.load_state(cp.agent)
     run_episode(config, world, agent, out, ledger, cp.compactions)
-    world.kb.close()
     return out
 
 

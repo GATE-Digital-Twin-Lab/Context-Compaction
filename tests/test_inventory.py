@@ -26,5 +26,4 @@ def test_potions_get_sequential_ids():
     first = inv.add_potion({"mint": 1, "elderberry": 1, "dill": 1}, Effect(), turn=8)
     second = inv.add_potion({"elderberry": 1, "sage": 1, "dill": 1}, Effect({"I": 2}, {}), turn=15)
     assert (first.id, second.id) == (1, 2)
-    assert not first.logged
     assert inv.potions[-1].effect == Effect({"I": 2}, {})

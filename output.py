@@ -22,7 +22,6 @@ def potion_dict(potion: Potion) -> dict:
         "drinkable": potion.effect.drinkable,
         "origin": list(potion.origin),
         "used": potion.used,
-        "logged": potion.logged,
     }
 
 
@@ -46,9 +45,6 @@ def world_state(world: World) -> dict:
         "inventory": {
             "plants": dict(sorted(world.inventory.plants.items())),
             "potions": [potion_dict(p) for p in world.inventory.potions],
-        },
-        "knowledge_base": {
-            "outcomes": [{"labels": o.labels, "effect": o.effect, "text": o.render()} for o in world.kb.outcomes()],
         },
     }
 
@@ -93,10 +89,6 @@ class RunOutput:
             raise FileNotFoundError(f"No working folder {out.temp} for this run.")
         out._transcript_turn = None
         return out
-
-    @property
-    def kb_path(self) -> Path:
-        return self.temp / "knowledge_base.sqlite"
 
     def write_params(self, config: ExperimentConfig, extra: dict[str, Any]) -> None:
         """All inputs, plus values only known after setup (growth times, prompt text)."""

@@ -51,7 +51,7 @@ def load(temp_dir: Path) -> Checkpoint | None:
     return Checkpoint(data["world"], data["ledger"], data["agent"], data["log_sizes"], data["compactions"])
 
 
-def restore(cp: Checkpoint, run_dir: Path, kb_path: Path) -> tuple[World, Ledger]:
+def restore(cp: Checkpoint, run_dir: Path) -> tuple[World, Ledger]:
     """Cut logs and compaction files back to the checkpoint; rebuild world and ledger."""
     for name, size in cp.log_sizes.items():
         path = run_dir / name
@@ -61,4 +61,4 @@ def restore(cp: Checkpoint, run_dir: Path, kb_path: Path) -> tuple[World, Ledger
     for extra in sorted((run_dir / "compactions").glob("*.json")):
         if int(extra.stem) > cp.compactions:
             extra.unlink()
-    return World.from_dict(cp.world, str(kb_path)), Ledger.from_dict(cp.ledger)
+    return World.from_dict(cp.world), Ledger.from_dict(cp.ledger)

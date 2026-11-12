@@ -4,12 +4,11 @@ import json
 from collections.abc import Callable
 
 from environment.world import World
-from tools import brew, deliver, gather, inventory, kb_lookup, log, mix, plant, skip
+from tools import brew, deliver, gather, inventory, kb_lookup, mix, plant, skip
 from tools.base import ToolError, ToolResult
 
 ACTIONS: dict[str, Callable[[World, dict], ToolResult]] = {
     "plant": plant.run,
-    "log": log.run,
     "brew": brew.run,
     "mix": mix.run,
     "deliver": deliver.run,

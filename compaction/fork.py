@@ -39,7 +39,7 @@ def replay(
     reproduced the recorded transcript exactly. Also returns where each turn starts in the conversation."""
     original = (run_dir / "transcript.md").read_text(encoding="utf-8")
     world = World.create(
-        config.garden_size, config.request, config.turn_cap, config.env_seed, kb_path=str(out.kb_path), lore=config.lore,
+        config.garden_size, config.request, config.turn_cap, config.env_seed,
     )
     agent, ledger, dispatcher = ReplayAgent(recorded_replies(original)), Ledger(), Dispatcher(world)
     out.log_facts(ledger.observe(world))
@@ -94,7 +94,6 @@ def fork(run_dir: Path, at: int, keep_turns: int = 5, name: str | None = None) -
     agent.load_state({"messages": result.after, "system_prompt": system_prompt, "calls": replayed.replayed})
     checkpoint.save(out.temp, out.dir, world, ledger, agent.state(), compactions=1)
     run_episode(config, world, agent, out, ledger, compactions=1)
-    world.kb.close()
     return out
 
 

@@ -1,7 +1,6 @@
 import pytest
 
 from environment.brewer import RecipeError, effect_of
-from environment.knowledge_base import LogError
 from environment.requests import Request
 from environment.world import DeliveryError, InfeasibleBrew, MixError, World
 
@@ -65,42 +64,6 @@ def test_failed_brews_change_nothing():
         world.brew({"mint": 2})
     assert dict(world.inventory.plants) == {"mint": 2, "chamomile": 1}
     assert world.inventory.potions == []
-
-
-# --- logging potions ----------------------------------------------------------
-
-
-def test_log_potions_defaults_and_duplicates():
-    world = make_world()
-    world.inventory.add_plants({"elderberry": 3, "sage": 2, "dill": 2})
-    world.brew({"elderberry": 1, "sage": 1, "dill": 1})
-    world.brew({"elderberry": 2, "sage": 1, "dill": 1})
-    result = world.log({1: {}, 2: {"elderberry": "higher"}})
-    assert [log.outcome.render() for log in result] == [
-        "dill, elderberry, sage → +I",
-        "dill, (higher) elderberry, sage → +I",
-    ]
-    assert all(log.new for log in result)
-    assert all(p.logged for p in world.inventory.potions)
-    again = world.log({2: {"elderberry": "higher"}})
-    assert not again[0].new
-
-
-@pytest.mark.parametrize(
-    "potions, message",
-    [
-        ({5: {}}, "Unknown potion #5"),
-        ({1: {"basil": "odd"}}, "does not contain basil"),
-        ({1: {"elderberry": "big"}}, 'Invalid label "big"'),
-    ],
-)
-def test_invalid_potion_logs_write_nothing(potions, message):
-    world = make_world()
-    world.inventory.add_plants({"elderberry": 1, "sage": 1, "dill": 1})
-    world.brew({"elderberry": 1, "sage": 1, "dill": 1})
-    with pytest.raises(LogError, match=message):
-        world.log(potions)
-    assert world.kb.outcomes() == []
 
 
 # --- delivery and the end of the episode -------------------------------------------

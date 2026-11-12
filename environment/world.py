@@ -1,14 +1,12 @@
-"""The complete world state: garden, inventory, knowledge base, the request and the turn clock."""
+"""The complete world state: garden, inventory (with the potion records), the request and the turn clock."""
 
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
-from environment.brewer import PLANTS, Effect, RecipeError, brew, effect_of, validate_recipe
+from environment.brewer import Effect, RecipeError, brew, effect_of, validate_recipe
 from environment.garden import Garden, GatherResult, GrowthRecord, PlantResult
 from environment.inventory import Inventory, Potion
-from environment.knowledge_base import LABELS, KnowledgeBase, LogError, Outcome, effect_label
-from environment.lore import LORE, pairs_among
 from environment.requests import Request, RequestResult, judge
 from environment.view import GardenView, garden_view
 
@@ -29,22 +27,12 @@ class DeliveryError(ValueError):
     """Invalid delivery (unknown or used-up potion); costs no turn."""
 
 
-@dataclass(frozen=True)
-class PotionLog:
-    potion_id: int
-    outcome: Outcome
-    new: bool  # False: exact duplicate, already known
-    new_lore: int = 0  # lore lines this log unlocked for the potion's plants
-
-
 @dataclass
 class World:
     garden: Garden
     inventory: Inventory
-    kb: KnowledgeBase
     request: Request
     turn_cap: int
-    lore: bool = True  # logging potions unlocks herbal lore
     turn: int = 1
     result: RequestResult | None = None  # set by the delivery, or when time runs out
 
@@ -55,39 +43,29 @@ class World:
         request: Request,
         turn_cap: int,
         seed: int,
-        kb_path: str = ":memory:",
-        lore: bool = True,
     ) -> "World":
         if turn_cap < 1:
             raise ValueError("The turn cap must be >= 1.")
-        kb = KnowledgeBase(kb_path, catalogue=PLANTS)
-        return cls(Garden(size, seed), Inventory(), kb, request, turn_cap, lore)
+        return cls(Garden(size, seed), Inventory(), request, turn_cap)
 
     def to_dict(self) -> dict:
-        """Complete state, including the knowledge base contents."""
+        """Complete state."""
         return {
             "garden": self.garden.to_dict(),
             "inventory": self.inventory.to_dict(),
-            "knowledge_base": self.kb.dump(),
             "request": self.request.to_dict(),
             "turn_cap": self.turn_cap,
-            "lore": self.lore,
             "turn": self.turn,
             "result": self.result.to_dict() if self.result else None,
         }
 
     @classmethod
-    def from_dict(cls, data: Mapping, kb_path: str = ":memory:") -> "World":
-        """Rebuild a world; the knowledge base at kb_path is overwritten with the saved contents."""
-        kb = KnowledgeBase(kb_path)
-        kb.restore(data["knowledge_base"])
+    def from_dict(cls, data: Mapping) -> "World":
         return cls(
             garden=Garden.from_dict(data["garden"]),
             inventory=Inventory.from_dict(data["inventory"]),
-            kb=kb,
             request=Request.from_dict(data["request"]),
             turn_cap=data["turn_cap"],
-            lore=data["lore"],
             turn=data["turn"],
             result=RequestResult.from_dict(data["result"]) if data["result"] else None,
         )
@@ -184,31 +162,6 @@ class World:
         potion.used = True
         self.result = judge(self.request, potion, self.turn)
         return self.result
-
-    def log(self, potions: Mapping[int, Mapping[str, str]]) -> list[PotionLog]:
-        """Raises LogError (no turn cost) before writing anything if a potion entry is invalid."""
-        entries = []
-        for pid, labels in potions.items():
-            if not 1 <= pid <= len(self.inventory.potions):
-                raise LogError(f"Unknown potion #{pid}.")
-            potion = self.inventory.potions[pid - 1]
-            if extra := sorted(set(labels) - potion.recipe.keys()):
-                raise LogError(f"Potion #{pid} does not contain {extra[0]}.")
-            if bad := sorted(set(labels.values()) - set(LABELS)):
-                raise LogError(f'Invalid label "{bad[0]}" (allowed: {", ".join(LABELS)}).')
-            full = {p: labels.get(p, "present") for p in sorted(potion.recipe)}
-            entries.append((potion, full))
-        logs = []
-        for potion, labels in entries:
-            effect = effect_label(potion.effect)
-            new = self.kb.log_outcome(labels, effect, potion.id, self.turn)
-            potion.logged = True
-            unlocked = 0
-            if self.lore:
-                pairs = pairs_among(potion.recipe)
-                unlocked = len(self.kb.unlock_lore({p: LORE[p] for p in pairs}, self.turn))
-            logs.append(PotionLog(potion.id, Outcome(labels, effect), new, unlocked))
-        return logs
 
     def skip(self) -> None:
         pass

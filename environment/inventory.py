@@ -16,7 +16,6 @@ class Potion:
     recipe: dict[str, int]
     effect: Effect
     turn: int
-    logged: bool = False
     origin: tuple[int, ...] = ()  # empty: brewed; otherwise the ids of the mixed potions
     used: bool = False            # used up by a mix (or a delivery)
 
@@ -26,7 +25,6 @@ class Potion:
             "recipe": self.recipe,
             "effect": self.effect.to_dict(),
             "turn": self.turn,
-            "logged": self.logged,
             "origin": list(self.origin),
             "used": self.used,
         }
@@ -38,7 +36,6 @@ class Potion:
             dict(data["recipe"]),
             Effect.from_dict(data["effect"]),
             data["turn"],
-            data["logged"],
             tuple(data.get("origin", ())),
             data.get("used", False),
         )

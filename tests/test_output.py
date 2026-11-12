@@ -19,7 +19,7 @@ def config(tmp_path):
 
 def make_world(config, out):
     return World.create(
-        config.garden_size, config.request, config.turn_cap, config.env_seed, kb_path=str(out.kb_path),
+        config.garden_size, config.request, config.turn_cap, config.env_seed,
     )
 
 
@@ -50,7 +50,6 @@ def test_summary_after_turn_cap(config):
     assert summary["request"]["translation"] == "S >= +25% by day 7 (turn 70)" and summary["request"]["last_turn"] == 3
     assert summary["result"] == {"potion": None, "turn": 3, "success": False, "intensity": 0,
                                  "failures": ["nothing delivered"]}
-    world.kb.close()
 
 
 def test_same_run_id_twice_is_refused(config):
@@ -95,5 +94,3 @@ def test_logs_and_final_files(config):
     state = json.loads((out.dir / "final_state.json").read_text(encoding="utf-8"))
     assert state["inventory"]["potions"][0]["effect"] == {"positive": {"S": 25}, "negative": {}, "secondary": ["fragrant"]}
     assert state["garden"]["size"] == world.garden.size and state["garden"]["died"] == []
-    assert out.kb_path.is_file()
-    world.kb.close()

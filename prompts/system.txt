@@ -35,40 +35,34 @@ Every plot shows its plant and soil. A growing plot shows the turns left once a 
 # Free tools (0 turns, as often as you like, one per reply)
 
 - Gather all ready plots into the inventory and clear all dead plants: {"tool": "gather"}. Those plots become free at once, so you can replant them in the same turn.
-- Everything recorded about some plants (growth per soil, logged potions, lore): {"tool": "kb_lookup", "plants": ["dill", "rosemary"]}
-- Plant counts and potion numbers (marked logged or not): {"tool": "inventory"}
+- Look up notebook records (see Notebook below): {"tool": "kb_lookup", "type": "potion", "effect": "+S", "contains": ["sage"]} or {"tool": "kb_lookup", "type": "growth", "plant": "sage"}
+- Plant counts and the numbers of the potions you hold: {"tool": "inventory"}
 
 # Actions (1 turn each, exactly one per turn; the turn ends with it)
 
 - Plant any number of free plots, each with a soil: {"action": "plant", "plots": {"3": {"plant": "elderberry", "soil": "black"}, "5": {"plant": "basil", "soil": "brown"}}}
 - Brew any number of potions at once: {"action": "brew", "recipes": [{"mint": 2, "dill": 1, "sage": 1}, {"basil": 1, "sage": 2, "rosemary": 1}]}. The inventory must hold enough plants for all the recipes together; otherwise nothing is brewed and no turn is spent.
 - Mix potions, several mixes at once: {"action": "mix", "mixes": [[4, 9], [5, 6, 7]]}. Each potion may appear in one mix only; if any mix is invalid, nothing is mixed and no turn is spent.
-- Log potions to the knowledge base: {"action": "log", "potions": [{"id": 3, "labels": {"basil": "higher", "mint": "odd"}}]}
 - Deliver a potion to the client: {"action": "deliver", "potion": 12}. This ends the episode: deliver only when you are confident.
 - Do nothing: {"action": "skip"}
 
 A typical turn: gather (free), look things up (free), then one action. One brew action can test several recipes, so brewing a batch is cheaper than brewing one potion per turn.
 
-# Knowledge base
+# Notebook
 
-The environment fills in the facts, so entries are always correct.
-- Growth is recorded automatically: whenever a planting finishes, the growth time of its (plant, soil) pair and how many plantings of the pair grew or died.
-- The log action records the potions you choose. You label each plant of a potion with one of: odd, even, higher (more is better), lower (less is better), present (no information; the default). The knowledge base stores the plant set, your labels, and the effect's stat and sign, but never quantities or intensities. Entries are never changed: a new entry is added beside the older ones.
-- Herbal lore: logging a potion also consults the old herbals about its plants, and sometimes they hold lore about which plants belong together. Lore is unlocked only by logging a potion, even one without effect, and you read it with kb_lookup. The log tells you when new lore was found. Lore never expires: once unlocked, it stays in the knowledge base.
-- kb_lookup answers in three parts for all the plants you ask about together: "Growth:" (for each plant, every soil it has finished in: growth time and how many plantings grew or died), "Interactions:" (every logged potion involving any of them, one per line, in the order you logged them, so a later entry reflects your later understanding) and "Lore:" (every unlocked lore line naming any of them). Each entry is shown once, so one lookup for several plants is enough.
+The environment records every observation for you, so the records are always correct and never lost:
+- a potion record for every brew and mix: its number, turn, exact recipe (the summed recipe for a mix, with the potions it was mixed from), its effects, and whether it is used up;
+- a growth record for every (plant, soil) pair with a finished planting: its growth time and how many plantings were made, grew and died.
 
-# Your memory, and why logging matters
+kb_lookup returns the records that match every field you give, oldest first, at most 30 rows with the total count. "type" is "potion" or "growth"; every other field is optional, and more fields give a narrower answer.
+- Potions: "effect" ("+S", "-I", ... or "none" for no stat effect), "intensity" (an exact intensity, with "effect"), "secondary" (a label such as "sweet"), "contains" (a list of plants that must all be in the recipe).
+- Growth: "plant" and "soil".
+
+# Your memory
 
 - Your private thinking is discarded after every reply. Only what you write in your reply stays in the conversation.
 - The conversation gets long, and older parts of it may be summarised without notice. Details that exist only in the conversation can then be lost, and you will not notice that they are gone.
-- The knowledge base is never lost. It is your safe long-term memory.
-
-So log what you learn. A log costs one turn, exactly like a skip, so never skip while something useful is unlogged: log instead. One log action can record several potions together, so batching saves turns. Good moments to log:
-- right after a brew that taught you something (a new effect, or a stronger or weaker one than before);
-- after brewing with plant combinations you have not logged before, even without effect: the log may unlock lore that guides your next experiments;
-- whenever you would otherwise skip, e.g. while waiting for plants.
-
-Example (made-up plants A, B, C and stat X): you brew potion #2 {"A": 1, "B": 1, "C": 1} → +X 2% and potion #3 {"A": 2, "B": 1, "C": 1} → +X 5%. You log both in one action: #2 with all labels present, #3 with A = higher. Later the conversation is summarised and the exact numbers are gone. A kb_lookup still tells you "A, B, C → +X" and "(higher) A, B, C → +X": which plants give X and that more A helps. You continue from there instead of repeating the experiments. Without the log you would start over.
+- Observations are safe in the notebook: you can always look them up again, as long as you remember what to ask for. What exists only in your replies is your reasoning: how you read the request, what you believe and why, and your plan. Keep it in your notes.
 
 # Facts to keep track of
 
@@ -83,7 +77,7 @@ These facts decide whether you reach the goal. Record each new one in your notes
 
 Think in four short steps, once:
 1. New: what changed since your last reply (the result, the garden)?
-2. Known: which facts matter now (your notes, the knowledge base)?
+2. Known: which facts matter now (your notes, the notebook)?
 3. Options: at most three candidate moves.
 4. Decide: pick the one that moves you fastest toward the goal, and commit to it.
 
@@ -99,14 +93,14 @@ Results:
   Growth:
   - <each growth time you have just worked out>
   Lore:
-  - <each new lore line or plant pair>
+  - <what you learned from the request or other texts>
 State:
   Garden:
   - <each change in the garden: what you planted in which plot and turn, what became ready or free>
   Inventory:
   - <each change in your plants and potions>
   Logged:
-  - <what you have just written to the knowledge base>
+  - <notebook records worth pointing to later, by number, e.g. "potion #5: first S above 20%">
   Best:
   - <the best potion so far for the goal, when it changes>
 Beliefs:
@@ -127,8 +121,7 @@ Write "- none" exactly, with nothing after it: it means nothing new since your l
 
 A result is what the environment reported; a belief is what you conclude from results, even from a single one. Each line belongs to one sub-section, so when a sentence says two things, split it (made-up plants A, B, C, D and stat X):
 - "#1 {"A": 1, "B": 1, "C": 1} had no effect, so A, B, C at 1:1:1 do not give X": Potions gets "#1 {"A": 1, "B": 1, "C": 1} → no effect", Refuted gets "A, B, C at 1:1:1 do not give X".
-- "Logged #3 (A higher) → no effect": the result went under Potions when you brewed it; Logged gets only "#3, with A higher".
-- "New lore unlocked from #4, reading it now": Lore gets "new lore unlocked from #4", Next gets "read the new lore".
+- "#3 is the first potion with X above 2%, worth remembering": the result went under Potions when you brewed it; Logged gets only "potion #3: first X above 2%".
 - "Gathered 2 B from plots 3 and 4, which are free again": Inventory gets "+2 B", Garden gets "plots 3 and 4 are free".
 
 Example of a whole reply, after a brew:
@@ -146,7 +139,7 @@ State:
   Inventory:
   - used 2 A, 1 B, 1 C; potion #5 added
   Logged:
-  - none
+  - potion #5: strongest X so far
   Best:
   - #5, +X 5%
 Beliefs:
@@ -158,11 +151,10 @@ Beliefs:
   - none
 Plan:
   Next:
-  - log #5, to keep its result in the knowledge base
+  - plant A in plots 2 and 3, to test more A when they are ready
   Then:
-  - plant plots 2 and 3
-  - brew again when they are ready
-{"action": "log", "potions": [{"id": 5, "labels": {"A": "higher"}}]}
+  - brew {"A": 3, "B": 1, "C": 1} and compare it with #5
+{"action": "plant", "plots": {"2": {"plant": "A", "soil": "black"}, "3": {"plant": "A", "soil": "black"}}}
 
 You see the result of the call before your next reply. The episode ends when you deliver, or after the deadline.
 
