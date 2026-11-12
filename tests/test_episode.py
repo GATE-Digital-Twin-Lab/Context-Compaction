@@ -7,7 +7,7 @@ from agents.random_agent import RandomAgent, _numbers
 from main import main
 
 BASE = ["--env-seed", "3", "--llm-seed", "5", "--turn-cap", "40", "--garden-size", "6",
-        "--goals", "target:D:5,time:I:15", "--allergy", "mint+sage"]
+        "--request", "stonecutter"]
 
 
 def run_args(tmp_path, name):
@@ -19,10 +19,12 @@ def read(path):
 
 
 def test_numbers_parses_garden_line():
-    line = "Garden: free: 1, 10; growing: 3 (elderberry, 2 turns left), 4; ready: 7 (waiting 2), 8 (chamomile, waiting 0)"
+    line = ("Garden: free: 1, 10; growing: 3 (elderberry, black, 2 turns left), 4 (sage, yellow, planted turn 12); "
+            "ready: 7 (mint, brown, waiting 2), 8 (chamomile, black, waiting 0); died: 9 (basil, black)")
     assert _numbers(line, "free") == [1, 10]
     assert _numbers(line, "growing") == [3, 4]
     assert _numbers(line, "ready") == [7, 8]
+    assert _numbers(line, "died") == [9]
     assert _numbers("Garden: free: none; growing: none; ready: none", "free") == []
 
 
@@ -31,7 +33,7 @@ def test_full_episode_writes_all_outputs(tmp_path):
     for name in ("params.json", "transcript.md", "actions.jsonl", "ledger.jsonl", "final_state.json", "summary.json"):
         assert (out.dir / name).is_file()
     transcript = read(out.dir / "transcript.md")
-    assert "My garden has 6 plots. I am allergic to the combination of mint and sage" in transcript
+    assert "The garden has 6 plots. It is day 1, turn 1." in transcript
     assert "## Turn 40" in transcript and "## Turn 41" not in transcript
     assert json.loads(read(out.dir / "summary.json"))["turns_played"] == 40
     assert (out.temp / "checkpoint.json").is_file()

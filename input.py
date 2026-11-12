@@ -6,7 +6,7 @@ import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from environment.goals import Allergy, Goal, GoalKind, validate_allergy
+from environment.requests import REQUESTS_FILE, Request, load_requests
 from utils import new_seed, slugify
 
 AGENTS = ("llm", "random", "oracle")
@@ -28,9 +28,8 @@ class ExperimentConfig:
     # garden
     garden_size: int
     env_seed: int
-    # user
-    goals: tuple[Goal, ...]
-    allergy: Allergy | None
+    # client
+    request: Request            # the full request is stored, so a run never depends on the file again
     lore: bool                  # logging potions unlocks herbal lore
     # episode
     turn_cap: int
@@ -50,8 +49,7 @@ class ExperimentConfig:
 
     def to_dict(self) -> dict:
         data = asdict(self)
-        data["goals"] = [g.to_dict() for g in self.goals]
-        data["allergy"] = sorted(self.allergy.plants) if self.allergy else None
+        data["request"] = self.request.to_dict()
         for key in ("prompt_file", "runs_dir", "temp_dir"):
             data[key] = str(data[key])
         return data
@@ -60,8 +58,7 @@ class ExperimentConfig:
     def from_dict(cls, data: dict) -> "ExperimentConfig":
         """Rebuild from params.json (extra keys such as run_id are ignored)."""
         values = {k: data[k] for k in cls.__dataclass_fields__}
-        values["goals"] = tuple(Goal.from_dict(g) for g in data["goals"])
-        values["allergy"] = Allergy(frozenset(data["allergy"])) if data["allergy"] else None
+        values["request"] = Request.from_dict(data["request"])
         for key in ("prompt_file", "runs_dir", "temp_dir"):
             values[key] = Path(values[key])
         return cls(**values)
@@ -72,27 +69,6 @@ def load_config(run_dir: Path) -> ExperimentConfig:
     if not params.is_file():
         raise ValueError(f"No params.json in {run_dir}.")
     return ExperimentConfig.from_dict(json.loads(params.read_text(encoding="utf-8")))
-
-
-def parse_goal(text: str) -> Goal:
-    """'time:S:30' or 'target:I:10'."""
-    parts = text.strip().split(":")
-    usage = f'Invalid goal "{text}": expected time:<stat>:<turns> or target:<stat>:<percent>.'
-    if len(parts) != 3 or not parts[2].isdigit():
-        raise ValueError(usage)
-    kind, stat, value = parts[0].lower(), parts[1].upper(), int(parts[2])
-    if kind == GoalKind.TIME:
-        return Goal(GoalKind.TIME, stat, turns=value)
-    if kind == GoalKind.TARGET:
-        return Goal(GoalKind.TARGET, stat, target=value)
-    raise ValueError(usage)
-
-
-def parse_allergy(text: str) -> Allergy | None:
-    """'nettle+chamomile' or 'none'."""
-    if text.strip().lower() == "none":
-        return None
-    return Allergy(frozenset(p.strip() for p in text.split("+")))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -112,14 +88,13 @@ def build_parser() -> argparse.ArgumentParser:
     g = p.add_argument_group("garden")
     g.add_argument("--garden-size", type=int, default=10)
     g.add_argument("--env-seed", type=int, help="default: random, recorded in params.json")
-    u = p.add_argument_group("user")
-    u.add_argument("--goals", default="target:I:10,time:S:40,target:D:10",
-                   help="comma-separated, e.g. 'time:S:30,target:I:10'")
+    u = p.add_argument_group("client")
+    u.add_argument("--request", default="stonecutter", help="request id in the requests file")
+    u.add_argument("--requests-file", type=Path, default=REQUESTS_FILE)
     u.add_argument("--lore", choices=("on", "off"), default="on",
                    help="logging a potion unlocks herbal lore about its plants (read with kb_lookup)")
-    u.add_argument("--allergy", default="none", help="two plants, e.g. 'nettle+chamomile', or 'none'")
     e = p.add_argument_group("episode")
-    e.add_argument("--turn-cap", type=int, default=150)
+    e.add_argument("--turn-cap", type=int, default=150, help="the episode ends here at the latest (or at the deadline)")
     e.add_argument("--prompt-file", type=Path, default=Path("prompts/system.txt"))
     c = p.add_argument_group("compaction (checked only between turns)")
     c.add_argument("--compactor", choices=COMPACTORS, default="none")
@@ -154,12 +129,11 @@ def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
-        goals = tuple(parse_goal(t) for t in args.goals.split(",") if t.strip())
-        if not goals:
-            raise ValueError("At least one goal is required.")
-        allergy = parse_allergy(args.allergy)
-        validate_allergy(allergy, goals)
         _check(args)
+        requests = load_requests(args.requests_file)
+        if args.request not in requests:
+            raise ValueError(f"Unknown request {args.request!r} (in {args.requests_file}: {', '.join(requests)}).")
+        request = requests[args.request]
     except ValueError as err:
         parser.error(str(err))
     return ExperimentConfig(
@@ -174,8 +148,7 @@ def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
         llm_seed=args.llm_seed if args.llm_seed is not None else new_seed(),
         garden_size=args.garden_size,
         env_seed=args.env_seed if args.env_seed is not None else new_seed(),
-        goals=goals,
-        allergy=allergy,
+        request=request,
         lore=args.lore == "on",
         turn_cap=args.turn_cap,
         prompt_file=args.prompt_file,
@@ -194,6 +167,8 @@ def _check(args: argparse.Namespace) -> None:
             raise ValueError("--llm-name is required for --agent llm.")
         if not args.prompt_file.is_file():
             raise ValueError(f"Prompt file not found: {args.prompt_file}.")
+    if not args.requests_file.is_file():
+        raise ValueError(f"Requests file not found: {args.requests_file}.")
     if args.garden_size < 1:
         raise ValueError("--garden-size must be >= 1.")
     if args.turn_cap < 1:

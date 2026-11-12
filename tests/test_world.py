@@ -1,54 +1,22 @@
 import pytest
 
 from environment.brewer import RecipeError, effect_of
-from environment.goals import Allergy, Goal, GoalKind, score_goal, validate_allergy
 from environment.knowledge_base import LogError
-from environment.world import InfeasibleBrew, MixError, World
+from environment.requests import Request
+from environment.world import DeliveryError, InfeasibleBrew, MixError, World
 
-STRENGTH_10 = Goal(GoalKind.TARGET, "S", target=10)
-INTEL_5_TURNS = Goal(GoalKind.TIME, "I", turns=5)
-P5_P3 = Allergy(frozenset({"chamomile", "nettle"}))
+STRENGTH_10 = Request("s10", "text", "S", threshold=10)
+WEEK_S25_NO_NETTLE = Request("s25", "text", "S", threshold=25, deadline_day=7, excluded=frozenset({"nettle"}))
 
 
-def make_world(goals=(STRENGTH_10,), allergy=None, turn_cap=100, seed=0) -> World:
-    return World.create(7, list(goals), allergy, turn_cap, seed)
+def make_world(request=STRENGTH_10, turn_cap=100, seed=0) -> World:
+    return World.create(7, request, turn_cap, seed)
 
 
 def advance(world: World, turns: int) -> None:
     for _ in range(turns):
         world.skip()
         world.end_turn()
-
-
-# --- goals and allergy ------------------------------------------------------
-
-
-@pytest.mark.parametrize(
-    "kwargs",
-    [
-        dict(kind=GoalKind.TIME, stat="X", turns=5),
-        dict(kind=GoalKind.TIME, stat="S"),
-        dict(kind=GoalKind.TIME, stat="S", turns=5, target=10),
-        dict(kind=GoalKind.TARGET, stat="S"),
-        dict(kind=GoalKind.TARGET, stat="S", target=10, turns=5),
-    ],
-)
-def test_invalid_goals(kwargs):
-    with pytest.raises(ValueError):
-        Goal(**kwargs)
-
-
-def test_allergy_must_not_block_a_goal():
-    with pytest.raises(ValueError):
-        validate_allergy(Allergy(frozenset({"mint", "chamomile"})), [STRENGTH_10])
-    validate_allergy(P5_P3, [STRENGTH_10])  # one required + one non-required is fine
-
-
-def test_allergy_needs_two_known_plants():
-    with pytest.raises(ValueError):
-        Allergy(frozenset({"mint"}))
-    with pytest.raises(ValueError):
-        Allergy(frozenset({"mint", "lavender"}))
 
 
 # --- world creation and actions ---------------------------------------------
@@ -135,52 +103,71 @@ def test_invalid_potion_logs_write_nothing(potions, message):
     assert world.kb.outcomes() == []
 
 
-# --- goals over time ----------------------------------------------------------
+# --- delivery and the end of the episode -------------------------------------------
 
 
-def test_target_goal_ends_when_reached_and_next_goal_starts():
-    world = make_world(goals=[STRENGTH_10, INTEL_5_TURNS])
-    world.inventory.add_plants({"mint": 4, "chamomile": 5, "rosemary": 4})
-    advance(world, 2)                                  # turns 1–2
-    world.brew({"mint": 2, "chamomile": 2, "rosemary": 2})            # turn 3: +S 5%, not enough
-    assert world.end_turn().finished is None
-    world.brew({"mint": 2, "chamomile": 3, "rosemary": 2})            # turn 4: +S 10%
-    end = world.end_turn()
-    assert end.finished.success and end.finished.best_intensity == 10
-    assert end.finished.turns_used == 4 and end.finished.best_potion == 2
-    assert end.next_goal == INTEL_5_TURNS and world.goal_start == 5
-
-
-def test_allergic_potion_does_not_reach_target():
-    world = make_world(allergy=P5_P3)
-    world.inventory.add_plants({"mint": 2, "chamomile": 3, "rosemary": 2, "nettle": 1})
-    world.brew({"mint": 2, "chamomile": 3, "rosemary": 2, "nettle": 1})   # +S 10%, but allergic
-    assert world.end_turn().finished is None
-    result = score_goal(STRENGTH_10, world.inventory.potions, P5_P3, 1, 1)
-    assert result.allergy_violations == 1 and not result.success
-
-
-def test_time_goal_ends_at_deadline_with_best_potion():
-    world = make_world(goals=[INTEL_5_TURNS])
-    world.inventory.add_plants({"elderberry": 6, "sage": 2, "dill": 2})
-    world.brew({"elderberry": 2, "sage": 1, "dill": 1})            # turn 1: +I 5%
-    world.end_turn()
-    world.brew({"elderberry": 1, "sage": 1, "dill": 1})            # turn 2: +I 2%
-    world.end_turn()
-    advance(world, 2)                                  # turns 3–4
-    world.skip()                                       # turn 5: deadline
-    end = world.end_turn()
-    assert end.finished.best_potion == 1 and end.finished.best_intensity == 5
-    assert end.finished.turns_used == 5 and end.episode_over
-
-
-def test_turn_cap_fails_open_target_goal():
-    world = make_world(goals=[STRENGTH_10, INTEL_5_TURNS], turn_cap=3)
+def test_delivery_ends_the_episode_and_uses_the_potion():
+    world = make_world()
+    world.inventory.add_plants({"mint": 2, "chamomile": 3, "rosemary": 2})
     advance(world, 2)
-    world.skip()
-    end = world.end_turn()
-    assert end.episode_over and not end.finished.success
-    assert len(world.results) == 1                     # the second goal never started
+    world.brew({"mint": 2, "chamomile": 3, "rosemary": 2})            # turn 3: +S 10%
+    world.end_turn()
+    result = world.deliver(1)                                         # turn 4
+    assert result.success and result.potion == 1 and result.turn == 4 and result.intensity == 10
+    assert world.episode_over and world.inventory.potions[0].used
+
+
+@pytest.mark.parametrize("pid, message", [(9, "Unknown potion #9."), (1, "Potion #1 was already used up.")])
+def test_invalid_deliveries_change_nothing(pid, message):
+    world = make_world()
+    world.inventory.add_plants({"mint": 4, "sage": 2})
+    world.brew_all([{"mint": 1, "sage": 1}, {"mint": 1, "sage": 1}])
+    world.mix_all([[1, 2]])                                           # potions 1 and 2 used up
+    with pytest.raises(DeliveryError, match=message):
+        world.deliver(pid)
+    assert world.result is None and not world.episode_over
+
+
+def test_a_failed_delivery_also_ends_the_episode():
+    world = make_world()
+    world.inventory.add_plants({"mint": 2, "chamomile": 2, "rosemary": 2})
+    world.brew({"mint": 2, "chamomile": 2, "rosemary": 2})            # +S 5%
+    result = world.deliver(1)
+    assert not result.success and result.failures == ("S 5% is below 10%",) and world.episode_over
+
+
+def test_the_deadline_ends_the_episode_without_a_delivery():
+    world = make_world(WEEK_S25_NO_NETTLE)
+    assert world.last_turn == 70
+    advance(world, 69)
+    assert not world.episode_over and world.turn == 70
+    advance(world, 1)
+    assert world.episode_over and world.result.failures == ("nothing delivered",) and world.result.turn == 70
+
+
+def test_delivery_on_the_last_turn_counts():
+    world = make_world(WEEK_S25_NO_NETTLE)
+    world.inventory.add_plants({"mint": 2, "chamomile": 4, "rosemary": 2, "basil": 1})
+    advance(world, 68)
+    world.brew({"mint": 2, "chamomile": 4, "rosemary": 2, "basil": 1})   # turn 69: S 20 + fragrant = 25
+    world.end_turn()
+    assert world.deliver(1).success and world.result.turn == 70
+
+
+def test_the_turn_cap_ends_the_episode_before_a_later_deadline():
+    world = make_world(WEEK_S25_NO_NETTLE, turn_cap=12)
+    assert world.last_turn == 12
+    advance(world, 12)
+    assert world.episode_over and world.result.turn == 12
+
+
+def test_result_survives_a_checkpoint():
+    world = make_world()
+    world.inventory.add_plants({"mint": 2, "sage": 1})
+    world.brew({"mint": 2, "sage": 1})
+    world.deliver(1)
+    copy = World.from_dict(world.to_dict())
+    assert copy.result == world.result and copy.request == world.request
 
 
 # --- mixing ---------------------------------------------------------------------
@@ -230,25 +217,23 @@ def test_used_potion_cannot_be_mixed_again():
         world.mix_all([[1, 3]])
 
 
-def test_mix_reaches_a_target():
-    world = make_world(goals=(Goal(GoalKind.TARGET, "S", target=30),))
+def test_a_mixed_potion_can_meet_the_request():
+    world = make_world(Request("s30", "text", "S", threshold=30))
     world.inventory.add_plants({"mint": 2, "chamomile": 5, "rosemary": 2, "nettle": 1})
     world.brew_all([{"mint": 2, "chamomile": 4, "rosemary": 2}, {"chamomile": 1, "nettle": 1}])   # S 20; warming
     world.end_turn()
-    assert not world.results
     (mixed,) = world.mix_all([[1, 2]])
     assert mixed.effect.positive == {"S": 30}
     world.end_turn()
-    assert world.results[0].success and world.results[0].best_potion == 3
+    assert world.deliver(3).success
 
 
-def test_used_potions_are_not_scored():
-    world = make_world(goals=(Goal(GoalKind.TIME, "S", turns=5),))
-    world.inventory.add_plants({"mint": 2, "chamomile": 4, "rosemary": 2, "elderberry": 1, "dill": 1})
-    world.brew_all([{"mint": 2, "chamomile": 4, "rosemary": 2}, {"elderberry": 1, "dill": 1}])
-    world.mix_all([[1, 2]])   # adds elderberry + mint (bitter), dill + rosemary (bitter), dill + mint (sweet): cancel
-    result = score_goal(world.goals[0], world.inventory.potions, None, 1, world.turn)
-    assert result.best_potion == 3
+def test_an_excluded_plant_anywhere_in_a_mix_fails():
+    world = make_world(WEEK_S25_NO_NETTLE)
+    world.inventory.add_plants({"mint": 2, "chamomile": 5, "rosemary": 2, "nettle": 1})
+    world.brew_all([{"mint": 2, "chamomile": 4, "rosemary": 2}, {"chamomile": 1, "nettle": 1}])
+    world.mix_all([[1, 2]])                                               # S 30, but contains nettle
+    assert world.deliver(3).failures == ("contains nettle",)
 
 
 def test_mixed_potions_survive_a_checkpoint():

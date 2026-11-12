@@ -46,6 +46,8 @@ class RandomAgent(Agent):
         """Brew from what is available, or log a potion, or skip."""
         plants = {p: int(n) for p, n in re.findall(r"([a-z]+): (\d+)", text)}
         potions = [int(n) for n in re.findall(r"#(\d+)", text)]
+        if potions and self.rng.random() < 0.05:
+            return self._say({"action": "deliver", "potion": self.rng.choice(potions)})
         if potions and self.rng.random() < 0.3:
             pid = self.rng.choice(potions)
             labels = {p: self.rng.choice(LABELS) for p in self.rng.sample(PLANTS, 2)}

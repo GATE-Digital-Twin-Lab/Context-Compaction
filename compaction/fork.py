@@ -39,8 +39,7 @@ def replay(
     reproduced the recorded transcript exactly. Also returns where each turn starts in the conversation."""
     original = (run_dir / "transcript.md").read_text(encoding="utf-8")
     world = World.create(
-        config.garden_size, list(config.goals),
-        config.allergy, config.turn_cap, config.env_seed, kb_path=str(out.kb_path), lore=config.lore,
+        config.garden_size, config.request, config.turn_cap, config.env_seed, kb_path=str(out.kb_path), lore=config.lore,
     )
     agent, ledger, dispatcher = ReplayAgent(recorded_replies(original)), Ledger(), Dispatcher(world)
     out.log_facts(ledger.observe(world))

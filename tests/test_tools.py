@@ -1,6 +1,6 @@
 import pytest
 
-from environment.goals import Goal, GoalKind
+from environment.requests import Request
 from environment.lore import LORE
 from environment.world import World
 from tools.dispatcher import Dispatcher
@@ -8,7 +8,7 @@ from tools.observation import turn_header
 
 @pytest.fixture
 def world() -> World:
-    return World.create(7, [Goal(GoalKind.TARGET, "S", target=20)], None, 100, seed=0)
+    return World.create(7, Request("s20", "text", "S", threshold=20), 100, seed=0)
 
 
 def act(d: Dispatcher, call) -> str:
@@ -142,12 +142,15 @@ def test_multi_brew_is_all_or_nothing(world):
     assert d.handle({"action": "brew", "recipe": two[0], "recipes": two}).text.startswith('Give either "recipe"')
 
 
-def test_multi_brew_reaches_a_target(world):
-    world.goals[0] = Goal(GoalKind.TARGET, "I", target=5)
+def test_deliver_texts(world):
     d = Dispatcher(world)
-    world.inventory.add_plants({"elderberry": 3, "sage": 2, "dill": 2})
-    act(d, {"action": "brew", "recipes": [{"elderberry": 1, "sage": 1, "dill": 1}, {"elderberry": 2, "sage": 1, "dill": 1}]})
-    assert world.results and world.results[0].success and world.results[0].best_intensity == 5
+    world.inventory.add_plants({"mint": 2, "chamomile": 4, "rosemary": 2})
+    act(d, {"action": "brew", "recipe": {"mint": 2, "chamomile": 4, "rosemary": 2}})   # +S 20%
+    failed = d.handle({"action": "deliver", "potion": 5})
+    assert failed.error and not failed.ends_turn and failed.text == "Unknown potion #5. Nothing was delivered."
+    assert d.handle({"action": "deliver"}).text.startswith('"potion" must be a whole number')
+    assert act(d, {"action": "deliver", "potion": 1}) == "Delivered potion #1. The request is closed."   # no verdict
+    assert world.episode_over and world.result.success
 
 
 def test_brew_texts(world):

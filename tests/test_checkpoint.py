@@ -3,29 +3,28 @@ import json
 import pytest
 
 import checkpoint
-from environment.goals import Allergy, Goal, GoalKind
+from environment.requests import Request
 from environment.world import World
 from input import ExperimentConfig, parse_args, parse_command
 from ledger import Ledger
 from output import RunOutput
 from tools.dispatcher import Dispatcher
 
-GROWTH = {"mint": 3, "elderberry": 4, "nettle": 3, "sage": 2, "chamomile": 3, "dill": 3, "basil": 6, "rosemary": 3}
 CALLS = [
-    {"action": "plant", "plots": {"1": "sage", "2": "basil", "3": "elderberry"}},
+    {"action": "plant", "plots": {"1": {"plant": "sage", "soil": "yellow"}, "2": {"plant": "dill", "soil": "brown"},
+                                  "3": {"plant": "elderberry", "soil": "brown"}}},   # ready / 75% / dies, at turn 3
     {"action": "skip"},
-    {"action": "log", "garden": True},
     {"tool": "gather"},
-    {"action": "brew", "recipe": {"mint": 2, "chamomile": 3, "rosemary": 2}},   # reaches the S target
+    {"action": "brew", "recipe": {"mint": 2, "chamomile": 3, "rosemary": 2}},   # +S 10%
     {"action": "log", "potions": [{"id": 1, "labels": {"chamomile": "higher"}}]},
 ]
-MORE = [{"action": "plant", "plots": {"4": "mint"}}, {"action": "skip"}, {"tool": "gather"}]
+MORE = [{"action": "plant", "plots": {"4": {"plant": "mint", "soil": "brown"}}}, {"action": "skip"}, {"tool": "gather"},
+        {"action": "deliver", "potion": 1}]
 
 
 def new_world(kb_path=":memory:") -> World:
-    goals = [Goal(GoalKind.TARGET, "S", target=10), Goal(GoalKind.TIME, "I", turns=20)]
-    world = World.create(7, goals, Allergy(frozenset({"nettle", "chamomile"})), 100, seed=0, kb_path=kb_path)
-    world.garden.growth_times = dict(GROWTH)
+    request = Request("s10", "text", "S", threshold=10, deadline_day=3, excluded=frozenset({"nettle"}))
+    world = World.create(7, request, 100, seed=0, kb_path=kb_path)
     world.inventory.add_plants({"mint": 4, "chamomile": 3, "rosemary": 2})
     return world
 
@@ -35,6 +34,7 @@ def play(world, ledger, calls):
     texts = []
     for call in calls:
         result = d.handle(call)
+        assert not result.error, result.text
         texts.append(result.text)
         if result.ends_turn:
             world.end_turn()
@@ -49,7 +49,7 @@ def test_world_and_ledger_round_trip_then_continue_identically():
     data = json.loads(json.dumps({"world": world.to_dict(), "ledger": ledger.to_dict()}))
     copy, copy_ledger = World.from_dict(data["world"]), Ledger.from_dict(data["ledger"])
     assert copy.to_dict() == world.to_dict()
-    assert copy.view() == world.view() and copy.results == world.results
+    assert copy.view() == world.view() and copy.garden.history == world.garden.history
     assert play(copy, copy_ledger, MORE) == play(world, ledger, MORE)
     assert copy.to_dict() == world.to_dict()
     assert copy_ledger.snapshot(copy) == ledger.snapshot(world)
@@ -89,9 +89,9 @@ def test_load_without_checkpoint(tmp_path):
 
 def test_resume_command(tmp_path):
     config = parse_args(["--runs-dir", str(tmp_path / "r"), "--temp-dir", str(tmp_path / "t"),
-                         "--goals", "time:S:30", "--allergy", "nettle+chamomile", "--env-seed", "4"])
+                         "--request", "stonecutter", "--env-seed", "4"])
     out = RunOutput(config)
-    out.write_params(config, {"growth_times": GROWTH})
+    out.write_params(config, {})
     resumed, run_dir = parse_command(["--resume", str(out.dir)])
     assert run_dir == out.dir and resumed == config
     assert RunOutput.reopen(resumed, out.dir).temp == out.temp
@@ -124,5 +124,5 @@ def test_compaction_arguments(argv, message, capsys):
 
 
 def test_config_round_trip():
-    config = parse_args(["--goals", "target:I:10", "--allergy", "nettle+chamomile", "--context-window", "8000"])
+    config = parse_args(["--request", "stonecutter", "--context-window", "8000"])
     assert ExperimentConfig.from_dict(json.loads(json.dumps(config.to_dict()))) == config

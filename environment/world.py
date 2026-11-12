@@ -1,15 +1,15 @@
-"""The complete world state: garden, inventory, knowledge base, goals and turn clock."""
+"""The complete world state: garden, inventory, knowledge base, the request and the turn clock."""
 
 from collections import Counter
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from environment.brewer import PLANTS, Effect, RecipeError, brew, effect_of, validate_recipe
 from environment.garden import Garden, GatherResult, GrowthRecord, PlantResult
-from environment.goals import Allergy, Goal, GoalKind, GoalResult, goal_intensity, score_goal, validate_allergy
 from environment.inventory import Inventory, Potion
 from environment.knowledge_base import LABELS, KnowledgeBase, LogError, Outcome, effect_label
 from environment.lore import LORE, pairs_among
+from environment.requests import Request, RequestResult, judge
 from environment.view import GardenView, garden_view
 
 
@@ -25,6 +25,10 @@ class MixError(ValueError):
     """Invalid mix (unknown, used-up or repeated potion); costs no turn."""
 
 
+class DeliveryError(ValueError):
+    """Invalid delivery (unknown or used-up potion); costs no turn."""
+
+
 @dataclass(frozen=True)
 class PotionLog:
     potion_id: int
@@ -33,44 +37,31 @@ class PotionLog:
     new_lore: int = 0  # lore lines this log unlocked for the potion's plants
 
 
-@dataclass(frozen=True)
-class TurnEnd:
-    finished: GoalResult | None  # goal that ended this turn
-    next_goal: Goal | None       # goal that starts next turn
-    episode_over: bool
-
-
 @dataclass
 class World:
     garden: Garden
     inventory: Inventory
     kb: KnowledgeBase
-    goals: list[Goal]
-    allergy: Allergy | None
+    request: Request
     turn_cap: int
     lore: bool = True  # logging potions unlocks herbal lore
     turn: int = 1
-    goal_index: int = 0
-    goal_start: int = 1
-    results: list[GoalResult] = field(default_factory=list)
-    _target_reached: bool = field(default=False, repr=False)
+    result: RequestResult | None = None  # set by the delivery, or when time runs out
 
     @classmethod
     def create(
         cls,
         size: int,
-        goals: Sequence[Goal],
-        allergy: Allergy | None,
+        request: Request,
         turn_cap: int,
         seed: int,
         kb_path: str = ":memory:",
         lore: bool = True,
     ) -> "World":
-        if not goals:
-            raise ValueError("An episode needs at least one goal.")
-        validate_allergy(allergy, goals)
+        if turn_cap < 1:
+            raise ValueError("The turn cap must be >= 1.")
         kb = KnowledgeBase(kb_path, catalogue=PLANTS)
-        return cls(Garden(size, seed), Inventory(), kb, list(goals), allergy, turn_cap, lore)
+        return cls(Garden(size, seed), Inventory(), kb, request, turn_cap, lore)
 
     def to_dict(self) -> dict:
         """Complete state, including the knowledge base contents."""
@@ -78,15 +69,11 @@ class World:
             "garden": self.garden.to_dict(),
             "inventory": self.inventory.to_dict(),
             "knowledge_base": self.kb.dump(),
-            "goals": [g.to_dict() for g in self.goals],
-            "allergy": sorted(self.allergy.plants) if self.allergy else None,
+            "request": self.request.to_dict(),
             "turn_cap": self.turn_cap,
             "lore": self.lore,
             "turn": self.turn,
-            "goal_index": self.goal_index,
-            "goal_start": self.goal_start,
-            "results": [r.to_dict() for r in self.results],
-            "target_reached": self._target_reached,
+            "result": self.result.to_dict() if self.result else None,
         }
 
     @classmethod
@@ -98,24 +85,22 @@ class World:
             garden=Garden.from_dict(data["garden"]),
             inventory=Inventory.from_dict(data["inventory"]),
             kb=kb,
-            goals=[Goal.from_dict(g) for g in data["goals"]],
-            allergy=Allergy(frozenset(data["allergy"])) if data["allergy"] else None,
+            request=Request.from_dict(data["request"]),
             turn_cap=data["turn_cap"],
-            lore=data.get("lore", False),
+            lore=data["lore"],
             turn=data["turn"],
-            goal_index=data["goal_index"],
-            goal_start=data["goal_start"],
-            results=[GoalResult.from_dict(r) for r in data["results"]],
-            _target_reached=data["target_reached"],
+            result=RequestResult.from_dict(data["result"]) if data["result"] else None,
         )
 
     @property
-    def current_goal(self) -> Goal | None:
-        return self.goals[self.goal_index] if self.goal_index < len(self.goals) else None
+    def last_turn(self) -> int:
+        """The deadline's last turn, or the turn cap if that comes first (or there is no deadline)."""
+        deadline = self.request.deadline_turn
+        return self.turn_cap if deadline is None else min(deadline, self.turn_cap)
 
     @property
     def episode_over(self) -> bool:
-        return self.current_goal is None or self.turn > self.turn_cap
+        return self.result is not None
 
     # --- actions (each costs the turn if it returns) ------------------------
 
@@ -186,12 +171,19 @@ class World:
         return self._add_potion(recipe, effect_of(recipe), origin=tuple(ids))
 
     def _add_potion(self, recipe: Mapping[str, int], effect: Effect, origin: tuple[int, ...] = ()) -> Potion:
-        potion = self.inventory.add_potion(recipe, effect, self.turn, origin)
-        goal = self.current_goal
-        valid = self.allergy is None or not self.allergy.violated_by(recipe)
-        if goal and goal.kind is GoalKind.TARGET and valid and goal_intensity(goal, potion) >= goal.target:
-            self._target_reached = True
-        return potion
+        return self.inventory.add_potion(recipe, effect, self.turn, origin)
+
+    def deliver(self, pid: int) -> RequestResult:
+        """Deliver a held potion: it is used up and the request ends, as a success or a failure.
+        Raises DeliveryError (no turn cost) for an unknown or used-up potion."""
+        potion = self.inventory.potion(pid)
+        if potion is None:
+            raise DeliveryError(f"Unknown potion #{pid}.")
+        if potion.used:
+            raise DeliveryError(f"Potion #{pid} was already used up.")
+        potion.used = True
+        self.result = judge(self.request, potion, self.turn)
+        return self.result
 
     def log(self, potions: Mapping[int, Mapping[str, str]]) -> list[PotionLog]:
         """Raises LogError (no turn cost) before writing anything if a potion entry is invalid."""
@@ -232,20 +224,9 @@ class World:
 
     # --- turn clock ------------------------------------------------------------
 
-    def end_turn(self) -> TurnEnd:
-        """Check the goal, then advance the clock."""
-        goal = self.current_goal
-        finished = None
-        if goal is not None:
-            deadline = goal.kind is GoalKind.TIME and self.turn >= self.goal_start + goal.turns - 1
-            if self._target_reached or deadline or self.turn >= self.turn_cap:
-                finished = score_goal(goal, self.inventory.potions, self.allergy, self.goal_start, self.turn)
-                self.results.append(finished)
-                self.goal_index += 1
-                self.goal_start = self.turn + 1
-                self._target_reached = False
-        over = self.current_goal is None or self.turn >= self.turn_cap
+    def end_turn(self) -> None:
+        """Close the request if its last turn passed without a delivery, then advance the clock."""
+        if self.result is None and self.turn >= self.last_turn:
+            self.result = judge(self.request, None, self.turn)
         self.turn += 1
         self.garden.settle(self.turn)  # plantings due now become ready or die
-        next_goal = self.current_goal if finished and not over else None
-        return TurnEnd(finished, next_goal, over)

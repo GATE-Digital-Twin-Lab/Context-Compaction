@@ -4,8 +4,8 @@ from datetime import datetime
 
 import pytest
 
-from environment.goals import Goal, GoalKind
-from input import parse_allergy, parse_args, parse_goal
+from environment.requests import Request
+from input import ExperimentConfig, parse_args
 from utils import run_id, slugify
 
 
@@ -17,37 +17,28 @@ def test_defaults_are_valid_and_seeds_recorded():
 
 
 def test_explicit_values():
-    config = parse_args([
-        "--garden-size", "8", "--env-seed", "7",
-        "--goals", "time:S:30, target:i:10", "--allergy", "nettle+chamomile", "--turn-cap", "90",
-    ])
-    assert config.goals == (Goal(GoalKind.TIME, "S", turns=30), Goal(GoalKind.TARGET, "I", target=10))
-    assert config.to_dict()["allergy"] == ["chamomile", "nettle"]
-    assert (config.garden_size, config.env_seed) == (8, 7)
+    config = parse_args(["--garden-size", "8", "--env-seed", "7", "--request", "stonecutter", "--turn-cap", "90"])
+    assert config.request.id == "stonecutter" and config.request.stat == "S" and config.request.threshold == 25
+    assert (config.garden_size, config.env_seed, config.turn_cap) == (8, 7, 90)
 
 
-@pytest.mark.parametrize("text", ["time:S", "speed:S:10", "time:X:10", "target:S:abc", "time:S:0"])
-def test_invalid_goals(text):
-    with pytest.raises(ValueError):
-        parse_goal(text)
-
-
-def test_allergy_parsing():
-    assert parse_allergy("none") is None
-    assert parse_allergy("chamomile+nettle").plants == {"nettle", "chamomile"}
-    with pytest.raises(ValueError):
-        parse_allergy("nettle")
+def test_the_whole_request_is_stored_in_the_config(tmp_path):
+    requests = tmp_path / "requests.json"
+    requests.write_text(json.dumps([{"id": "fever", "text": "Help.", "stat": "D", "excluded": ["mint"]}]), encoding="utf-8")
+    config = parse_args(["--request", "fever", "--requests-file", str(requests)])
+    assert config.request == Request("fever", "Help.", "D", excluded=frozenset({"mint"}))
+    assert ExperimentConfig.from_dict(json.loads(json.dumps(config.to_dict()))) == config
 
 
 @pytest.mark.parametrize(
     "argv, message",
     [
-        (["--goals", "target:S:10", "--allergy", "mint+chamomile"], "impossible"),
+        (["--request", "nobody"], "Unknown request 'nobody'"),
+        (["--requests-file", "missing.json"], "Requests file not found"),
         (["--agent", "llm"], "--llm-name is required"),
         (["--agent", "llm", "--llm-name", "m", "--prompt-file", "missing.txt"], "Prompt file not found"),
         (["--garden-size", "0"], "--garden-size"),
         (["--turn-cap", "0"], "--turn-cap"),
-        (["--goals", ""], "At least one goal"),
     ],
 )
 def test_invalid_arguments_exit_with_message(argv, message, capsys):

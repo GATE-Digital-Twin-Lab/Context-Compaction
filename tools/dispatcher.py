@@ -4,7 +4,7 @@ import json
 from collections.abc import Callable
 
 from environment.world import World
-from tools import brew, gather, inventory, kb_lookup, log, mix, plant, skip
+from tools import brew, deliver, gather, inventory, kb_lookup, log, mix, plant, skip
 from tools.base import ToolError, ToolResult
 
 ACTIONS: dict[str, Callable[[World, dict], ToolResult]] = {
@@ -12,6 +12,7 @@ ACTIONS: dict[str, Callable[[World, dict], ToolResult]] = {
     "log": log.run,
     "brew": brew.run,
     "mix": mix.run,
+    "deliver": deliver.run,
     "skip": skip.run,
 }
 FREE_TOOLS: dict[str, Callable[[World, dict], ToolResult]] = {

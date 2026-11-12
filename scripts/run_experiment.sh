@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run one Potion Garden episode.
 # Every parameter is listed below with its default; override any of them on the command line, e.g.
-#   scripts/run_experiment.sh --garden-size 12 --goals "time:S:30,target:I:10" --env-seed 7
+#   scripts/run_experiment.sh --garden-size 12 --request stonecutter --env-seed 7
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -22,8 +22,7 @@ GARDEN_SIZE="10"
 ENV_SEED=""               # empty: random, recorded in params.json
 
 # --- user ---
-GOALS="target:I:10"       # one goal per episode while testing; several: "target:I:10,time:S:40"
-ALLERGY="none"            # e.g. nettle+chamomile
+REQUEST="stonecutter"     # request id in content/requests.json
 LORE="on"                 # on | off: logging a potion unlocks herbal lore about its plants
 
 # --- episode ---
@@ -42,7 +41,7 @@ TEMP_DIR="temp"
 args=(
   --agent "$AGENT" --llm-url "$LLM_URL" --thinking "$THINKING" --max-tokens "$MAX_TOKENS"
   --garden-size "$GARDEN_SIZE"
-  --goals "$GOALS" --allergy "$ALLERGY" --lore "$LORE"
+  --request "$REQUEST" --lore "$LORE"
   --turn-cap "$TURN_CAP" --prompt-file "$PROMPT_FILE"
   --compactor "$COMPACTOR" --compaction-trigger "$COMPACTION_TRIGGER"
   --runs-dir "$RUNS_DIR" --temp-dir "$TEMP_DIR"

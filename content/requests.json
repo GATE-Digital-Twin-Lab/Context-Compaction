@@ -1,0 +1,18 @@
+[
+  {
+    "id": "stonecutter",
+    "text": "I am a stonecutter and recently I have been having problems lifting heavier stones. In a week we need to gather enough stone for the construction of a new monastery in the town. The work is so much, I need to pack 10 oxen with stone, but I can barely pack 8. Please help me.",
+    "stat": "S",
+    "threshold": 25,
+    "deadline_day": 7,
+    "excluded": []
+  },
+  {
+    "id": "maiden",
+    "text": "Since the spring floods a fever has come over me every night, and by day I am so slow and heavy-limbed that I stumble on the path and spill the water I carry up from the well. Old Marta told me of the pond where the river bends below the mill: the plants on its banks cleanse anything, she said, and no fever outlasts a brew of them. So I picked a basketful, steeped it in ale and drank, and she spoke true: that night the fever did not come. But every cup leaves me dizzy, the room turns about me, and before long I am retching in the yard. If I leave the ale for a day, the fever returns and the slowness with it. I can neither keep drinking it nor stop. Please, help me.",
+    "stat": "D",
+    "threshold": null,
+    "deadline_day": null,
+    "excluded": ["elderberry", "mint"]
+  }
+]

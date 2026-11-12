@@ -3,15 +3,11 @@
 from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 
-from environment.goals import score_goal
 from environment.inventory import Potion
 from environment.world import World
 
 
 class FactKind(StrEnum):
-    ALLERGY = "allergy"
-    GOAL = "goal"
-    GOAL_DONE = "goal_done"
     BREW = "brew"
     BEST = "best"
     PLANTING = "planting"
@@ -39,14 +35,11 @@ def recipe_text(potion: Potion) -> str:
 
 
 def effect_text(potion: Potion) -> str:
+    """E.g. '+S 25%, -I 5% (fragrant)'."""
     effect = potion.effect
-    if effect.positive:
-        stat, value = next(iter(effect.positive.items()))
-        return f"+{stat} {value}%"
-    if effect.negative:
-        stat, value = next(iter(effect.negative.items()))
-        return f"-{stat} {value}%"
-    return "no effect"
+    parts = [f"+{s} {v}%" for s, v in effect.positive.items()] + [f"-{s} {v}%" for s, v in effect.negative.items()]
+    text = ", ".join(parts) or "no effect"
+    return f"{text} ({', '.join(effect.secondary)})" if effect.secondary else text
 
 
 @dataclass
@@ -86,30 +79,21 @@ class Ledger:
         def add(id_: str, kind: FactKind, text: str, turn: int) -> None:
             facts.append(self._seen.get(id_) or Fact(id_, kind, text, turn))
 
-        if world.allergy is not None:
-            a, b = sorted(world.allergy.plants)
-            add("allergy", FactKind.ALLERGY, f"The user is allergic to the combination of {a} and {b}.", 0)
-
-        for i, result in enumerate(world.results, start=1):
-            add(f"goal_done:{i}", FactKind.GOAL_DONE, f"Goal {i} ({result.goal.describe()}) is finished.", result.end_turn)
-
-        goal = world.current_goal
-        if goal is not None:
-            i, start = world.goal_index + 1, world.goal_start
-            text = f"Current goal (goal {i}, started turn {start}): {goal.describe()}."
-            if goal.turns is not None:
-                text = text[:-1] + f" (ends after turn {start + goal.turns - 1})."
-            add(f"goal:{i}", FactKind.GOAL, text, start)
-            best = score_goal(goal, world.inventory.potions, world.allergy, start, world.turn)
-            if best.best_potion is not None:
-                potion = world.inventory.potions[best.best_potion - 1]
-                add(
-                    f"best:{i}:#{potion.id}",
-                    FactKind.BEST,
-                    f"Best valid {goal.stat} potion for the current goal so far: "
-                    f"#{potion.id} ({recipe_text(potion)}) → {effect_text(potion)}.",
-                    potion.turn,
-                )
+        # The request is in the system prompt (never compacted), so it is not a fact to retain.
+        stat, excluded = world.request.stat, world.request.excluded
+        candidates = [   # deliverable apart from the threshold
+            p for p in world.inventory.held
+            if p.effect.positive.get(stat, 0) > 0 and p.effect.drinkable and not excluded & p.recipe.keys()
+        ]
+        if candidates:
+            potion = max(candidates, key=lambda p: (p.effect.positive[stat], -p.id))
+            add(
+                f"best:#{potion.id}",
+                FactKind.BEST,
+                f"Best held {stat} potion for the request so far: #{potion.id} ({recipe_text(potion)}) → "
+                f"{effect_text(potion)}.",
+                potion.turn,
+            )
 
         for potion in world.inventory.potions:
             add(

@@ -204,7 +204,7 @@ def run_llm_episode(tmp_path, monkeypatch, script, turn_cap="6"):
     monkeypatch.setattr(main_module, "ChatClient", ScriptedClient)
     return main([
         "--agent", "llm", "--llm-name", "fake/model", "--prompt-file", str(prompt),
-        "--env-seed", "3", "--llm-seed", "5", "--turn-cap", turn_cap, "--garden-size", "4", "--goals", "target:I:10",
+        "--env-seed", "3", "--llm-seed", "5", "--turn-cap", turn_cap, "--garden-size", "4", "--request", "stonecutter",
         "--runs-dir", str(tmp_path / "runs"), "--temp-dir", str(tmp_path / "temp"),
     ])
 
@@ -224,7 +224,8 @@ def test_llm_episode_outputs(tmp_path, monkeypatch):
     assert "thinking, discarded)**" not in clean and "private" not in clean
     assert clean.count("**agent**") == transcript.count("**agent**") == 12
     params = json.loads((out.dir / "params.json").read_text())
-    assert params["system_prompt"] == "SYSTEM PROMPT" and params["llm_server"] == {"n_ctx": 1000}
+    assert params["system_prompt"].startswith("SYSTEM PROMPT\n\n# The request\n\nI am a stonecutter")
+    assert params["llm_server"] == {"n_ctx": 1000}
     assert params["temperature"] is None and params["thinking"] is True
     checkpoint = (out.temp / "checkpoint.json").read_text()
     assert "private" not in checkpoint and "made up" not in checkpoint

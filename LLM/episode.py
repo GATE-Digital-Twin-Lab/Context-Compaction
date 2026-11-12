@@ -2,7 +2,7 @@
 
 import checkpoint
 from agents.base import Agent, ContextFull
-from environment.world import TurnEnd, World
+from environment.world import World
 from input import ExperimentConfig
 from ledger import Ledger
 from output import RunOutput
@@ -14,19 +14,13 @@ MAX_CALLS_PER_TURN = 20  # stops an agent that only uses free tools
 
 
 def opening_message(world: World) -> str:
-    allergy = "I have no allergies."
-    if world.allergy is not None:
-        a, b = sorted(world.allergy.plants)
-        allergy = f"I am allergic to the combination of {a} and {b}: never brew a potion containing both."
-    return f"My garden has {world.garden.size} plots. {allergy} Goal 1: {world.goals[0].describe()}."
+    """The first message; the request itself is in the system prompt."""
+    return f"The garden has {world.garden.size} plots. It is day 1, turn 1."
 
 
-def goal_message(end: TurnEnd, world: World) -> str | None:
-    if end.finished is None:
-        return None
-    if end.next_goal is None:
-        return "Goal finished. That was the last goal."
-    return f"Goal finished. Goal {world.goal_index + 1}: {end.next_goal.describe()}."
+def system_prompt(base: str, request_text: str) -> str:
+    """The prompt file followed by the client's request, so the request is never compacted."""
+    return f"{base.rstrip()}\n\n# The request\n\n{request_text.strip()}\n"
 
 
 def maybe_compact(config: ExperimentConfig, agent: Agent, compactions: int) -> int:
@@ -65,10 +59,7 @@ def play_turn(world: World, agent: Agent, dispatcher: Dispatcher, out: RunOutput
         agent.observe(note)
         out.log_message(turn, "environment", note)
 
-    end = world.end_turn()
-    if message := goal_message(end, world):
-        agent.observe(message)
-        out.log_message(turn, "user", message)
+    world.end_turn()
     out.log_facts(ledger.observe(world))
 
 

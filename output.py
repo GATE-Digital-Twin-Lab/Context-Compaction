@@ -19,6 +19,9 @@ def potion_dict(potion: Potion) -> dict:
         "turn": potion.turn,
         "recipe": potion.recipe,
         "effect": potion.effect.to_dict(),
+        "drinkable": potion.effect.drinkable,
+        "origin": list(potion.origin),
+        "used": potion.used,
         "logged": potion.logged,
     }
 
@@ -51,30 +54,16 @@ def world_state(world: World) -> dict:
 
 
 def summary(world: World, stop_reason: str | None = None) -> dict:
-    """Per-goal results, including the best potion's details."""
-    goals = []
-    for result in world.results:
-        best = world.inventory.potions[result.best_potion - 1] if result.best_potion else None
-        goals.append({
-            "goal": result.goal.to_dict(),
-            "description": result.goal.describe(),
-            "start_turn": result.start_turn,
-            "end_turn": result.end_turn,
-            "turns_used": result.turns_used,
-            "success": result.success,
-            "best_intensity": result.best_intensity,
-            "best_potion": potion_dict(best) if best else None,
-            "allergy_violations": result.allergy_violations,
-        })
-    in_progress = None if world.episode_over else world.current_goal
-    not_started = world.goals[len(world.results) + (in_progress is not None):]
+    """The request, its hidden translation and how it ended, with the delivered potion's details."""
+    result = world.result
+    delivered = world.inventory.potion(result.potion) if result and result.potion else None
     return {
         "turns_played": world.turn - 1,
         "episode_over": world.episode_over,
         "stop_reason": stop_reason,
-        "goals": goals,
-        "goal_in_progress": in_progress.to_dict() if in_progress else None,
-        "goals_not_started": [g.to_dict() for g in not_started],
+        "request": {**world.request.to_dict(), "translation": world.request.describe(), "last_turn": world.last_turn},
+        "result": result.to_dict() if result else None,
+        "delivered_potion": potion_dict(delivered) if delivered else None,
     }
 
 
