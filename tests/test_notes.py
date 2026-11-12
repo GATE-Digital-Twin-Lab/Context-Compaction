@@ -107,7 +107,7 @@ def test_the_review_shows_the_invalid_replies(tmp_path, monkeypatch):
     assert [e.turn for e in load_entries(out.dir, invalid_only=False)] == [1, 2]
     [entry] = load_entries(out.dir)
     assert entry.turn == 2 and entry.notes["problems"] == ["Garden heading left out: 'plot 1: mint, planted turn 4'"]
-    assert "Turn 2" in entry.before
+    assert "[Day 1, turn 2]" in entry.before
     page = render(entry)
     assert '<span class="flag">  - plot 1: mint, planted turn 4</span>' in page   # the line it was about
     assert "Garden <span class=\"flag\">filled in</span>" in page and "Garden heading left out" in page

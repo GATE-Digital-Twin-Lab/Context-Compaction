@@ -27,8 +27,6 @@ class ExperimentConfig:
     llm_seed: int
     # garden
     garden_size: int
-    growth_min: int
-    growth_max: int
     env_seed: int
     # user
     goals: tuple[Goal, ...]
@@ -113,8 +111,6 @@ def build_parser() -> argparse.ArgumentParser:
     a.add_argument("--llm-seed", type=int, help="default: random, recorded in params.json")
     g = p.add_argument_group("garden")
     g.add_argument("--garden-size", type=int, default=10)
-    g.add_argument("--growth-min", type=int, default=2)
-    g.add_argument("--growth-max", type=int, default=6)
     g.add_argument("--env-seed", type=int, help="default: random, recorded in params.json")
     u = p.add_argument_group("user")
     u.add_argument("--goals", default="target:I:10,time:S:40,target:D:10",
@@ -177,8 +173,6 @@ def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
         max_tokens=args.max_tokens,
         llm_seed=args.llm_seed if args.llm_seed is not None else new_seed(),
         garden_size=args.garden_size,
-        growth_min=args.growth_min,
-        growth_max=args.growth_max,
         env_seed=args.env_seed if args.env_seed is not None else new_seed(),
         goals=goals,
         allergy=allergy,
@@ -202,8 +196,6 @@ def _check(args: argparse.Namespace) -> None:
             raise ValueError(f"Prompt file not found: {args.prompt_file}.")
     if args.garden_size < 1:
         raise ValueError("--garden-size must be >= 1.")
-    if not 1 <= args.growth_min <= args.growth_max:
-        raise ValueError("Need 1 <= --growth-min <= --growth-max.")
     if args.turn_cap < 1:
         raise ValueError("--turn-cap must be >= 1.")
     if args.temperature is not None and args.temperature < 0:

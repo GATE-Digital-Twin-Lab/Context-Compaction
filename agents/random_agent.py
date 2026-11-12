@@ -7,6 +7,7 @@ import re
 from agents.base import Agent, AgentReply
 from environment.brewer import PLANTS
 from environment.knowledge_base import LABELS
+from environment.soils import SOILS
 
 
 def _numbers(text: str, field: str) -> list[int]:
@@ -28,18 +29,17 @@ class RandomAgent(Agent):
         if self.rng.random() < self.error_rate:
             return self._say("{not valid json")
         garden = next((m["content"] for m in reversed(self.messages) if "Garden: " in m["content"]), "")
-        free, ready = _numbers(garden, "free"), _numbers(garden, "ready")
-        options = ["inventory", "skip", "log_garden"] + ["plant"] * 3 * bool(free) + ["gather"] * 3 * bool(ready)
+        free, ready = _numbers(garden, "free"), _numbers(garden, "ready") + _numbers(garden, "died")
+        options = ["inventory", "skip"] + ["plant"] * 3 * bool(free) + ["gather"] * 3 * bool(ready)
         choice = self.rng.choice(options)
         if choice == "plant":
             plots = self.rng.sample(free, self.rng.randint(1, len(free)))
-            return self._say({"action": "plant", "plots": {str(p): self.rng.choice(PLANTS) for p in plots}})
+            return self._say({"action": "plant", "plots": {
+                str(p): {"plant": self.rng.choice(PLANTS), "soil": self.rng.choice(SOILS)} for p in plots}})
         if choice == "gather":
             return self._say({"tool": "gather"})
         if choice == "inventory":
             return self._say({"tool": "inventory"})
-        if choice == "log_garden":
-            return self._say({"action": "log", "garden": True})
         return self._say({"action": "skip"})
 
     def _after_inventory(self, text: str) -> AgentReply:
@@ -50,8 +50,8 @@ class RandomAgent(Agent):
             pid = self.rng.choice(potions)
             labels = {p: self.rng.choice(LABELS) for p in self.rng.sample(PLANTS, 2)}
             return self._say({"action": "log", "potions": [{"id": pid, "labels": labels}]})
-        if len(plants) >= 3:
-            chosen = self.rng.sample(sorted(plants), self.rng.randint(3, min(4, len(plants))))
+        if len(plants) >= 2:
+            chosen = self.rng.sample(sorted(plants), self.rng.randint(2, min(4, len(plants))))
             extra = int(self.rng.random() < 0.1)  # sometimes infeasible on purpose
             recipe = {p: self.rng.randint(1, plants[p]) + extra for p in chosen}
             return self._say({"action": "brew", "recipe": recipe})

@@ -18,12 +18,12 @@ def test_defaults_are_valid_and_seeds_recorded():
 
 def test_explicit_values():
     config = parse_args([
-        "--garden-size", "8", "--growth-min", "3", "--growth-max", "5", "--env-seed", "7",
+        "--garden-size", "8", "--env-seed", "7",
         "--goals", "time:S:30, target:i:10", "--allergy", "nettle+chamomile", "--turn-cap", "90",
     ])
     assert config.goals == (Goal(GoalKind.TIME, "S", turns=30), Goal(GoalKind.TARGET, "I", target=10))
     assert config.to_dict()["allergy"] == ["chamomile", "nettle"]
-    assert (config.garden_size, config.growth_min, config.growth_max, config.env_seed) == (8, 3, 5, 7)
+    assert (config.garden_size, config.env_seed) == (8, 7)
 
 
 @pytest.mark.parametrize("text", ["time:S", "speed:S:10", "time:X:10", "target:S:abc", "time:S:0"])
@@ -46,7 +46,6 @@ def test_allergy_parsing():
         (["--agent", "llm"], "--llm-name is required"),
         (["--agent", "llm", "--llm-name", "m", "--prompt-file", "missing.txt"], "Prompt file not found"),
         (["--garden-size", "0"], "--garden-size"),
-        (["--growth-min", "5", "--growth-max", "2"], "--growth-min"),
         (["--turn-cap", "0"], "--turn-cap"),
         (["--goals", ""], "At least one goal"),
     ],

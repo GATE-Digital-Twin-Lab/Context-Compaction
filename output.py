@@ -30,22 +30,21 @@ def world_state(world: World) -> dict:
         "turn": world.turn,
         "garden": {
             "size": world.garden.size,
-            "growth_times": world.garden.growth_times,
             "plantings": {
-                str(plot): {"plant": plant, "planted_turn": turn}
-                for plot, (plant, turn) in world.garden.plantings().items()
+                str(plot): {"plant": plant, "soil": soil, "planted_turn": turn}
+                for plot, (plant, soil, turn) in world.garden.plantings().items()
             },
             "free": state.free,
             "growing": [g._asdict() for g in state.growing],
             "ready": [r._asdict() for r in state.ready],
+            "died": [d._asdict() for d in state.died],
+            "growth_records": [asdict(r) for r in world.growth_records().values()],
         },
         "inventory": {
             "plants": dict(sorted(world.inventory.plants.items())),
             "potions": [potion_dict(p) for p in world.inventory.potions],
         },
         "knowledge_base": {
-            "growth_times": world.kb.growth_times(),
-            "plantings": {str(k): v for k, v in world.kb.plantings().items()},
             "outcomes": [{"labels": o.labels, "effect": o.effect, "text": o.render()} for o in world.kb.outcomes()],
         },
     }

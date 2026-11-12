@@ -24,7 +24,7 @@ MORE = [{"action": "plant", "plots": {"4": "mint"}}, {"action": "skip"}, {"tool"
 
 def new_world(kb_path=":memory:") -> World:
     goals = [Goal(GoalKind.TARGET, "S", target=10), Goal(GoalKind.TIME, "I", turns=20)]
-    world = World.create(7, (2, 6), goals, Allergy(frozenset({"nettle", "chamomile"})), 100, seed=0, kb_path=kb_path)
+    world = World.create(7, goals, Allergy(frozenset({"nettle", "chamomile"})), 100, seed=0, kb_path=kb_path)
     world.garden.growth_times = dict(GROWTH)
     world.inventory.add_plants({"mint": 4, "chamomile": 3, "rosemary": 2})
     return world

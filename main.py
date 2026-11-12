@@ -5,6 +5,7 @@ import sys
 import checkpoint
 from agents.base import Agent
 from agents.random_agent import RandomAgent
+from environment.soils import SOIL_TABLE
 from environment.world import World
 from input import ExperimentConfig, parse_command
 from LLM.agent import LLMAgent
@@ -27,11 +28,11 @@ def make_agent(config: ExperimentConfig) -> Agent:
 def start(config: ExperimentConfig) -> RunOutput:
     out = RunOutput(config)
     world = World.create(
-        config.garden_size, (config.growth_min, config.growth_max), list(config.goals),
+        config.garden_size, list(config.goals),
         config.allergy, config.turn_cap, config.env_seed, kb_path=str(out.kb_path), lore=config.lore,
     )
     agent, ledger = make_agent(config), Ledger()
-    out.write_params(config, {"growth_times": world.garden.growth_times, **agent.info()})
+    out.write_params(config, {"soil_table": SOIL_TABLE, **agent.info()})
     out.log_facts(ledger.observe(world))
     checkpoint.save(out.temp, out.dir, world, ledger, agent.state(), compactions=0)
     run_episode(config, world, agent, out, ledger)

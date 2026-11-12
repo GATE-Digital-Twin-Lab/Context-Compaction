@@ -39,7 +39,7 @@ def replay(
     reproduced the recorded transcript exactly. Also returns where each turn starts in the conversation."""
     original = (run_dir / "transcript.md").read_text(encoding="utf-8")
     world = World.create(
-        config.garden_size, (config.growth_min, config.growth_max), list(config.goals),
+        config.garden_size, list(config.goals),
         config.allergy, config.turn_cap, config.env_seed, kb_path=str(out.kb_path), lore=config.lore,
     )
     agent, ledger, dispatcher = ReplayAgent(recorded_replies(original)), Ledger(), Dispatcher(world)
@@ -65,7 +65,7 @@ def fork(run_dir: Path, at: int, keep_turns: int = 5, name: str | None = None) -
                     temp_dir=config.temp_dir / config.agent_label / run_dir.name / name)
     system_prompt = params["system_prompt"]
     fork_info = {"parent": str(run_dir), "at_turn": at, "compactor": "summary", "keep_turns": keep_turns}
-    out.write_params(config, {"growth_times": params["growth_times"], "system_prompt": system_prompt, "fork": fork_info})
+    out.write_params(config, {"soil_table": params.get("soil_table"), "system_prompt": system_prompt, "fork": fork_info})
 
     world, ledger, replayed, starts = replay(run_dir, at, out, config)
     client = make_client(config)

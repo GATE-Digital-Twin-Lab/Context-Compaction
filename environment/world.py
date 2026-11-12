@@ -1,15 +1,14 @@
 """The complete world state: garden, inventory, knowledge base, goals and turn clock."""
 
-import random
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 
 from environment.brewer import PLANTS, Effect, RecipeError, brew, effect_of, validate_recipe
-from environment.garden import Garden, GatherResult, PlantResult, sample_growth_times
+from environment.garden import Garden, GatherResult, GrowthRecord, PlantResult
 from environment.goals import Allergy, Goal, GoalKind, GoalResult, goal_intensity, score_goal, validate_allergy
 from environment.inventory import Inventory, Potion
-from environment.knowledge_base import LABELS, GardenLogResult, KnowledgeBase, LogError, Outcome, effect_label
+from environment.knowledge_base import LABELS, KnowledgeBase, LogError, Outcome, effect_label
 from environment.lore import LORE, pairs_among
 from environment.view import GardenView, garden_view
 
@@ -35,12 +34,6 @@ class PotionLog:
 
 
 @dataclass(frozen=True)
-class LogResult:
-    garden: GardenLogResult | None
-    potions: list[PotionLog]
-
-
-@dataclass(frozen=True)
 class TurnEnd:
     finished: GoalResult | None  # goal that ended this turn
     next_goal: Goal | None       # goal that starts next turn
@@ -61,13 +54,11 @@ class World:
     goal_start: int = 1
     results: list[GoalResult] = field(default_factory=list)
     _target_reached: bool = field(default=False, repr=False)
-    _gathered_this_turn: set[str] = field(default_factory=set, repr=False)  # empty at every checkpoint
 
     @classmethod
     def create(
         cls,
         size: int,
-        growth_range: tuple[int, int],
         goals: Sequence[Goal],
         allergy: Allergy | None,
         turn_cap: int,
@@ -78,9 +69,8 @@ class World:
         if not goals:
             raise ValueError("An episode needs at least one goal.")
         validate_allergy(allergy, goals)
-        growth = sample_growth_times(PLANTS, *growth_range, random.Random(seed))
-        kb = KnowledgeBase(kb_path, catalogue=[(p, None) for p in PLANTS])
-        return cls(Garden(size, growth), Inventory(), kb, list(goals), allergy, turn_cap, lore)
+        kb = KnowledgeBase(kb_path, catalogue=PLANTS)
+        return cls(Garden(size, seed), Inventory(), kb, list(goals), allergy, turn_cap, lore)
 
     def to_dict(self) -> dict:
         """Complete state, including the knowledge base contents."""
@@ -129,13 +119,12 @@ class World:
 
     # --- actions (each costs the turn if it returns) ------------------------
 
-    def plant(self, assignments: Mapping[int, str]) -> PlantResult:
+    def plant(self, assignments: Mapping[int, tuple[str, str]]) -> PlantResult:
+        """plot -> (plant, soil)."""
         return self.garden.plant(assignments, self.turn)
 
     def gather(self) -> GatherResult:
         result = self.garden.gather(self.turn)
-        self._gathered_this_turn.update(result.counts)
-        self.kb.clear_plantings(result.plots)
         self.inventory.add_plants(result.counts)
         return result
 
@@ -204,7 +193,7 @@ class World:
             self._target_reached = True
         return potion
 
-    def log(self, garden: bool, potions: Mapping[int, Mapping[str, str]]) -> LogResult:
+    def log(self, potions: Mapping[int, Mapping[str, str]]) -> list[PotionLog]:
         """Raises LogError (no turn cost) before writing anything if a potion entry is invalid."""
         entries = []
         for pid, labels in potions.items():
@@ -217,10 +206,6 @@ class World:
                 raise LogError(f'Invalid label "{bad[0]}" (allowed: {", ".join(LABELS)}).')
             full = {p: labels.get(p, "present") for p in sorted(potion.recipe)}
             entries.append((potion, full))
-        garden_result = None
-        if garden:
-            state = self.garden.state(self.turn)
-            garden_result = self.kb.log_garden(state, self.garden.growth_times, also_ready=self._gathered_this_turn)
         logs = []
         for potion, labels in entries:
             effect = effect_label(potion.effect)
@@ -231,15 +216,19 @@ class World:
                 pairs = pairs_among(potion.recipe)
                 unlocked = len(self.kb.unlock_lore({p: LORE[p] for p in pairs}, self.turn))
             logs.append(PotionLog(potion.id, Outcome(labels, effect), new, unlocked))
-        return LogResult(garden_result, logs)
+        return logs
 
     def skip(self) -> None:
         pass
 
     # --- free lookups --------------------------------------------------------
 
+    def growth_records(self) -> dict[tuple[str, str], GrowthRecord]:
+        """Automatic growth records: (plant, soil) pairs with at least one finished planting."""
+        return self.garden.growth_records(self.turn)
+
     def view(self) -> GardenView:
-        return garden_view(self.garden.state(self.turn), self.kb)
+        return garden_view(self.garden.state(self.turn), self.growth_records())
 
     # --- turn clock ------------------------------------------------------------
 
@@ -257,6 +246,6 @@ class World:
                 self._target_reached = False
         over = self.current_goal is None or self.turn >= self.turn_cap
         self.turn += 1
-        self._gathered_this_turn.clear()
+        self.garden.settle(self.turn)  # plantings due now become ready or die
         next_goal = self.current_goal if finished and not over else None
         return TurnEnd(finished, next_goal, over)

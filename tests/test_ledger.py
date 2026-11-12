@@ -3,14 +3,12 @@ from environment.world import World
 from ledger import FactKind, Ledger
 from tools.dispatcher import Dispatcher
 
-GROWTH = {"mint": 3, "elderberry": 4, "nettle": 3, "sage": 2, "chamomile": 3, "dill": 3, "basil": 6, "rosemary": 3}
 STRENGTH_10 = Goal(GoalKind.TARGET, "S", target=10)
 INTEL_30 = Goal(GoalKind.TIME, "I", turns=30)
 
 
 def setup(goals=(STRENGTH_10, INTEL_30), allergy=Allergy(frozenset({"nettle", "chamomile"}))):
-    world = World.create(7, (2, 6), list(goals), allergy, 100, seed=0)
-    world.garden.growth_times = dict(GROWTH)
+    world = World.create(7, list(goals), allergy, 100, seed=0)
     ledger = Ledger()
     ledger.observe(world)
     return world, Dispatcher(world), ledger
@@ -39,17 +37,23 @@ def test_initial_facts():
 
 def test_planting_and_growth_facts_lifecycle():
     world, d, ledger = setup()
-    new = act(world, d, ledger, {"action": "plant", "plots": {"1": "sage"}})       # turn 1
-    assert [f.text for f in new] == ["Plot 1 contains sage (planted turn 1)."]
-    assert active(ledger, world, FactKind.PLANTING)[0]["logged"] is False
-    new = act(world, d, ledger, {"action": "skip"})                                # turn 2 → sage ready at 3
-    assert [(f.text, f.turn) for f in new] == [("sage grows in 2 turns.", 3)]
-    act(world, d, ledger, {"action": "log", "garden": True})                       # turn 3
-    assert active(ledger, world, FactKind.PLANTING)[0]["logged"] is True
-    assert active(ledger, world, FactKind.GROWTH)[0]["logged"] is True
-    act(world, d, ledger, {"tool": "gather"})                                    # turn 4
+    plots = {"1": {"plant": "sage", "soil": "yellow"}, "2": {"plant": "elderberry", "soil": "brown"}}
+    new = act(world, d, ledger, {"action": "plant", "plots": plots})                # turn 1
+    assert [f.text for f in new] == [
+        "Plot 1 contains sage in yellow soil (planted turn 1).",
+        "Plot 2 contains elderberry in brown soil (planted turn 1).",
+    ]
+    assert active(ledger, world, FactKind.PLANTING)[0]["logged"] is True           # shown in the garden line
+    new = act(world, d, ledger, {"action": "skip"})                                # turn 2 → both finish at 3
+    assert [(f.text, f.turn) for f in new] == [
+        ("sage in yellow soil grows after 2 turns.", 3),
+        ("elderberry in brown soil died after 2 turns.", 3),
+    ]
+    assert len(active(ledger, world, FactKind.PLANTING)) == 2                      # the dead plant stays until gathered
+    assert all(r["logged"] for r in active(ledger, world, FactKind.GROWTH))        # recorded automatically
+    act(world, d, ledger, {"tool": "gather"})
     assert active(ledger, world, FactKind.PLANTING) == []                          # retired on gather
-    assert len(active(ledger, world, FactKind.GROWTH)) == 1                        # growth stays
+    assert len(active(ledger, world, FactKind.GROWTH)) == 2                        # growth stays
 
 
 def test_brews_best_and_allergy():

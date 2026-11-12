@@ -21,7 +21,7 @@ def config(tmp_path):
 
 def make_world(config, out):
     return World.create(
-        config.garden_size, (config.growth_min, config.growth_max), list(config.goals),
+        config.garden_size, list(config.goals),
         config.allergy, config.turn_cap, config.env_seed, kb_path=str(out.kb_path),
     )
 
@@ -94,6 +94,6 @@ def test_logs_and_final_files(config):
 
     state = json.loads((out.dir / "final_state.json").read_text(encoding="utf-8"))
     assert state["inventory"]["potions"][0]["effect"] == {"positive": {"S": 10}, "negative": {}, "secondary": []}
-    assert set(state["garden"]["growth_times"]) == set(PLANTS)
+    assert state["garden"]["size"] == world.garden.size and state["garden"]["died"] == []
     assert out.kb_path.is_file()
     world.kb.close()

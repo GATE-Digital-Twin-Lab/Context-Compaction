@@ -54,38 +54,28 @@ class Ledger:
     """Call observe() at the start of every turn; snapshot() at a compaction point."""
 
     _seen: dict[str, Fact] = field(default_factory=dict)
-    _grown: dict[str, int] = field(default_factory=dict)  # plant -> turn first seen ready
 
     def to_dict(self) -> dict:
-        return {"seen": [asdict(f) for f in self._seen.values()], "grown": self._grown}
+        return {"seen": [asdict(f) for f in self._seen.values()]}
 
     @classmethod
     def from_dict(cls, data: dict) -> "Ledger":
         seen = {f["id"]: Fact(f["id"], FactKind(f["kind"]), f["text"], f["turn"]) for f in data["seen"]}
-        return cls(seen, dict(data["grown"]))
+        return cls(seen)
 
     def observe(self, world: World) -> list[Fact]:
-        """Record readiness seen this turn; return facts that are new since the last call."""
-        for ready in world.garden.state(world.turn).ready:
-            self._grown.setdefault(ready.plant, world.turn)
+        """Return facts that are new since the last call."""
         new = [f for f in self._active(world) if f.id not in self._seen]
         for fact in new:
             self._seen[fact.id] = fact
         return new
 
     def snapshot(self, world: World) -> list[dict]:
-        """Active facts with whether the knowledge base holds them."""
-        plantings, growth = world.kb.plantings(), world.kb.growth_times()
+        """Active facts with whether the knowledge base holds them (plantings are in the garden line,
+        growth records and lore are written automatically)."""
         rows = []
         for fact in self._active(world):
-            logged = None
-            if fact.kind is FactKind.PLANTING:
-                plot = int(fact.id.split(":")[1].split("@")[0])
-                logged = plot in plantings
-            elif fact.kind is FactKind.GROWTH:
-                logged = fact.id.split(":")[1] in growth
-            elif fact.kind is FactKind.LORE:
-                logged = True
+            logged = True if fact.recoverable else None
             rows.append({**asdict(fact), "recoverable": fact.recoverable, "logged": logged})
         return rows
 
@@ -129,12 +119,15 @@ class Ledger:
                 potion.turn,
             )
 
-        for plot, (plant, planted) in world.garden.plantings().items():
-            add(f"planting:{plot}@{planted}", FactKind.PLANTING, f"Plot {plot} contains {plant} (planted turn {planted}).", planted)
+        for plot, (plant, soil, planted) in world.garden.plantings().items():
+            add(f"planting:{plot}@{planted}", FactKind.PLANTING,
+                f"Plot {plot} contains {plant} in {soil} soil (planted turn {planted}).", planted)
 
-        for plant, turn in sorted(self._grown.items()):
-            g = world.garden.growth_times[plant]
-            add(f"growth:{plant}", FactKind.GROWTH, f"{plant} grows in {g} turn{'s' if g != 1 else ''}.", turn)
+        for f in world.garden.history:  # one fact per (plant, soil) and outcome, from its first occurrence
+            g = f.done_turn - f.planted_turn
+            outcome = "grows" if f.survived else "died"
+            add(f"growth:{f.plant}:{f.soil}:{outcome}", FactKind.GROWTH,
+                f"{f.plant} in {f.soil} soil {outcome} after {g} turn{'s' if g != 1 else ''}.", f.done_turn)
 
         for a, b, text, turn in world.kb.lore_entries():
             add(f"lore:{a}+{b}", FactKind.LORE, f"Lore on {a} and {b}: {text}", turn)

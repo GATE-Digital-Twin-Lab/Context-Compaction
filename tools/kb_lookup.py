@@ -12,9 +12,13 @@ def run(world: World, args: dict) -> ToolResult:
     if unknown := [p for p in plants if p not in catalogue]:
         raise ToolError(f"Unknown plant {unknown[0]}.")
     plants = list(dict.fromkeys(plants))
-    growth = world.kb.growth_times()
-    grows = ", ".join(f"{p} {turns(growth[p])}" if p in growth else f"{p} unknown" for p in plants)
-    sections = [f"Growth: {grows}.", _listed("Interactions", [o.render() for o in world.kb.outcomes(*plants)], "none.")]
+    records = world.growth_records()
+    grows = []
+    for plant in plants:
+        rows = [r for (p, _), r in records.items() if p == plant]
+        grows += [f"{plant} in {r.soil}: {turns(r.turns)} (planted {r.planted}, grew {r.grew}, died {r.died})" for r in rows]
+        grows += [] if rows else [f"{plant}: no planting finished yet"]
+    sections = [_listed("Growth", grows, "none."), _listed("Interactions", [o.render() for o in world.kb.outcomes(*plants)], "none.")]
     if world.lore:
         sections.append(_listed("Lore", world.kb.lore(*plants), "none yet."))
     return ToolResult("\n".join(sections))

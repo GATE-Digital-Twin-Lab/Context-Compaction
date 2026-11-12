@@ -72,7 +72,7 @@ def test_fork_replays_compacts_and_continues(tmp_path, monkeypatch):
     # the first call after the fork sees only the summary and turn 4; seeds continue after the 3 replayed calls
     first, seed = requests[1]
     assert seed == 5 + 3 and len(first) == 2 and "Skipped every turn." in first[1]["content"]
-    assert "[Turn 4]" in first[1]["content"] and "Notes 5." not in first[1]["content"]
+    assert "[Day 1, turn 4]" in first[1]["content"] and "Notes 5." not in first[1]["content"]
 
     record = json.loads((out.dir / "compactions" / "001.json").read_text())
     assert record["turn"] == 3 and record["summary"] == "Skipped every turn."
@@ -88,9 +88,9 @@ def test_fork_replays_compacts_and_continues(tmp_path, monkeypatch):
 def test_fork_keeps_the_last_turns_verbatim(tmp_path, monkeypatch):
     parent, out, requests = fork_with_fake_model(tmp_path, monkeypatch, "--keep-turns", "2", "--name", "k2")
     summary_request = requests[0][0]
-    assert "[Turn 1]" in summary_request[1]["content"] and "[Turn 2]" not in json.dumps(summary_request)
+    assert "[Day 1, turn 1]" in summary_request[1]["content"] and "[Day 1, turn 2]" not in json.dumps(summary_request)
     first = requests[1][0]
-    assert "Skipped every turn." in first[1]["content"] and "[Turn 2]" in first[1]["content"]
+    assert "Skipped every turn." in first[1]["content"] and "[Day 1, turn 2]" in first[1]["content"]
     assert [m["role"] for m in first[1:]] == ["user", "assistant", "user", "assistant", "user"]   # turns 2, 3 and 4
     record = json.loads((out.dir / "compactions" / "001.json").read_text())
     assert len(record["summarised"]) == 1 + 3 and len(record["context_after"]) == 1 + 2 * 3

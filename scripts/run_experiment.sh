@@ -19,8 +19,6 @@ LLM_SEED=""               # empty: random, recorded in params.json
 
 # --- garden ---
 GARDEN_SIZE="10"
-GROWTH_MIN="2"
-GROWTH_MAX="6"
 ENV_SEED=""               # empty: random, recorded in params.json
 
 # --- user ---
@@ -43,7 +41,7 @@ TEMP_DIR="temp"
 
 args=(
   --agent "$AGENT" --llm-url "$LLM_URL" --thinking "$THINKING" --max-tokens "$MAX_TOKENS"
-  --garden-size "$GARDEN_SIZE" --growth-min "$GROWTH_MIN" --growth-max "$GROWTH_MAX"
+  --garden-size "$GARDEN_SIZE"
   --goals "$GOALS" --allergy "$ALLERGY" --lore "$LORE"
   --turn-cap "$TURN_CAP" --prompt-file "$PROMPT_FILE"
   --compactor "$COMPACTOR" --compaction-trigger "$COMPACTION_TRIGGER"

@@ -24,9 +24,30 @@ A simulated environment in which a **language** agent is actually needed, used t
 - **Soils:** black, brown, yellow, unlimited. The agent chooses the soil for every planting. Soil affects **growing only**, never brewing:
   - **growth time** is a fixed property of each (plant, soil) pair;
   - **death:** a few (plant, soil) pairs never survive, and rarely a pair survives only with some probability. Most pairs always survive.
-  - A plant that dies is reported when it would have become ready: the garden line shows it as died, its plot becomes free, and the growth table records it.
+  - A plant that dies is reported when it would have become ready: the garden line shows it as died, the growth table records it, and the dead plant occupies its plot until `gather` clears it.
+  - Every planting in a pair with a survival chance rolls independently (env seed).
 - **Time:** discrete turns; **a day is 10 turns**. Every action costs exactly 1 turn; thinking and free tools cost nothing (within the free-call budget, see *Tools*).
 - **One fixed world:** the stat rules, the secondary pairs, the growth times per soil, the death probabilities and the corpus are written together and do not change between episodes. The env seed only drives random deaths. Variation comes from the requests and the LLM seed.
+
+**Soil table (hidden).** Growth time in turns; "dies" = never survives (the death is reported after the growth time); a percentage = survival chance.
+
+| Plant | black | brown | yellow |
+|---|---|---|---|
+| mint | 6 | 2 | 5 |
+| elderberry | 5 | 2, dies | 3, dies |
+| nettle | 4, dies | 6, dies | 5 |
+| sage | 4, dies | 5 | 2 |
+| chamomile | 4 | 5 | 3 |
+| dill | 3 | 2, **75%** | 3, dies |
+| basil | 6, dies | 6 | 3 |
+| rosemary | 4 | 4 | 6 |
+
+Sampled once with seed 17, then hand-edited (nettle brown 3 → 6, nettle yellow 6 → 5, dill brown 3 → 2 and 86% → 75%) and frozen; the corpus is written from it. Sampling rules:
+- growth time per (plant, soil) uniform in 2–6 turns (equal times allowed);
+- 6–8 dying (plant, soil) pairs in total, at most 3 per soil, and every plant keeps at least one soil with 100% survival;
+- 1–2 of the dying pairs get a survival chance uniform in 10–90% (whole percent); their growth time becomes 2 turns if the chance is below 50%, else 3.
+
+Here: 8 dying pairs, one with a chance (dill in brown, 75%). Nettle, elderberry and dill each have a single safe soil (yellow 5, black 5, black 3).
 
 ### Primary effects (unchanged rules)
 
@@ -166,7 +187,7 @@ A free tool that checks statements against the notebook's **automatic records** 
 | `read` | whole texts of sources returned by a search this turn | free |
 | `kb_lookup` | notebook records matching filters | free |
 | `inventory` | plant counts; potions by id | free |
-| `gather` | collects all ready plots; they are free at once | free |
+| `gather` | collects all ready plots and clears dead plants; those plots are free at once | free |
 
 - **Budget:** `search`, `record` and `validate` together are limited to **5 calls per turn**. Every operation can be batched. **(default)** A batched call counts as one call. The budget resets every turn.
 - **Running out:** a 6th counted call costs no turn; the agent is told the budget is used up and that only reads, lookups, inventory, gather or an action remain this turn.
@@ -194,7 +215,7 @@ Every turn starts with the day, the turn and the garden:
 Garden: free: 1, 6; growing: 2 (sage, yellow, 1 turn left), 3 (mint, black, planted turn 22); ready: 4 (nettle, brown, waiting 0); died: 5 (basil, yellow)
 ```
 
-- Every plot shows its plant and soil. **(default)** A growing plot shows the turns left once its (plant, soil) growth time is in the notebook, and otherwise the turn it was planted. A ready plot shows how long it has waited. A plant that died is shown once.
+- Every plot shows its plant and soil. **(default)** A growing plot shows the turns left once its (plant, soil) growth time is in the notebook, and otherwise the turn it was planted. A ready plot shows how long it has waited. A dead plant is shown under died until `gather` clears it.
 - The garden line deliberately omits the request, the deadline and any results.
 
 ## The agent's memory and reply format
@@ -229,7 +250,8 @@ The turn loop, the LLM client and agent (thinking discarded, cut after the first
 ## Open items
 
 - [x] **(content)** The pairs that give secondary effects (see *Secondary effects*)
-- [ ] **(content)** Plant names and groups; the glossary; growth times and deaths per (plant, soil); the false-information chance per source kind; the corpus; 5–10 requests with their translations and success checks
+- [x] **(content)** Growth times and deaths per (plant, soil) (see *Plants, garden, soils*)
+- [ ] **(content)** Plant names and groups; the glossary; the false-information chance per source kind; the corpus; 5–10 requests with their translations and success checks
 - [ ] The validator's exact grammar; the record fields and the relation vocabulary
 - [ ] `search` k and passage length; the `kb_lookup` row limit
 - [ ] The new reply schema (the thought process)

@@ -11,7 +11,7 @@ P5_P3 = Allergy(frozenset({"chamomile", "nettle"}))
 
 
 def make_world(goals=(STRENGTH_10,), allergy=None, turn_cap=100, seed=0) -> World:
-    return World.create(7, (2, 6), list(goals), allergy, turn_cap, seed)
+    return World.create(7, list(goals), allergy, turn_cap, seed)
 
 
 def advance(world: World, turns: int) -> None:
@@ -54,18 +54,21 @@ def test_allergy_needs_two_known_plants():
 # --- world creation and actions ---------------------------------------------
 
 
-def test_create_is_reproducible():
+def test_same_seed_same_survival_rolls():
     a, b = make_world(seed=3), make_world(seed=3)
-    assert a.garden.growth_times == b.garden.growth_times
-    assert all(2 <= g <= 6 for g in a.garden.growth_times.values())
+    for world in (a, b):
+        world.plant({p: ("dill", "brown") for p in range(1, 8)})   # 75% survival, 2 turns
+        world.end_turn()
+        advance(world, 1)
+    assert a.garden.history == b.garden.history and len(a.garden.history) == 7
 
 
 def test_plant_gather_brew_cycle():
     world = make_world()
-    g = world.garden.growth_times
-    world.plant({1: "mint", 2: "mint", 3: "chamomile", 4: "rosemary", 5: "rosemary"})
+    world.plant({1: ("mint", "brown"), 2: ("mint", "brown"), 3: ("chamomile", "yellow"),
+                 4: ("rosemary", "black"), 5: ("rosemary", "black")})   # ready after 2, 3 and 4 turns
     world.end_turn()
-    advance(world, max(g["mint"], g["chamomile"], g["rosemary"]))
+    advance(world, 3)
     gathered = world.gather()
     assert gathered.counts == {"mint": 2, "chamomile": 1, "rosemary": 2}
     potion = world.brew({"mint": 2, "chamomile": 1, "rosemary": 2})
@@ -73,15 +76,15 @@ def test_plant_gather_brew_cycle():
     assert dict(world.inventory.plants) == {}
 
 
-def test_gather_clears_logged_plantings():
+def test_a_death_is_recorded_and_gather_clears_it():
     world = make_world()
-    world.plant({1: "sage"})
-    world.log(garden=True, potions={})
-    assert world.kb.plantings() == {1: "sage"}
+    world.plant({1: ("elderberry", "brown"), 2: ("elderberry", "black")})   # brown: dies after 2
     world.end_turn()
-    advance(world, world.garden.growth_times["sage"])
-    world.gather()
-    assert world.kb.plantings() == {}
+    advance(world, 1)
+    assert world.turn == 3 and world.view().died[0].plot == 1 and 1 not in world.view().free
+    assert world.growth_records()[("elderberry", "brown")].died == 1
+    result = world.gather()
+    assert result.counts == {} and result.cleared == [1] and not world.inventory.plants
 
 
 def test_failed_brews_change_nothing():
@@ -104,15 +107,15 @@ def test_log_potions_defaults_and_duplicates():
     world.inventory.add_plants({"elderberry": 3, "sage": 2, "dill": 2})
     world.brew({"elderberry": 1, "sage": 1, "dill": 1})
     world.brew({"elderberry": 2, "sage": 1, "dill": 1})
-    result = world.log(garden=False, potions={1: {}, 2: {"elderberry": "higher"}})
-    assert [log.outcome.render() for log in result.potions] == [
+    result = world.log({1: {}, 2: {"elderberry": "higher"}})
+    assert [log.outcome.render() for log in result] == [
         "dill, elderberry, sage → +I",
         "dill, (higher) elderberry, sage → +I",
     ]
-    assert all(log.new for log in result.potions)
+    assert all(log.new for log in result)
     assert all(p.logged for p in world.inventory.potions)
-    again = world.log(garden=False, potions={2: {"elderberry": "higher"}})
-    assert not again.potions[0].new
+    again = world.log({2: {"elderberry": "higher"}})
+    assert not again[0].new
 
 
 @pytest.mark.parametrize(
@@ -127,10 +130,9 @@ def test_invalid_potion_logs_write_nothing(potions, message):
     world = make_world()
     world.inventory.add_plants({"elderberry": 1, "sage": 1, "dill": 1})
     world.brew({"elderberry": 1, "sage": 1, "dill": 1})
-    world.plant({1: "sage"})
     with pytest.raises(LogError, match=message):
-        world.log(garden=True, potions=potions)
-    assert world.kb.outcomes() == [] and world.kb.plantings() == {}
+        world.log(potions)
+    assert world.kb.outcomes() == []
 
 
 # --- goals over time ----------------------------------------------------------

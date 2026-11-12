@@ -1,26 +1,13 @@
 import pytest
 
 from environment.brewer import PLANTS, Effect
-from environment.garden import Garden
 from environment.knowledge_base import KnowledgeBase, LogError, Outcome, effect_label
-from environment.view import GardenView, GrowingView, ReadyView, garden_view
-
-GROWTH = {"elderberry": 4, "sage": 2, "chamomile": 3, "basil": 6}
-
 
 @pytest.fixture
 def kb():
-    kb = KnowledgeBase(catalogue=[(p, None) for p in PLANTS])
+    kb = KnowledgeBase(catalogue=PLANTS)
     yield kb
     kb.close()
-
-
-def spec_garden() -> Garden:
-    """7-plot example from demo_spec.md: at turn 5, 2 (elderberry) and 4 (sage, waiting 2) ready."""
-    garden = Garden(7, GROWTH)
-    garden.plant({2: "elderberry", 4: "sage"}, turn=1)
-    garden.plant({5: "chamomile", 7: "basil"}, turn=3)
-    return garden
 
 
 def test_catalogue(kb):
@@ -41,50 +28,6 @@ def test_render():
     assert Outcome({"mint": "present", "elderberry": "present", "dill": "present"}, "none").render() == (
         "mint, elderberry, dill → none"
     )
-
-
-def test_garden_log_spec_example(kb):
-    garden = spec_garden()
-    result = kb.log_garden(garden.state(5), garden.growth_times)
-    assert result.growth == {"elderberry": 4, "sage": 2}           # true values, waiting ignored
-    assert result.plantings == {2: "elderberry", 4: "sage", 5: "chamomile", 7: "basil"}
-    again = kb.log_garden(garden.state(5), garden.growth_times)
-    assert again.growth == {} and again.plantings == {}  # nothing new
-
-
-def test_view_before_and_after_garden_log(kb):
-    garden = spec_garden()
-    assert garden_view(garden.state(5), kb) == GardenView(
-        free=[1, 3, 6],
-        growing=[GrowingView(5, None, None), GrowingView(7, None, None)],
-        ready=[ReadyView(2, None, 0), ReadyView(4, None, 2)],
-    )
-    kb.log_garden(garden.state(5), garden.growth_times)
-    assert garden_view(garden.state(6), kb) == GardenView(
-        free=[1, 3, 6],
-        growing=[GrowingView(7, "basil", None)],             # basil growth time unknown
-        ready=[ReadyView(2, "elderberry", 1), ReadyView(4, "sage", 3), ReadyView(5, "chamomile", 0)],
-    )
-
-
-def test_turns_left_once_growth_known(kb):
-    garden = Garden(3, GROWTH)
-    garden.plant({1: "sage"}, turn=1)
-    kb.log_garden(garden.state(3), garden.growth_times)    # sage ready: growth logged
-    kb.clear_plantings(garden.gather(turn=3).plots)
-    garden.plant({2: "sage"}, turn=3)
-    kb.log_garden(garden.state(3), garden.growth_times)    # planting of plot 2 logged
-    assert garden_view(garden.state(4), kb).growing == [GrowingView(2, "sage", 1)]
-
-
-def test_gather_clears_planting_records(kb):
-    garden = spec_garden()
-    kb.log_garden(garden.state(5), garden.growth_times)
-    kb.clear_plantings(garden.gather(turn=5).plots)
-    assert kb.plantings() == {5: "chamomile", 7: "basil"}
-    assert kb.growth_times() == {"elderberry": 4, "sage": 2}          # growth times are permanent
-    garden.plant({2: "basil"}, turn=6)
-    assert garden_view(garden.state(6), kb).growing[0] == GrowingView(2, None, None)
 
 
 def test_outcomes_spec_example(kb):
