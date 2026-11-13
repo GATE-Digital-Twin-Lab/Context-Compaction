@@ -32,11 +32,14 @@ Garden: free: 1, 6; growing: 2 (sage, yellow, 1 turn left), 3 (mint, black, plan
 
 Every plot shows its plant and soil. A growing plot shows the turns left once a planting of the same plant in the same soil has finished (grown or died), otherwise the turn it was planted. Ready plots show how many turns they have waited since becoming ready. A dead plant is shown under "died" until gather clears it.
 
-# Free tools (0 turns, as often as you like, one per reply)
+# Free tools (0 turns, one per reply)
+
+record and validate are counted: together at most 5 calls per turn (a batched call counts once). The others are unlimited.
 
 - Gather all ready plots into the inventory and clear all dead plants: {"tool": "gather"}. Those plots become free at once, so you can replant them in the same turn.
 - Look up notebook records (see Notebook below): {"tool": "kb_lookup", "type": "potion", "effect": "+S", "pattern": {"sage": "any"}} or {"tool": "kb_lookup", "type": "growth", "plant": "sage"}
-- Check statements against the records (see Validator below): {"tool": "validate", "statements": [{"kind": "necessity", "effect": "+S", "pattern": {"sage": "any"}}]}
+- Check statements against the records (see Validator below; counted): {"tool": "validate", "statements": [{"kind": "necessity", "effect": "+S", "pattern": {"sage": "any"}}]}
+- Write your own records: claims, beliefs and requirements (see Your records below; counted): {"tool": "record", "records": [...]}
 - Plant counts and the numbers of the potions you hold: {"tool": "inventory"}
 
 # Actions (1 turn each, exactly one per turn; the turn ends with it)
@@ -72,16 +75,28 @@ An effect is a stat with its sign ("+S", "-I"; add "at_least": 20 for a minimum 
 - Relation: a higher count of a plant never lowers ("increases") or never raises ("decreases") a stat's intensity, from 0 (adding the plant) upwards. {"kind": "relation", "plant": "chamomile", "effect": "+S", "direction": "increases"}. Only pairs of potions whose recipes differ in that plant's count alone count ("for", "against", and "flat" for no change); pairs that also differ in another plant are "confounded" and ignored.
 - Soil: {"kind": "soil", "plant": "dill", "soil": "brown", "claim": ...} with claim "always_dies", "always_survives", "growth_time" (with "turns": 2), or "survival_at_least" / "survival_at_most" (with "rate": 60, in percent). A survival rate is "true" or "false" only when its 95% interval lies entirely above or below the rate; otherwise "unknown".
 
+# Your records
+
+Besides the observations, the notebook keeps what you write with the record tool. Each record gets an id (c1, b1, r1) and the turn. Records are never changed: to correct one, write a new record with "replaces": "<id>"; the old one stays, marked as replaced. One call can write several records, and a later record may refer to an earlier one of the same call.
+- Requirement (r#): what a phrase of the request means for the potion. "means" may give "stat", "at_least" (minimum intensity), "deadline_turn" and "avoid" (plants); "open" holds a question you still have to answer. Write what you know now and refine it later with "replaces".
+  {"type": "requirement", "phrase": "barely pack 8, I need 10", "means": {"stat": "S", "at_least": 25}}
+  {"type": "requirement", "phrase": "the plants by the pond make me sick", "open": "which plants grow by the pond?"}
+- Claim (c#): what a text says, as you read it, with the passage it rests on and how far you trust it (high, medium, low). "says" is a validator statement, or a name: {"name": "pond plant", "plant": "nettle"}; a group is one name claim per member.
+  {"type": "claim", "source": "S4", "quote": "tasted of honey", "says": {"kind": "sufficiency", "pattern": {"sage": "any", "chamomile": "any"}, "effect": "sweet"}, "trust": "medium"}
+- Belief (b#): your own hypothesis, as a validator statement, with "why" you believe it (required) and the claims it comes "from". Its status is checked against the records every time you look it up, so it is never out of date.
+  {"type": "belief", "statement": {"kind": "relation", "plant": "chamomile", "effect": "+S", "direction": "increases"}, "why": "#2 and #5 rose with chamomile"}
+Look them up with kb_lookup: "type" "claim" (fields "source", "name", "plant", "trust"), "belief" ("status", "plant") or "requirement" ("open": true for unanswered questions); add "replaced": true to see replaced records too.
+
 # Your memory
 
 - Your private thinking is discarded after every reply. Only what you write in your reply stays in the conversation.
 - The conversation gets long, and older parts of it may be summarised without notice. Details that exist only in the conversation can then be lost, and you will not notice that they are gone.
-- Observations are safe in the notebook: you can always look them up again, as long as you remember what to ask for. What exists only in your replies is your reasoning: how you read the request, what you believe and why, and your plan. Keep it in your notes.
+- Observations are safe in the notebook: you can always look them up again, as long as you remember what to ask for. Your requirements, claims and beliefs are safe there too, once you record them. What exists only in your replies is everything else: your plan, and reasoning you have not recorded. Record what you conclude, and keep the rest in your notes.
 
 # Facts to keep track of
 
 These facts decide whether you reach the goal. Record each new one in your notes, in the reply where you learn it (the sub-section to use is in brackets):
-- your translation of the request: stat, minimum intensity, deadline turn and plants to avoid;
+- your translation of the request: stat, minimum intensity, deadline turn and plants to avoid (record them as requirements);
 - what you planted in which plot, soil and turn [Garden], and the growth times and deaths you have seen [Growth];
 - every brew: its exact recipe and its exact result [Potions];
 - the best potion so far for the goal [Best];

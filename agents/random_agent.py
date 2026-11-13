@@ -29,7 +29,7 @@ class RandomAgent(Agent):
             return self._say("{not valid json")
         garden = next((m["content"] for m in reversed(self.messages) if "Garden: " in m["content"]), "")
         free, ready = _numbers(garden, "free"), _numbers(garden, "ready") + _numbers(garden, "died")
-        options = ["inventory", "skip", "lookup"] + ["plant"] * 3 * bool(free) + ["gather"] * 3 * bool(ready)
+        options = ["inventory", "skip", "lookup", "record"] + ["plant"] * 3 * bool(free) + ["gather"] * 3 * bool(ready)
         choice = self.rng.choice(options)
         if choice == "plant":
             plots = self.rng.sample(free, self.rng.randint(1, len(free)))
@@ -37,6 +37,13 @@ class RandomAgent(Agent):
                 str(p): {"plant": self.rng.choice(PLANTS), "soil": self.rng.choice(SOILS)} for p in plots}})
         if choice == "gather":
             return self._say({"tool": "gather"})
+        if choice == "record":
+            plant = self.rng.choice(PLANTS)
+            return self._say({"tool": "record", "records": [
+                {"type": "belief", "why": "a random guess",
+                 "statement": {"kind": "necessity", "effect": "+" + self.rng.choice("ISVDW"), "pattern": {plant: "any"}}},
+                {"type": "requirement", "phrase": "the request", "open": f"does {plant} matter?"},
+            ]})
         if choice == "lookup":
             kind = self.rng.choice(["potion", "growth"])
             return self._say({"tool": "kb_lookup", "type": kind} | ({"pattern": {self.rng.choice(PLANTS): "any"}} if kind == "potion" else {}))

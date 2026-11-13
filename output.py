@@ -46,6 +46,7 @@ def world_state(world: World) -> dict:
             "plants": dict(sorted(world.inventory.plants.items())),
             "potions": [potion_dict(p) for p in world.inventory.potions],
         },
+        "records": world.records.to_dict(),
     }
 
 

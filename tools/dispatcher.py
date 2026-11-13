@@ -1,10 +1,10 @@
-"""Routes one agent call to its tool and enforces the failure limit per turn."""
+"""Routes one agent call to its tool; enforces the failure limit and the counted-call budget per turn."""
 
 import json
 from collections.abc import Callable
 
 from environment.world import World
-from tools import brew, deliver, gather, inventory, kb_lookup, mix, plant, skip, validate
+from tools import brew, deliver, gather, inventory, kb_lookup, mix, plant, record, skip, validate
 from tools.base import ToolError, ToolResult
 
 ACTIONS: dict[str, Callable[[World, dict], ToolResult]] = {
@@ -18,22 +18,27 @@ FREE_TOOLS: dict[str, Callable[[World, dict], ToolResult]] = {
     "gather": gather.run,
     "kb_lookup": kb_lookup.run,
     "validate": validate.run,
+    "record": record.run,
     "inventory": inventory.run,
 }
+COUNTED = ("record", "validate")   # with search, once it exists
+BUDGET = 5                         # counted calls per turn (a batched call counts once)
 
 
 class Dispatcher:
-    """One call at a time; the failure counter resets when the world's turn changes."""
+    """One call at a time; the failure counter and the budget reset when the world's turn changes."""
 
-    def __init__(self, world: World, max_failures: int = 3) -> None:
+    def __init__(self, world: World, max_failures: int = 3, budget: int = BUDGET) -> None:
         self.world = world
         self.max_failures = max_failures
+        self.budget = budget
         self._failures = 0
+        self._counted = 0
         self._turn = world.turn
 
     def handle(self, call: str | dict) -> ToolResult:
         if self.world.turn != self._turn:
-            self._failures, self._turn = 0, self.world.turn
+            self._failures, self._counted, self._turn = 0, 0, self.world.turn
         try:
             return self._route(call)
         except ToolError as err:
@@ -65,4 +70,16 @@ class Dispatcher:
             name, table, kind = call["tool"], FREE_TOOLS, "tool"
         if name not in table:
             raise ToolError(f"Unknown {kind} {name!r} (allowed: {', '.join(table)}).")
-        return table[name](self.world, call)
+        if name not in COUNTED:
+            return table[name](self.world, call)
+        if self._counted >= self.budget:   # not a failure: it costs nothing and does not lead to a skip
+            return ToolResult(
+                f"The budget of {self.budget} record/validate calls is used up this turn. Only kb_lookup, "
+                "inventory, gather or an action remain until the next turn.",
+                error=True,
+            )
+        result = table[name](self.world, call)
+        self._counted += 1
+        left = self.budget - self._counted
+        return ToolResult(f"{result.text}\n({left} of {self.budget} record/validate calls left this turn.)",
+                          result.ends_turn, result.error)

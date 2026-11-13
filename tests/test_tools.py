@@ -231,7 +231,8 @@ def test_validate_is_free_and_answers_each_statement(world):
     assert not result.ends_turn and world.turn == 2
     assert result.text == (
         '1. {"status": "true", "for": [[1, 2]], "against": [], "flat": [], "tested": 1, "confounded": 0}\n'
-        '2. {"status": "true", "for": [2], "against": [], "tested": 1}'
+        '2. {"status": "true", "for": [2], "against": [], "tested": 1}\n'
+        '(4 of 5 record/validate calls left this turn.)'
     )
     bad = d.handle({"tool": "validate", "statements": [{"kind": "soil"}, {"kind": "relation"}]})
     assert bad.error and bad.text == "Statement 1: Unknown plant None. Nothing was checked."
@@ -240,7 +241,7 @@ def test_validate_is_free_and_answers_each_statement(world):
 @pytest.mark.parametrize(
     "call, message",
     [
-        ({"type": "plant"}, '"type" must be "potion" or "growth"'),
+        ({"type": "plant"}, '"type" must be one of: potion, growth, claim, belief, requirement'),
         ({"type": "potion", "soil": "black"}, 'Unknown field "soil" for potion records'),
         ({"type": "potion", "effect": "S"}, '"effect" must be like "+S"'),
         ({"type": "potion", "intensity": 5}, '"intensity" needs an "effect"'),

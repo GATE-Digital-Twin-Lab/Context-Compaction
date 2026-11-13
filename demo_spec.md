@@ -145,15 +145,17 @@ The garden itself is not recorded: the garden line shows it every turn.
 
 **Written by the agent:**
 
-| Record | Required fields | Status |
+| Record | Fields | Status |
 |---|---|---|
-| `claim` (c#) | the source id, plants, relation, value, the agent's trust | none: a claim reports what a source says, as the agent understands it |
-| `belief` (b#) | a statement in the validator's grammar | set **only by the validator**, recomputed against the data at every lookup |
-| `requirement` (r#) | the request phrase it comes from, and what it means (stat, threshold, deadline, excluded plants) | none |
+| `claim` (c#) | `source` (id), `quote` (the passage), `says` (a validator statement, or a name: `{"name": "pond plant", "plant": "nettle"}`), `trust` (high / medium / low); optional `why` | none: a claim reports what a source says, as the agent understands it |
+| `belief` (b#) | `statement` (validator grammar), `why` (**required**: why the agent believes it); optional `from` (claim ids) | set **only by the validator**, recomputed against the data at every lookup |
+| `requirement` (r#) | `phrase` (from the request); `means` (any of `stat`, `at_least`, `deadline_turn`, `avoid`) and/or `open` (a question still to answer); optional `from`, `why` | none |
 
-- Records are told apart by **origin**: claims cite a source, beliefs are the agent's own and are judged by data, and requirements come from the request. Claims and beliefs share one vocabulary of relations (pair → secondary label, recipe → effect, (plant, soil) → growth or survival), so a claim can be turned into a belief and tested.
-- **Corrections:** a new record with `replaces: <id>`; the old one stays, marked as replaced.
-- `kb_lookup` filters on record type and fields (e.g. potions with primary S; growth rows for sage). The more fields are given, the narrower the answer; broad lookups return many rows and fill the context. **(default)** At most 30 rows per lookup, with the total count shown.
+- Records are told apart by **origin**: claims cite a source, beliefs are the agent's own and are judged by data, and requirements come from the request. Claims and beliefs share the validator's grammar, so a claim can be turned into a belief and tested.
+- **Groups are name claims**: a source naming the pond plants gives one name claim per member, written in one batched call; a lookup by name returns them all, and a disagreeing source is a separate claim per member.
+- **Requirements are refined over time**: at the start the agent knows only part of the request's meaning (e.g. the stat, and an open question "which plants are the pond plants?"); it replaces the requirement when sources answer it. An unanswered `open` question is part of the thought process to retain.
+- **Corrections:** a new record with `replaces: <id>` (same type); the old one stays, marked as replaced, and lookups hide it unless asked. Every record gets an id and the turn it was written.
+- `kb_lookup` filters on record type and fields (potions: effect, intensity, secondary, pattern; growth: plant, soil; claims: source, name, plant, trust; beliefs: status, plant; requirements: open). The more fields are given, the narrower the answer; broad lookups return many rows and fill the context. At most 30 rows per lookup, with the total count shown.
 
 ## Validator
 
@@ -191,7 +193,7 @@ A free tool that checks statements against the notebook's **automatic records** 
 | `inventory` | plant counts; potions by id | free |
 | `gather` | collects all ready plots and clears dead plants; those plots are free at once | free |
 
-- **Budget:** `search`, `record` and `validate` together are limited to **5 calls per turn**. Every operation can be batched. **(default)** A batched call counts as one call. The budget resets every turn.
+- **Budget:** `search`, `record` and `validate` together are limited to **5 calls per turn**. Every operation can be batched. A batched call counts as one call; a call that fails (malformed) does not count. The budget resets every turn, and every counted answer ends with how many calls are left.
 - **Running out:** a 6th counted call costs no turn; the agent is told the budget is used up and that only reads, lookups, inventory, gather or an action remain this turn.
 
 ### Actions (1 turn each, exactly one per turn)
@@ -255,8 +257,8 @@ The turn loop, the LLM client and agent (thinking discarded, cut after the first
 - [x] **(content)** Growth times and deaths per (plant, soil) (see *Plants, garden, soils*)
 - [ ] **(content)** Plant names and groups; the glossary; the false-information chance per source kind; the corpus; 5–10 requests with their translations and success checks
 - [x] The validator's grammar (see *Validator*)
-- [ ] The record fields of claims, beliefs and requirements
-- [ ] `search` k and passage length; the `kb_lookup` row limit
+- [x] The record fields of claims, beliefs and requirements (see *Notebook*)
+- [ ] `search` k and passage length (the `kb_lookup` row limit is 30)
 - [ ] The new reply schema (the thought process)
 - [ ] Defining and labelling the retention target; compaction method and guarantee (parked)
 - [ ] Multi-agent variant (parked idea)

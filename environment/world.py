@@ -2,11 +2,12 @@
 
 from collections import Counter
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from environment.brewer import Effect, RecipeError, brew, effect_of, validate_recipe
 from environment.garden import Garden, GatherResult, GrowthRecord, PlantResult
 from environment.inventory import Inventory, Potion
+from environment.records import Record, RecordBook
 from environment.requests import Request, RequestResult, judge
 from environment.view import GardenView, garden_view
 
@@ -35,6 +36,7 @@ class World:
     turn_cap: int
     turn: int = 1
     result: RequestResult | None = None  # set by the delivery, or when time runs out
+    records: RecordBook = field(default_factory=RecordBook)  # the agent's claims, beliefs and requirements
 
     @classmethod
     def create(
@@ -53,6 +55,7 @@ class World:
         return {
             "garden": self.garden.to_dict(),
             "inventory": self.inventory.to_dict(),
+            "records": self.records.to_dict(),
             "request": self.request.to_dict(),
             "turn_cap": self.turn_cap,
             "turn": self.turn,
@@ -64,6 +67,7 @@ class World:
         return cls(
             garden=Garden.from_dict(data["garden"]),
             inventory=Inventory.from_dict(data["inventory"]),
+            records=RecordBook.from_dict(data["records"]),
             request=Request.from_dict(data["request"]),
             turn_cap=data["turn_cap"],
             turn=data["turn"],
@@ -165,6 +169,12 @@ class World:
 
     def skip(self) -> None:
         pass
+
+    # --- free tools that write --------------------------------------------------
+
+    def record(self, batch) -> list[Record]:
+        """Write the agent's records (all or nothing). Raises RecordError."""
+        return self.records.add(batch, self.turn)
 
     # --- free lookups --------------------------------------------------------
 
