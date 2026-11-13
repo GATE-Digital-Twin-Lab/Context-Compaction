@@ -35,7 +35,8 @@ Every plot shows its plant and soil. A growing plot shows the turns left once a 
 # Free tools (0 turns, as often as you like, one per reply)
 
 - Gather all ready plots into the inventory and clear all dead plants: {"tool": "gather"}. Those plots become free at once, so you can replant them in the same turn.
-- Look up notebook records (see Notebook below): {"tool": "kb_lookup", "type": "potion", "effect": "+S", "contains": ["sage"]} or {"tool": "kb_lookup", "type": "growth", "plant": "sage"}
+- Look up notebook records (see Notebook below): {"tool": "kb_lookup", "type": "potion", "effect": "+S", "pattern": {"sage": "any"}} or {"tool": "kb_lookup", "type": "growth", "plant": "sage"}
+- Check statements against the records (see Validator below): {"tool": "validate", "statements": [{"kind": "necessity", "effect": "+S", "pattern": {"sage": "any"}}]}
 - Plant counts and the numbers of the potions you hold: {"tool": "inventory"}
 
 # Actions (1 turn each, exactly one per turn; the turn ends with it)
@@ -55,8 +56,21 @@ The environment records every observation for you, so the records are always cor
 - a growth record for every (plant, soil) pair with a finished planting: its growth time and how many plantings were made, grew and died.
 
 kb_lookup returns the records that match every field you give, oldest first, at most 30 rows with the total count. "type" is "potion" or "growth"; every other field is optional, and more fields give a narrower answer.
-- Potions: "effect" ("+S", "-I", ... or "none" for no stat effect), "intensity" (an exact intensity, with "effect"), "secondary" (a label such as "sweet"), "contains" (a list of plants that must all be in the recipe).
+- Potions: "effect" ("+S", "-I", ... or "none" for no stat effect), "intensity" (an exact intensity, with "effect"), "secondary" (a label such as "sweet"), "pattern" (see below).
 - Growth: "plant" and "soil".
+
+A pattern describes recipes. It gives each plant a condition: an exact count (2), "any" (present in any count), "odd", "even" or "absent"; plants it does not name may be in the recipe or not, unless you add "only": true. For example {"mint": 2, "sage": "odd", "nettle": "absent"}, or an exact recipe: {"mint": 2, "sage": 1, "only": true}. Where a pattern is expected you may also give a list of patterns, of which any may match.
+
+# Validator
+
+The validate tool checks your beliefs against the notebook's records, never against the hidden rules: it tells you what your data supports. Each answer is "true", "false" or "unknown", with the evidence: the potion numbers for and against, and "tested", the number of records that could have refuted the statement. "true" means no counterexample so far, not proof: the more tested, the stronger it is. To make a belief stronger, brew what could refute it.
+
+An effect is a stat with its sign ("+S", "-I"; add "at_least": 20 for a minimum intensity), "none" (no stat effect), or a secondary label ("sweet"); add "not": true to negate it. Whether a potion is drinkable is never shown, so it is not an effect: reason from the labels and intensities.
+
+- Sufficiency: every potion matching the pattern has the effect. {"kind": "sufficiency", "pattern": {"sage": "any", "chamomile": "any"}, "effect": "sweet"}. "tested": the potions that match.
+- Necessity: every potion with the effect matches the pattern (e.g. needs nettle). {"kind": "necessity", "effect": "+D", "pattern": {"nettle": "any"}}. "tested": the potions that do not match; it stays "unknown" until you have tried one.
+- Relation: a higher count of a plant never lowers ("increases") or never raises ("decreases") a stat's intensity, from 0 (adding the plant) upwards. {"kind": "relation", "plant": "chamomile", "effect": "+S", "direction": "increases"}. Only pairs of potions whose recipes differ in that plant's count alone count ("for", "against", and "flat" for no change); pairs that also differ in another plant are "confounded" and ignored.
+- Soil: {"kind": "soil", "plant": "dill", "soil": "brown", "claim": ...} with claim "always_dies", "always_survives", "growth_time" (with "turns": 2), or "survival_at_least" / "survival_at_most" (with "rate": 60, in percent). A survival rate is "true" or "false" only when its 95% interval lies entirely above or below the rate; otherwise "unknown".
 
 # Your memory
 

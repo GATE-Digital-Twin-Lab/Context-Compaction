@@ -163,17 +163,19 @@ A free tool that checks statements against the notebook's **automatic records** 
 {"status": "true" | "false" | "unknown", "for": [6, 18], "against": [], "tested": 7}
 ```
 
-| Kind | True | False | Unknown |
-|---|---|---|---|
-| exact recipe gives X | that recipe was brewed with result X | it was brewed with another result | not brewed |
-| exists (some recipe containing F gives X) | one witness | never (the space is infinite with quantities) | no witness yet; reports how many were tested |
-| all / none (every recipe containing F gives / does not give X) | no counterexample in n tests (consistent, not proven; n is reported) | one counterexample | nothing tested |
-| relation (more P increases / decreases X) | ≥ 1 qualifying pair, and all such pairs agree | one pair disagrees | no qualifying pair |
-| rate ((plant, soil) survives with rate ≥ p) | the 95% binomial interval lies above p | it lies below p | otherwise |
+| Kind | Example | True | False | Unknown |
+|---|---|---|---|---|
+| sufficiency: every potion matching P has E | sage + chamomile → sweet | no counterexample among the n matching potions | one matching potion without E | no matching potion |
+| necessity: every potion with E matches P | +D needs nettle | a witness with E, and no potion outside P (n of them) has E | one potion outside P has E | no witness, or nothing outside P tried |
+| relation: a higher count of plant X never lowers (increases) / never raises (decreases) the intensity of a stat | more chamomile → S never decreases | ≥ 1 qualifying pair, none disagreeing | one pair disagrees | no qualifying pair |
+| soil: always dies / always survives / growth time / survival ≥ p or ≤ p | dill in brown survives ≥ 60% | no counterexample; for a rate, the 95% Wilson interval lies above (≤: below) p | a counterexample; the interval lies on the wrong side | nothing finished; the interval contains p |
 
-- **Qualifying pairs** for a relation differ **only** in the count of P and give the same stat. Pairs that also differ elsewhere are confounded and reported separately, never counted.
+- **Patterns** (shared with `kb_lookup`): each plant gets an exact count, `any` (present), `odd`, `even` or `absent`; `only: true` forbids other plants, so a pattern can be an exact recipe. A list of patterns means any of them.
+- **Effects**: a stat with its sign (`+S`, `-I`) with an optional minimum (`at_least`), `none` (no stat effect), or a secondary label; `not: true` negates. **Drinkability is not an effect**: it is never shown, so the validator must not reveal it; the agent reasons from the labels (`toxic`) and the intensities.
+- **Qualifying pairs** for a relation differ **only** in the count of the plant (0 allowed, so adding a plant is a relation). The intensity is that of the signed stat, 0 when the potion lacks it. "Increases" means never decreases: unchanged pairs are reported as `flat` and do not refute. Pairs that also differ elsewhere are counted as `confounded` and ignored.
+- **Left to `kb_lookup`**: "this exact recipe gives X" and "some recipe gives X" are lookups (a pattern with `only: true`; any row), so they are not validator statements.
+- Evidence lists are cut at 10 entries; `tested` is the full count. Answers are only from data: `true` means "no counterexample in n", not proof.
 - A `belief` record is a stored validator statement. Its status is the validator's answer at lookup time, so a belief in the notebook is never out of date.
-- The exact JSON grammar is fixed in the implementation.
 
 ## Tools and actions
 
@@ -252,7 +254,8 @@ The turn loop, the LLM client and agent (thinking discarded, cut after the first
 - [x] **(content)** The pairs that give secondary effects (see *Secondary effects*)
 - [x] **(content)** Growth times and deaths per (plant, soil) (see *Plants, garden, soils*)
 - [ ] **(content)** Plant names and groups; the glossary; the false-information chance per source kind; the corpus; 5–10 requests with their translations and success checks
-- [ ] The validator's exact grammar; the record fields and the relation vocabulary
+- [x] The validator's grammar (see *Validator*)
+- [ ] The record fields of claims, beliefs and requirements
 - [ ] `search` k and passage length; the `kb_lookup` row limit
 - [ ] The new reply schema (the thought process)
 - [ ] Defining and labelling the retention target; compaction method and guarantee (parked)

@@ -1,17 +1,18 @@
 """Free tool: notebook lookups over the automatic records. Every field but "type" is optional; the more
 fields, the narrower the answer (at most 30 rows, with the total count).
-  {"tool": "kb_lookup", "type": "potion", "effect": "+S", "intensity": 25, "secondary": "sweet", "contains": ["sage", "mint"]}
+  {"tool": "kb_lookup", "type": "potion", "effect": "+S", "intensity": 25, "secondary": "sweet",
+   "pattern": {"sage": "any", "mint": 2}}   (a pattern, or a list of patterns of which any may match)
   {"tool": "kb_lookup", "type": "growth", "plant": "sage", "soil": "yellow"}"""
 
 import re
 
 from environment.brewer import MODIFIERS, PLANTS
-from environment.notebook import find_growth, find_potions, growth_row, listing, potion_row
+from environment.notebook import find_growth, find_potions, growth_row, listing, parse_patterns, potion_row
 from environment.soils import SOILS
 from environment.world import World
 from tools.base import ToolError, ToolResult, require_int
 
-FIELDS = {"potion": {"effect", "intensity", "secondary", "contains"}, "growth": {"plant", "soil"}}
+FIELDS = {"potion": {"effect", "intensity", "secondary", "pattern"}, "growth": {"plant", "soil"}}
 
 
 def run(world: World, args: dict) -> ToolResult:
@@ -34,13 +35,14 @@ def run(world: World, args: dict) -> ToolResult:
             raise ToolError('"intensity" needs an "effect" such as "+S".')
         intensity = require_int(args["intensity"], '"intensity"')
     secondary = _choice(args, "secondary", MODIFIERS)
-    contains = args.get("contains", [])
-    if not isinstance(contains, list) or not all(isinstance(p, str) for p in contains):
-        raise ToolError('"contains" must be a list of plant names.')
-    if unknown := [p for p in contains if p not in PLANTS]:
-        raise ToolError(f"Unknown plant {unknown[0]}.")
+    patterns = ()
+    if "pattern" in args:
+        try:
+            patterns = parse_patterns(args["pattern"])
+        except ValueError as err:
+            raise ToolError(str(err)) from None
     potions = find_potions(world.inventory.potions, effect=effect, intensity=intensity, secondary=secondary,
-                           contains=contains)
+                           patterns=patterns)
     return ToolResult(listing("potion", [potion_row(p) for p in potions]))
 
 

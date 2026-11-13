@@ -39,7 +39,7 @@ class RandomAgent(Agent):
             return self._say({"tool": "gather"})
         if choice == "lookup":
             kind = self.rng.choice(["potion", "growth"])
-            return self._say({"tool": "kb_lookup", "type": kind} | ({"contains": [self.rng.choice(PLANTS)]} if kind == "potion" else {}))
+            return self._say({"tool": "kb_lookup", "type": kind} | ({"pattern": {self.rng.choice(PLANTS): "any"}} if kind == "potion" else {}))
         if choice == "inventory":
             return self._say({"tool": "inventory"})
         return self._say({"action": "skip"})

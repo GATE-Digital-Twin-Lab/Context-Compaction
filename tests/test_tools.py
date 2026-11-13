@@ -188,10 +188,12 @@ def test_potion_lookups_filter_on_every_field(world):
 
     assert ids() == [1, 2, 3, 4]
     assert ids(effect="+S") == [1, 2, 4] and ids(effect="none") == [3]
-    assert ids(secondary="fragrant") == [2, 4] and ids(contains=["sage", "chamomile"]) == [4]
-    assert ids(effect="+S", secondary="fragrant", contains=["basil"]) == [2, 4] and ids(effect="+S", intensity=60) == [4]
+    assert ids(secondary="fragrant") == [2, 4] and ids(pattern={"sage": "any", "chamomile": "any"}) == [4]
+    assert ids(effect="+S", secondary="fragrant", pattern={"basil": "any"}) == [2, 4] and ids(effect="+S", intensity=60) == [4]
+    assert ids(pattern={"mint": 2, "chamomile": 4, "rosemary": 2, "only": True}) == [1]              # an exact recipe
+    assert ids(pattern=[{"basil": 1, "only": True}, {"sage": "even", "basil": "any", "mint": "absent"}]) == [3]
     assert d.handle({"tool": "kb_lookup", "type": "potion", "effect": "-W"}).text == "No potion records match."
-    assert "(turn 2, mix of #1 + #3)" in d.handle({"tool": "kb_lookup", "type": "potion", "contains": ["sage", "rosemary"]}).text
+    assert "(turn 2, mix of #1 + #3)" in d.handle({"tool": "kb_lookup", "type": "potion", "pattern": {"sage": "any", "rosemary": "any"}}).text
     assert "#1 (turn 1, used)" in d.handle({"tool": "kb_lookup", "type": "potion"}).text
 
 
@@ -212,9 +214,27 @@ def test_long_lookups_are_cut_at_30_rows(world):
     d = Dispatcher(world)
     world.inventory.add_plants({"mint": 35, "sage": 35})
     act(d, {"action": "brew", "recipes": [{"mint": 1, "sage": 1}] * 35})
-    text = d.handle({"tool": "kb_lookup", "type": "potion", "contains": ["mint"]}).text
+    text = d.handle({"tool": "kb_lookup", "type": "potion", "pattern": {"mint": "any"}}).text
     assert text.splitlines()[0] == "35 potion records, showing the first 30: give more fields to narrow the lookup:"
     assert len(text.splitlines()) == 31
+
+
+def test_validate_is_free_and_answers_each_statement(world):
+    d = Dispatcher(world)
+    world.inventory.add_plants({"mint": 4, "chamomile": 8, "rosemary": 4, "basil": 1})
+    act(d, {"action": "brew", "recipes": [{"mint": 2, "chamomile": 4, "rosemary": 2},
+                                          {"mint": 2, "chamomile": 4, "rosemary": 2, "basil": 1}]})
+    result = d.handle({"tool": "validate", "statements": [
+        {"kind": "relation", "plant": "basil", "effect": "+S", "direction": "increases"},
+        {"kind": "necessity", "effect": "fragrant", "pattern": {"basil": "any"}},
+    ]})
+    assert not result.ends_turn and world.turn == 2
+    assert result.text == (
+        '1. {"status": "true", "for": [[1, 2]], "against": [], "flat": [], "tested": 1, "confounded": 0}\n'
+        '2. {"status": "true", "for": [2], "against": [], "tested": 1}'
+    )
+    bad = d.handle({"tool": "validate", "statements": [{"kind": "soil"}, {"kind": "relation"}]})
+    assert bad.error and bad.text == "Statement 1: Unknown plant None. Nothing was checked."
 
 
 @pytest.mark.parametrize(
@@ -225,7 +245,8 @@ def test_long_lookups_are_cut_at_30_rows(world):
         ({"type": "potion", "effect": "S"}, '"effect" must be like "+S"'),
         ({"type": "potion", "intensity": 5}, '"intensity" needs an "effect"'),
         ({"type": "potion", "secondary": "salty"}, "Unknown secondary 'salty'"),
-        ({"type": "potion", "contains": ["lavender"]}, "Unknown plant lavender."),
+        ({"type": "potion", "pattern": {"lavender": 1}}, "Unknown plant lavender."),
+        ({"type": "potion", "pattern": {"mint": "lots"}}, "The condition for mint must be"),
         ({"type": "growth", "soil": "red"}, "Unknown soil 'red'"),
     ],
 )
@@ -241,7 +262,8 @@ def test_invalid_lookups(world, call, message):
         ("[1, 2]", "A call must be a JSON object."),
         ({"action": "skip", "tool": "inventory"}, 'exactly one of "action" or "tool"'),
         ({"action": "dance"}, "Unknown action 'dance'"),
-        ({"tool": "kb_lookup", "type": "potion", "contains": ["lavender"]}, "Unknown plant lavender."),
+        ({"tool": "kb_lookup", "type": "potion", "pattern": {"lavender": "any"}}, "Unknown plant lavender."),
+        ({"tool": "validate", "statements": [{"kind": "guess"}]}, '"kind" must be one of'),
         ({"action": "log"}, "Unknown action 'log'"),
         ({"action": "deliver", "potion": 4}, "Unknown potion #4."),
         ({"action": "plant", "plots": {"x": {"plant": "mint", "soil": "brown"}}}, "A plot number must be a whole number"),
