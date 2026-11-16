@@ -103,15 +103,107 @@ Secondary effects come from **pairs of plants**. A pair counts if both plants ar
 
 ### Plant names and groups (content)
 
-The corpus refers to plants by **folk names** ("the grey-leaved herb of the abbey wall" = sage) and **groups** ("pond plants", "hearth herbs"). A hidden table of names and groups is written first; the corpus and the requests are written from it.
+The corpus refers to plants by **folk names** ("Hesketh" = sage) and **groups**. A group is a place where plants grow naturally ("the plants of the mill pond", "what grows at Coldharbour"), so a plant's origin and its groups are the same fact. A hidden table of names and groups is written first; the corpus and the requests are written from it.
+
+- **Aliases:** 3 folk names per plant (24 in all), each belonging to **exactly one** plant. Confusion comes only from myths (a source saying a name means another plant). Aliases are **opaque**: people's and saints' names or invented words, never a description or a real folk etymology, so they can be resolved only from sources, not from the model's own knowledge.
+- **Groups:** **8 groups of 3 plants**, every plant in **3 groups**.
+  - **Two plants share at most one group**, so any two of a plant's groups identify it ("grows both by the mill pond and at Ludding").
+  - **No group equals a stat set**, so a group never gives away a recipe.
+  - The pond group is **nettle, mint, elderberry** (the maiden request).
+  - Places are **named locations** ("Coldharbour"), so the model cannot guess their plants from its own knowledge; only the mill pond keeps a descriptive name, because the maiden request refers to it.
+
+**Names and groups (hidden, `content/plants.json`).** The group layout was drawn with seed 17 from the 62 layouts that satisfy the rules.
+
+| Plant | Aliases | Groups |
+|---|---|---|
+| mint | Wenna's sprig, Ferrow, Saint Aldhelm's herb | mill pond, Ashby Row, Brackley |
+| elderberry | Old Gilly's herb, Brannock, Saint Osric's leaf | mill pond, Harrow's End, Wendle Cross |
+| nettle | Tobin's wort, Quellock, Saint Brede's sprig | mill pond, Ludding, Kettlebury |
+| sage | Prior Anselm's leaf, Hesketh, Saint Cuthwin's wort | Coldharbour, Brackley, Kettlebury |
+| chamomile | Mother Hale's herb, Pellow, Saint Ermengild's sprig | Harrow's End, Brackley, Ludding |
+| dill | Corbin's leaf, Thrale, Saint Wulfric's herb | Wendle Cross, Ashby Row, Kettlebury |
+| basil | Ysolde's sprig, Gammock, Saint Edith's wort | Coldharbour, Harrow's End, Ashby Row |
+| rosemary | Remy's herb, Morrick, Saint Hild's leaf | Coldharbour, Wendle Cross, Ludding |
+
+Pairs that share no group: mint–rosemary, elderberry–sage, basil–nettle, chamomile–dill.
 
 ## Sources
 
-- **Corpus:** one fixed set of short texts (herbals, records, notes, tales, pamphlets), plus distractor texts about unrelated things. Each source shows its **title, author and kind**. **(content)**
-- **Claims are implied, never numeric.** A source tells what happened ("my boy could suddenly carry two full buckets instead of one"); the agent infers the relation (a doubling: sweet, or a stronger base) and finds the exact values by experiment. Sources cover combinations, secondary effects, soils and plant groups. Some facts appear in no source and can only be found by experiment.
-- **Contradictions:** several sources may support a claim and one deny it.
-- **Reliability:** the kinds have a **known order**, stated in the system prompt, tied to the chance that a source of that kind is wrong. From most to least reliable, e.g. learned herbals > monastery records > healers' notes > village tales > merchants' pamphlets. The probabilities themselves are hidden **(content)**.
-- **Generation:** every source is written from a structured hidden claim (plants, relation, true or false, kind). This gives the answer key for each source.
+- **Corpus:** a large fixed **pool** of texts of five kinds, plus distractor texts about unrelated things. Each episode gets a **sample** of the pool, drawn with `corpus_seed` (separate from the garden seed). Each source shows its **title, author and kind**. **(content)**
+- **One focus plant per source.** Other plants appear in it only as co-ingredients of its brews and mixes, possibly under folk names.
+- **Kinds**, from most to least reliable:
+
+| Kind | Fact correct | In the pool | In a sample | Length | What it tells |
+|---|---|---|---|---|---|
+| Monastery books | 100% | one per plant | rare | long | everything about its plant: names, groups, soil hints, brews with primary and secondary effects, some mixes |
+| Apothecary transcripts | 80% | many | frequent | medium, often table-like | experimental results: brews and mixes with their effects, plants under their official names; rarely names or groups |
+| Herbal lady tales | 70% | many | frequent | long, mostly padding | names, groups, hints about the plant; rarely a brew |
+| Merchant pamphlets | 60% | lots | very frequent | short, some padding | a few facts of any kind |
+| Folk tales | 40% | lots | very frequent | short, some padding | a few facts of any kind, vaguely: a primary effect is hard to tell from a secondary one |
+
+- **Experimental and non-experimental facts:**
+
+| Fact | Experimental | How the agent checks it |
+|---|---|---|
+| alias (a folk name = a plant) | no | sources only |
+| group (a plant grows in a place) | no | sources only |
+| soil hint (how a plant grows in a soil: dies, sometimes fails, fast, slow) | yes | plant it (costs turns and plants) |
+| brew (plants → a primary stat through the glossary, or a secondary label, `toxic` included) | yes | brew it |
+| mix (two brews → an effect) | yes | mix it |
+
+  Not facts: the glossary (it is in the system prompt), undrinkability (never shown; inferred from `toxic` and the intensities) and pure lore ("the monks first grew sage"), which is padding.
+- **Facts.** Every source is written from a hidden **source sheet**: its kind, focus plant, facts (each true or false) and amount of padding; the sheets are the answer key. A fact may name only some of the plants ("nettle and chamomile, among two others").
+- **Truth is per fact**, not per source, and is drawn **when the pool is built**, at the kind's rate; one text can mix true and false facts. Monastery books are always true.
+- **Shared myths:** a false fact is not a random error. A **myth pool** is drawn before any text is written: each fact has **one fixed wrong version per kind**, so all the folk tales that get a fact wrong tell the same myth, and cheap sources can agree with each other and still be wrong. E.g. an apothecary transcript tells of a messenger who drank a potion with nettle and chamomile among two other plants and fell ill (toxic); the truth is a D potion with warming.
+  - **The myth pool** (`python -m corpus.myths` → `content/myths.json`, seed 17): every catalogue fact has one myth for each fallible kind (transcript, herbal tale, pamphlet, folk tale), **different across the kinds** and never the truth. A myth is **one change** from the truth:
+
+| Fact | Myth |
+|---|---|
+| alias | the name means another plant that **shares a group** with the true one (a local confusion) |
+| group | the plant grows at a place it is **not** in (a plant is moved, never denied where it grows) |
+| soil hint | another category |
+| 2-plant brew | another label, or nothing (a nothing pair gets a label) |
+| 3-plant brew | swap, drop or add a label; name the wrong stat, claim a stat where there is none, or deny the stat |
+| mix | one **revealed effect** is wrong (the stat, the secondary, or the second brew's own effect); the plants and how they are named stay true |
+
+  - **References stay true:** an alias or group used inside a brew or mix always means its true plant, and a text never states a false alias and also uses that alias.
+- **Mixes** are reported only by monastery books and apothecary transcripts, and only simple ones: two brews of 2 + 2 or 3 + 2 plants (see *Mixes* below).
+- **Claims are implied, never numeric.** A source tells what happened ("my boy could suddenly carry two full buckets instead of one"); the agent infers the relation (a doubling: sweet, or a stronger base) and finds the exact values and quantities by experiment. **No source hints at quantities**: counts are found only by experiment. Some facts appear in no source and can only be found by experiment.
+- **Vagueness is separate from falsity:** a true fact can be told vaguely (folk tales especially), and a false one clearly.
+- **Contradictions:** several sources may support a fact and others deny it.
+- **Reliability:** the system prompt states the **order** of the kinds only; the probabilities are hidden.
+- **Padding:** besides the distractor texts, sources carry meaningless detail ("I describe my morning before going out to gather herbs"), the herbal lady tales most of all. Padding states no facts.
+- **The fact catalogue:** one master table per fact type, with every possible fact and its true value. A source with focus plant X draws its facts from the rows that involve X (43 rows per plant: 3 aliases, 3 groups, 3 soils, 7 pairs, 21 triples, 6 mixes). Built by `python -m corpus.catalogue` into `content/catalogue.json` (204 rows).
+
+| Table | Rows | True values |
+|---|---|---|
+| alias | 24 | the plant |
+| group | 24 (8 groups × 3 members) | the group's members |
+| soil hint | 24 (8 plants × 3 soils) | dies; sometimes fails (dill in brown); fast (2–3 turns); slow (5–6 turns); ordinary (4 turns) |
+| 2-plant brew | 28 | a secondary label (11) or nothing (17) |
+| 3-plant brew | 56 | the stat, for the 4 stat triples (I, S, V, D); 0, 1 or 2 secondary labels (10 / 26 / 20 triples) |
+| mix | 48 (6 per focus plant) | the stats whose sets are present, the labels, drinkable; plus what the source reveals |
+
+- **How a fact names its plants:** the official name, an alias (the agent must find what it means) or a group ("nettle with one of the pond plants"). A group reference is a hint only: it does not identify the pair or triple, so it never counts as the true source for it.
+- **A brew's primary effect names the stat only.** Whether a stat triple gives +, − or nothing depends on the counts, which no source gives; a primary fact means "these plants together act on S", and its myth names the wrong stat or says nothing happens. The direction is left to experiment.
+- **Mixes** (`corpus/catalogue.py`, `mixes()`): a mix is told as a story about two brews.
+  - **No counts:** sources never give quantities, so a mix is judged on its **plants** only. A primary "acts on S" when S's set is present (direction left to experiment, as for brews); the labels depend on presence alone.
+  - **The named brew** `{X, y}`, X the focus plant: told by official names, **without its effect**.
+  - **2 + 2:** the second brew `{u, v}` is any two plants (X included; not the named brew itself), named in one of three styles: **two aliases**, **an alias and a group**, or **two groups** ("a plant of the mill pond and one of Kettlebury"). When a group is used, the second brew's **own effect** is revealed too (if it has one). The source reveals **one effect** of the mix.
+  - **3 + 2:** the second brew is **a whole group** ("all three plants of Coldharbour"), any group. The source reveals **one stat** (if any) and **one secondary** (if any) of the mix.
+  - **What a drinker notices:** a secondary is revealed only if it acts: mixed-sign modifiers cancel, so then none is revealed; otherwise a label of the net's sign. An undrinkable mix (toxic, or net ≤ −100%) shows no stat, only its poison.
+  - **Selection** (seed 17): **6 per focus plant**, 3 of 2 + 2 (one per naming style) and 3 of 3 + 2, each with something to reveal. **W:** every plant gets **1 W mix** (a 3 + 2 whose plants contain W's set, e.g. `{X, dill}` + Harrow's End), with W the revealed stat; no other mix reaches W. No source describes a 4-plant brew, so these are the only written evidence for W.
+  - With up to 5 plants a mix can act on two stats (one in the current selection); only one is revealed.
+- **Guarantees:**
+  - **in the pool:** every 2-plant brew, 3-plant brew and soil hint has at least one true source that names its plants (name or alias);
+  - **in the sample:** every alias and group has at least one true source (the repair rule below). The books cover most of the rest.
+- **Building the pool**, in layers:
+  1. the catalogue of true facts, classified as above;
+  2. the myth pool;
+  3. the source sheets;
+  4. the texts, generated from the sheets, each **checked** against its sheet: every fact stated with its intended truth, nothing else;
+  5. the sampler.
+- **Sampling:** the sampler draws texts per kind with `corpus_seed` (books rarely). Then, for every non-experimental fact with **no true source** in the sample, it adds one from the pool, starting with the least reliable kind: a folk tale stating the truth, if none a pamphlet, then a herbal tale, a transcript, and last the plant's book. This keeps the guarantee from becoming "a book for every plant that matters".
 - **Retrieval:** BM25 over passages. `search` takes queries and returns the top-k passages with their source's title, author and kind. `read` returns whole sources, but only those returned by a `search` **in the current turn**; to read again in a later turn, the agent must search again.
 
 ## Requests
@@ -255,7 +347,11 @@ The turn loop, the LLM client and agent (thinking discarded, cut after the first
 
 - [x] **(content)** The pairs that give secondary effects (see *Secondary effects*)
 - [x] **(content)** Growth times and deaths per (plant, soil) (see *Plants, garden, soils*)
-- [ ] **(content)** Plant names and groups; the glossary; the false-information chance per source kind; the corpus; 5–10 requests with their translations and success checks
+- [x] **(content)** Source kinds, their correct rates and what they tell (see *Sources*)
+- [x] **(content)** The corpus structure: a pool sampled per episode, experimental and non-experimental facts (see *Sources*)
+- [x] **(content)** The fact catalogue's tables, guarantees and the rules for names and groups (see *Plant names and groups*, *Sources*)
+- [x] **(content)** The myth pool (see *Sources*)
+- [ ] **(content)** The glossary; the source sheets and texts; pool and sample sizes per kind; 5–10 requests with their translations and success checks
 - [x] The validator's grammar (see *Validator*)
 - [x] The record fields of claims, beliefs and requirements (see *Notebook*)
 - [ ] `search` k and passage length (the `kb_lookup` row limit is 30)

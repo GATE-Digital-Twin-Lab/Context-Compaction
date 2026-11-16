@@ -1,0 +1,22 @@
+{
+  "aliases": {
+    "mint": ["Wenna's sprig", "Ferrow", "Saint Aldhelm's herb"],
+    "elderberry": ["Old Gilly's herb", "Brannock", "Saint Osric's leaf"],
+    "nettle": ["Tobin's wort", "Quellock", "Saint Brede's sprig"],
+    "sage": ["Prior Anselm's leaf", "Hesketh", "Saint Cuthwin's wort"],
+    "chamomile": ["Mother Hale's herb", "Pellow", "Saint Ermengild's sprig"],
+    "dill": ["Corbin's leaf", "Thrale", "Saint Wulfric's herb"],
+    "basil": ["Ysolde's sprig", "Gammock", "Saint Edith's wort"],
+    "rosemary": ["Remy's herb", "Morrick", "Saint Hild's leaf"]
+  },
+  "groups": {
+    "the mill pond": ["mint", "elderberry", "nettle"],
+    "Coldharbour": ["sage", "basil", "rosemary"],
+    "Harrow's End": ["elderberry", "chamomile", "basil"],
+    "Wendle Cross": ["elderberry", "dill", "rosemary"],
+    "Ashby Row": ["mint", "dill", "basil"],
+    "Brackley": ["mint", "sage", "chamomile"],
+    "Ludding": ["nettle", "chamomile", "rosemary"],
+    "Kettlebury": ["nettle", "sage", "dill"]
+  }
+}
