@@ -1,0 +1,75 @@
+{
+  "note": "Hidden from the agent. Ways a text may show a secondary label, each from a different angle and none close to the glossary's cues. A text adapts the wording to its story; across texts the cues rotate, so no image becomes a fixed code.",
+  "fragrant": [
+    "the neighbours leaned over the fence to ask what was on the fire",
+    "the smell clung to the drinker's shirt for two days after",
+    "the cat would not leave the pot alone and sat sniffing at the lid",
+    "you could tell from the lane which house had brewed it",
+    "the steam alone made whoever passed stop and close their eyes",
+    "the priest asked whether incense had been burned in the room",
+    "a scent like crushed apple leaves hung over the table",
+    "the whole stair smelled of it, from the cellar to the attic",
+    "the cup still smelled pleasant after it had been washed",
+    "the linen in the press took on the scent of it"
+  ],
+  "warming": [
+    "the drinker threw off his cloak in the frost",
+    "his ears went red as if he had come in from a wind",
+    "the drinker moved back from the fire, though he had been shivering a moment before",
+    "the cold of the stone floor no longer came up through her boots",
+    "it sat in the belly like a coal swallowed whole",
+    "he slept with the shutters open in January",
+    "she said it was like sitting with her back to the bread oven",
+    "the chill went out of his fingers before he had set the cup down",
+    "she took off her shawl, and then her second shawl",
+    "beads of sweat stood on his brow though the room was cold"
+  ],
+  "sweet": [
+    "the drinker asked whether sugar had been put in it, and none had",
+    "it tasted like the inside of a ripe pear",
+    "the wasps found the cup before anyone else did",
+    "it went down like a slice of festival cake",
+    "the drinker sipped it slowly, to make it last",
+    "it tasted of ripe plums and needed nothing added",
+    "even the one who complains of everything asked how it was made",
+    "it was like sucking a stick of barley sugar",
+    "the taste stayed in the mouth like a fairground treat",
+    "the cook wanted to know which merchant sold it"
+  ],
+  "bitter": [
+    "it puckered the lips like a sloe off the bush",
+    "the drinker spat the first mouthful into the fire",
+    "it tasted like chewing willow bark",
+    "it was like licking the inside of a tinker's kettle",
+    "whatever it was meant to do, it did with half a heart",
+    "they had to hold the boy's nose to get it into him",
+    "the good of it came through thin, as through a wet cloth",
+    "it tasted of the rind and the pith, never the fruit",
+    "the drinker made a face as if he had bitten an acorn",
+    "it did its work, but as a tired horse pulls a cart"
+  ],
+  "murky": [
+    "it came out the colour of ditch water",
+    "you could not see the bottom of the cup",
+    "it settled into a grey silt when left standing",
+    "whatever it did was gone by supper",
+    "the change wore off before the evening bell",
+    "it looked like the river after a flood",
+    "it lasted no longer than a morning frost",
+    "it was as thick and dull as dishwater",
+    "by the time he reached home there was nothing left of it",
+    "it clouded like a jug of milk gone over"
+  ],
+  "toxic": [
+    "the cat that lapped the spill was found stiff in the morning",
+    "the drinker lay abed a week and they feared for him",
+    "the goat that got at the bucket was never right after",
+    "the priest was sent for",
+    "his lips went blue and he could not stand",
+    "the hens that pecked at the leavings did not wake",
+    "he was carried home on a door",
+    "the dog that licked the pot was buried by the hedge",
+    "she was sick all night and did not leave her bed for days",
+    "they poured the rest into the midden and marked the spot"
+  ]
+}

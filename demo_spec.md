@@ -201,7 +201,8 @@ Pairs that share no group: mint–rosemary, elderberry–sage, basil–nettle, c
   1. the catalogue of true facts, classified as above;
   2. the myth pool;
   3. the source sheets (`python -m corpus.sheets` → `content/sheets.json`, seed 17), below;
-  4. the texts, generated from the sheets, each **checked** against its sheet: every fact stated with its intended truth, nothing else, and no glossary wording repeated verbatim;
+  4. the texts (`content/texts/<kind>-<plant>-<nn>.txt`: a Title / Author / Kind header, then the body), generated from the sheets, each **checked** against its sheet: every fact stated with its intended truth, nothing else; length within 15% of the target; no glossary wording, not even a cue's own image ("meadow", "honey": the glossary's **near** words); one sentence per line (`corpus/texts.py`, `problems()`). Padding hints at no effect (no complaints of the body, no smells or tastes);
+     - **Cue bank** (`content/cues.json`, hidden): 10 distinct ways to show each secondary label, each from a different angle (who notices, the cup, the room, the animals), none close to the glossary. Mentions rotate through the bank and adapt the wording to their story, so no image dominates (the sheets hold about 140 mentions per label, 84 for toxic: each cue is used about 15 times unless the bank grows);
   5. the sampler.
 - **The source sheets:** 44 per plant, 352 in the pool. Each sheet holds its kind, focus plant, target length, padding share, and its facts, each with its truth, what it tells (the truth or the kind's myth), whether it is told vaguely, and how a brew names its co-ingredients (the focus plant is always named).
 

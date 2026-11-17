@@ -16,13 +16,15 @@ def load_glossary() -> dict:
 
 
 def entries(glossary: dict | None = None) -> dict[str, list[str]]:
-    """Every phrase of the glossary, by the stat or label it points to (words included)."""
+    """Every phrase of the glossary, by the stat or label it points to: names, direct words, signs,
+    trades and cues, and for a label its near words (the cues' own images, e.g. "honey"), which a text
+    must not borrow either."""
     glossary = glossary or load_glossary()
     out = {}
     for stat, e in glossary["stats"].items():
         out[stat] = [e["name"]] + e["words"] + e["more"] + e["less"] + e["trades"]
     for label, e in glossary["labels"].items():
-        out[label] = [label] + e["words"] + e["cues"]
+        out[label] = [label] + e["words"] + e["cues"] + e.get("near", [])
     return out
 
 

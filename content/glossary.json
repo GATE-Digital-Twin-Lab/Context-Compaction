@@ -38,11 +38,11 @@
     }
   },
   "labels": {
-    "fragrant": {"words": ["fragrant", "fragrance"], "cues": ["the scent of a spring meadow", "a perfume that fills the room"]},
-    "warming": {"words": ["warming", "warm", "warmth"], "cues": ["heat spreading through the chest", "flushed cheeks on a cold day"]},
-    "sweet": {"words": ["sweet", "sweetness"], "cues": ["the taste of honey", "children asking for more"]},
-    "bitter": {"words": ["bitter", "bitterness"], "cues": ["a harsh taste that twists the mouth", "an effect only half felt"]},
-    "murky": {"words": ["murky", "murkiness"], "cues": ["a cloudy, muddy look", "an effect that fades within hours"]},
-    "toxic": {"words": ["toxic", "poison", "poisonous", "poisoned"], "cues": ["falling gravely ill", "an animal that drank it and died"]}
+    "fragrant": {"words": ["fragrant", "fragrance"], "cues": ["the scent of a spring meadow", "a perfume that fills the room"], "near": ["meadow", "meadows", "perfume", "perfumed"]},
+    "warming": {"words": ["warming", "warm", "warmth"], "cues": ["heat spreading through the chest", "flushed cheeks on a cold day"], "near": ["heat", "flushed", "flush"]},
+    "sweet": {"words": ["sweet", "sweetness"], "cues": ["the taste of honey", "children asking for more"], "near": ["honey", "honeyed", "hive", "honeycomb", "comb"]},
+    "bitter": {"words": ["bitter", "bitterness"], "cues": ["a harsh taste that twists the mouth", "an effect only half felt"], "near": ["harsh", "twisted"]},
+    "murky": {"words": ["murky", "murkiness"], "cues": ["a cloudy, muddy look", "an effect that fades within hours"], "near": ["cloudy", "muddy", "faded", "fades"]},
+    "toxic": {"words": ["toxic", "poison", "poisonous", "poisoned"], "cues": ["falling gravely ill", "an animal that drank it and died"], "near": ["gravely", "died", "dead"]}
   }
 }

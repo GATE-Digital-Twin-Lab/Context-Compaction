@@ -227,3 +227,28 @@ def test_verbatim_finds_copied_phrases_only():
     assert verbatim("He had a Powerful   grip and was STRONG.") == ["a powerful grip", "strong"]
     assert verbatim("He could heave a millstone onto the cart unaided.") == []
     assert verbatim("the stonecutters") == [] and verbatim("unwise") == []          # whole words only
+
+
+# --- the cue bank and the texts ----------------------------------------------------------------
+
+from corpus.texts import TEXTS_DIR, load_cues, one_sentence_per_line, path_of, problems  # noqa: E402
+
+
+def test_cue_bank_has_distinct_cues_far_from_the_glossary():
+    cues = load_cues()
+    assert set(cues) == set(MODIFIERS) and all(len(c) >= 10 for c in cues.values())
+    every = [c.lower() for cs in cues.values() for c in cs]
+    assert len(every) == len(set(every))
+    assert not {c: verbatim(c) for c in every if verbatim(c)}                 # no glossary wording or image
+
+
+def test_one_sentence_per_line():
+    assert one_sentence_per_line("He came. He went.\n| a. b |\nIV. Of mixtures. Two brews.") == \
+        "He came.\nHe went.\n| a. b |\nIV. Of mixtures.\nTwo brews.\n"
+
+
+def test_written_texts_pass_the_mechanical_checks():
+    for path in TEXTS_DIR.glob("*.txt"):
+        sheet_id = path.stem.replace("-", ":")
+        sheet = next(s for s in SHEETS if s["id"] == sheet_id)
+        assert path_of(sheet_id) == path and problems(path, sheet) == [], path.name
