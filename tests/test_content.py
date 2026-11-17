@@ -198,3 +198,32 @@ def test_pool_guarantee():
         if fact["type"] in ("soil", "brew", "mix"):
             assert any(e["fact"] == fid and e["true"] and all("group" not in r for r in e.get("refs", []) if fact["type"] == "brew")
                        for s in SHEETS for e in s["facts"]), fid
+
+
+# --- the glossary --------------------------------------------------------------------------------
+
+from corpus.glossary import entries, load_glossary, verbatim  # noqa: E402
+from environment.brewer import MODIFIERS  # noqa: E402
+
+
+def test_glossary_covers_every_stat_and_label():
+    glossary = load_glossary()
+    assert set(glossary["stats"]) == set(STAT_SETS) and set(glossary["labels"]) == set(MODIFIERS)
+    for e in glossary["stats"].values():
+        assert len(e["more"]) + len(e["less"]) >= 6 and len(e["trades"]) >= 3
+    assert all(len(e["cues"]) >= 2 for e in glossary["labels"].values())
+
+
+def test_every_glossary_phrase_points_to_one_stat_or_label():
+    owner = {}
+    for key, phrases in entries().items():
+        for phrase in phrases:
+            assert owner.setdefault(phrase.lower(), key) == key, phrase                  # listed once
+    for key, phrases in entries().items():                   # and no phrase contains another key's phrase
+        assert all(owner[found] == key for phrase in phrases for found in verbatim(phrase)), key
+
+
+def test_verbatim_finds_copied_phrases_only():
+    assert verbatim("He had a Powerful   grip and was STRONG.") == ["a powerful grip", "strong"]
+    assert verbatim("He could heave a millstone onto the cart unaided.") == []
+    assert verbatim("the stonecutters") == [] and verbatim("unwise") == []          # whole words only

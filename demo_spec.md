@@ -201,7 +201,7 @@ Pairs that share no group: mint–rosemary, elderberry–sage, basil–nettle, c
   1. the catalogue of true facts, classified as above;
   2. the myth pool;
   3. the source sheets (`python -m corpus.sheets` → `content/sheets.json`, seed 17), below;
-  4. the texts, generated from the sheets, each **checked** against its sheet: every fact stated with its intended truth, nothing else;
+  4. the texts, generated from the sheets, each **checked** against its sheet: every fact stated with its intended truth, nothing else, and no glossary wording repeated verbatim;
   5. the sampler.
 - **The source sheets:** 44 per plant, 352 in the pool. Each sheet holds its kind, focus plant, target length, padding share, and its facts, each with its truth, what it tells (the truth or the kind's myth), whether it is told vaguely, and how a brew names its co-ingredients (the focus plant is always named).
 
@@ -210,8 +210,8 @@ Pairs that share no group: mint–rosemary, elderberry–sage, basil–nettle, c
 | Book | 1 | 25 | 3 aliases, 3 groups, 3 soils, all 7 pairs, 7 of 21 triples, 2 of 6 mixes | 20% | 1200–1800 | 0% | official names |
 | Transcript | 8 | 5 | brews and mixes; **one** of the 8 has one extra: an alias, a group, or more about one of its mixes (another effect, or which plant a group reference means) | 20% | 300–500 | 0% | official names |
 | Herbal tale | 5 | 4 | aliases, groups, soils; **one** of the 5 also has a brew | 75% (the facts buried in it) | 600–900 | 30% | 40 / 40 / 20% |
-| Pamphlet | 15 | 1–3 | any, mixes included | 40% | 100–200 | 20% | 60 / 25 / 15% |
-| Folk tale | 15 | 1–3 | any, mixes included | 55% | 150–300 | 70% | 40 / 30 / 30% |
+| Pamphlet | 15 | 1–3 | any, mixes included | 40% | 100–200 | 20% | 40 / 25 / 35% |
+| Folk tale | 15 | 1–3 | any, mixes included | 55% | 150–300 | 70% | 20 / 40 / 40% |
 
   - **Spread:** within a kind, a plant's sources take facts from a shuffled cycle of its rows, so rows are covered evenly before any repeats (the 8 transcripts' 40 slots cover all 34 brew and mix rows).
   - **Truth:** drawn per stated fact at the kind's rate; then any soil hint, brew or mix with no true source in the pool (brews: none naming its plants) has its mention in the most reliable kind set true (2 repairs). If a sheet uses an alias inside a brew or mix, its statement of that alias is true.
@@ -223,7 +223,10 @@ Pairs that share no group: mint–rosemary, elderberry–sage, basil–nettle, c
 - **One request per episode** while testing, written in plain language, e.g. *"I am a stonecutter … I need to pack 10 oxen with stone, but I can barely pack 8. In a week we need to gather enough stone …"*. The request is part of the system prompt, so it is never compacted.
 - **Translation rules** the agent must apply:
   - **Ratios:** from 8 to 10 oxen means at least +25%; from 5 to 7 means at least +40% (more is fine, less is not).
-  - **Glossary:** the system prompt maps symptoms and uses to stats, as a doctor maps symptoms to a disease. **(content)**
+  - **Glossary** (`content/glossary.json`, shown in the system prompt): maps signs and uses to stats, as a doctor maps symptoms to a disease, and sensory cues to the secondary labels. Per stat: its name and direct words ("strong", "wise"), 3–4 signs of more and of less ("a powerful grip" / "a feeble grip") and 4 trades (stonecutter, scribe); per label: its direct words and 2 cues ("the taste of honey").
+    - **One sign, one stat:** no phrase is listed under two stats or labels, and none contains another's. The borders are drawn on purpose: S carries loads, V lasts the day; D is clumsy or slow hands and feet, V is tiredness; I reckons and remembers, W judges and foresees.
+    - **Direction is flavour:** a story may tell of a drinker who gained or lost; either way the potion acts on that stat. The glossary's note tells the agent that its own brew's direction depends on quantities, which no story gives.
+    - **Paraphrase only:** texts and requests say the same things **in other words**. They never repeat a glossary phrase, a stat or label name, or a direct word (`corpus/glossary.py`, `verbatim()`): "he heaved a millstone onto the cart", not "lifting heavy loads" or "strong". The agent must match meanings, not strings.
   - **Deadlines** in days: "a week" means deliver by the end of day 7, i.e. turn 70. Requests without a deadline have a turn cap.
   - **Vague constraints:** e.g. a client reacts badly to "the pond plants". Sources name the group's members. The request is designed so that one member is **required** for the goal (nettle for D) and the others must be avoided. The allergy itself cannot be observed by experiment; it is inferred from the request and the sources.
 - **Success** is judged on the delivered potion only:
@@ -364,7 +367,8 @@ The turn loop, the LLM client and agent (thinking discarded, cut after the first
 - [x] **(content)** The fact catalogue's tables, guarantees and the rules for names and groups (see *Plant names and groups*, *Sources*)
 - [x] **(content)** The myth pool (see *Sources*)
 - [x] **(content)** The source sheets (see *Sources*)
-- [ ] **(content)** The glossary; the texts; pool and sample sizes per kind; 5–10 requests with their translations and success checks
+- [x] **(content)** The glossary (see *Requests*); to do: put it in the system prompt and reword the stonecutter request (it says "stonecutter", a glossary trade)
+- [ ] **(content)** The texts; pool and sample sizes per kind; 5–10 requests with their translations and success checks
 - [x] The validator's grammar (see *Validator*)
 - [x] The record fields of claims, beliefs and requirements (see *Notebook*)
 - [ ] `search` k and passage length (the `kb_lookup` row limit is 30)

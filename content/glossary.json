@@ -1,0 +1,48 @@
+{
+  "note": "A story may tell of a drinker who gained or lost: either way the potion acts on that stat. Whether your own brew raises or lowers it depends on the quantities, which no story gives.",
+  "stats": {
+    "S": {
+      "name": "strength",
+      "words": ["strength", "strong", "stronger", "strongest", "strengthen", "strengthened"],
+      "more": ["lifting and carrying heavy loads", "hauling, pushing and pulling", "a powerful grip", "breaking or bending hard things"],
+      "less": ["arms that give way under a load", "unable to lift what one once could", "a feeble grip"],
+      "trades": ["stonecutter", "blacksmith", "porter", "wrestler"]
+    },
+    "D": {
+      "name": "dexterity",
+      "words": ["dexterity", "dexterous", "agile", "agility"],
+      "more": ["nimble fingers", "steady hands at fine work", "sure footing and balance", "quick, precise movements"],
+      "less": ["clumsiness", "stumbling and tripping", "spilling and dropping things", "slow, awkward hands and feet"],
+      "trades": ["weaver", "juggler", "roofer", "archer"]
+    },
+    "V": {
+      "name": "vitality",
+      "words": ["vitality", "vital", "vigour", "vigor", "vigorous"],
+      "more": ["endurance through a long day's work", "wounds and illness mend quickly", "a healthy colour and appetite", "a long breath"],
+      "less": ["tiring quickly", "pale and sickly", "slow to recover from illness", "shortness of breath"],
+      "trades": ["messenger", "reaper", "soldier", "shepherd"]
+    },
+    "I": {
+      "name": "intelligence",
+      "words": ["intelligence", "intelligent", "clever", "cleverness"],
+      "more": ["quick reckoning", "a sharp memory", "learning letters and tongues", "solving riddles"],
+      "less": ["forgetfulness", "losing count", "muddled thinking", "slow to learn"],
+      "trades": ["scribe", "clerk", "tutor", "bookkeeper"]
+    },
+    "W": {
+      "name": "wisdom",
+      "words": ["wisdom", "wise", "wiser", "wisest"],
+      "more": ["sound judgement", "seeing through people", "foreseeing trouble", "good counsel"],
+      "less": ["rash decisions", "being easily fooled", "poor counsel", "blindness to consequences"],
+      "trades": ["village elder", "judge", "abbot", "steward"]
+    }
+  },
+  "labels": {
+    "fragrant": {"words": ["fragrant", "fragrance"], "cues": ["the scent of a spring meadow", "a perfume that fills the room"]},
+    "warming": {"words": ["warming", "warm", "warmth"], "cues": ["heat spreading through the chest", "flushed cheeks on a cold day"]},
+    "sweet": {"words": ["sweet", "sweetness"], "cues": ["the taste of honey", "children asking for more"]},
+    "bitter": {"words": ["bitter", "bitterness"], "cues": ["a harsh taste that twists the mouth", "an effect only half felt"]},
+    "murky": {"words": ["murky", "murkiness"], "cues": ["a cloudy, muddy look", "an effect that fades within hours"]},
+    "toxic": {"words": ["toxic", "poison", "poisonous", "poisoned"], "cues": ["falling gravely ill", "an animal that drank it and died"]}
+  }
+}
