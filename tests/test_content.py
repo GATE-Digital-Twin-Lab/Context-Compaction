@@ -8,6 +8,8 @@ from pathlib import Path
 from corpus.catalogue import CATALOGUE_FILE, STYLES, about, catalogue, dump, revealable
 from corpus.myths import FALLIBLE, MYTHS_FILE, myth_pool
 from corpus.myths import dump as myth_dump
+from corpus.sheets import BOOK, KINDS, SHEETS_FILE, SPEC, build, truth
+from corpus.sheets import dump as sheet_dump
 from environment.brewer import PLANTS, STAT_SETS
 
 TABLE = json.loads((Path(__file__).parent.parent / "content" / "plants.json").read_text(encoding="utf-8"))
@@ -111,3 +113,88 @@ def test_every_fact_has_a_different_wrong_myth_per_kind():
         if fact["type"] == "mix":                                                         # one revealed effect changed
             assert all(sum(v[k] != truth[k] for k in truth) == 1 for v in values)
             assert all(v[k] for v in values for k in truth if truth[k])
+
+
+# --- the source sheets -------------------------------------------------------------------------
+
+SHEETS, SHEET_STATS = build()
+FACTS = {f["id"]: f for f in catalogue()}
+MYTHS = json.loads(MYTHS_FILE.read_text(encoding="utf-8"))
+
+
+def _of(kind, plant=None):
+    return [s for s in SHEETS if s["kind"] == kind and plant in (None, s["focus"])]
+
+
+def test_sheet_file_is_up_to_date():
+    assert SHEETS_FILE.read_text(encoding="utf-8") == sheet_dump(SHEETS), "run: python -m corpus.sheets"
+
+
+def test_sheets_per_plant_and_kind():
+    for plant in PLANTS:
+        assert {k: len(_of(k, plant)) for k in KINDS} == {k: SPEC[k]["count"] for k in KINDS}
+    assert all(SPEC[s["kind"]]["words"][0] <= s["words"] <= SPEC[s["kind"]]["words"][1] for s in SHEETS)
+
+
+def test_facts_come_from_the_focus_plant_and_are_not_repeated():
+    for s in SHEETS:
+        rows = {f["id"] for f in about(s["focus"], list(FACTS.values()))}
+        ids = [e["fact"] for e in s["facts"]]
+        assert len(ids) == len(set(ids))
+        assert all(e["fact"] in rows or e["type"] == "more" and e["of"] in rows for e in s["facts"])
+
+
+def test_what_each_kind_states():
+    for plant in PLANTS:
+        book = _of("book", plant)[0]
+        assert Counter(e["type"] for e in book["facts"]) == BOOK and all(e["true"] for e in book["facts"])
+        transcripts = _of("transcript", plant)
+        extras = [e for s in transcripts for e in s["facts"] if e.get("extra") or e["type"] == "more"]
+        assert len(extras) == 1 and extras[0]["type"] in ("alias", "group", "more")
+        assert all(sum(e["type"] in ("pair", "triple", "mix") and e not in extras for e in s["facts"]) == 5
+                   for s in transcripts)
+        brews_mixes = {f["id"] for f in about(plant, list(FACTS.values())) if f["type"] in ("brew", "mix")}
+        assert {e["fact"] for s in transcripts for e in s["facts"]} >= brews_mixes      # 40 slots cover all 34
+        herbal = _of("herbal", plant)
+        assert all(sum(e["type"] in ("alias", "group", "soil") for e in s["facts"]) == 4 for s in herbal)
+        assert sum(e["type"] in ("pair", "triple") for s in herbal for e in s["facts"]) == 1
+        assert not any(e["type"] == "mix" for s in herbal for e in s["facts"])
+        assert all(1 <= len(s["facts"]) <= 3 for k in ("pamphlet", "folk") for s in _of(k, plant))
+
+
+def test_told_is_the_truth_or_the_kinds_myth():
+    for s in SHEETS:
+        for e in s["facts"]:
+            if e["type"] == "more":
+                assert (e["told"] == e["value"]) == e["true"]
+            else:
+                expected = truth(FACTS[e["fact"]]) if e["true"] else MYTHS[e["fact"]][s["kind"]]
+                assert e["told"] == expected
+
+
+def test_truth_rates_are_near_each_kinds_rate():
+    for kind in KINDS:
+        stated = [e for s in _of(kind) for e in s["facts"]]
+        assert abs(sum(e["true"] for e in stated) / len(stated) - SPEC[kind]["rate"]) < 0.06
+
+
+def test_references_stay_true():
+    for s in SHEETS:
+        for e in s["facts"]:
+            for ref in e.get("refs", []):
+                assert "alias" not in ref or TABLE["aliases"][ref["plant"]].count(ref["alias"]) == 1
+                assert "group" not in ref or ref["plant"] in TABLE["groups"][ref["group"]]
+            if e["type"] in ("pair", "triple"):
+                assert sorted(r["plant"] for r in e["refs"]) == sorted(p for p in FACTS[e["fact"]]["plants"] if p != s["focus"])
+                if s["kind"] in ("book", "transcript"):
+                    assert all(set(r) == {"plant"} for r in e["refs"])                  # official names
+        used = {r["alias"] for e in s["facts"] for r in e.get("refs", []) if "alias" in r}
+        assert not any(e["type"] == "alias" and not e["true"] and FACTS[e["fact"]]["alias"] in used for e in s["facts"])
+
+
+def test_pool_guarantee():
+    """Every soil hint and brew has a true source naming its plants (name or alias); every mix a true source."""
+    for fid, fact in FACTS.items():
+        if fact["type"] in ("soil", "brew", "mix"):
+            assert any(e["fact"] == fid and e["true"] and all("group" not in r for r in e.get("refs", []) if fact["type"] == "brew")
+                       for s in SHEETS for e in s["facts"]), fid

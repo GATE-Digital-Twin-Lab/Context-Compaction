@@ -167,7 +167,7 @@ Pairs that share no group: mint–rosemary, elderberry–sage, basil–nettle, c
 | mix | one **revealed effect** is wrong (the stat, the secondary, or the second brew's own effect); the plants and how they are named stay true |
 
   - **References stay true:** an alias or group used inside a brew or mix always means its true plant, and a text never states a false alias and also uses that alias.
-- **Mixes** are reported only by monastery books and apothecary transcripts, and only simple ones: two brews of 2 + 2 or 3 + 2 plants (see *Mixes* below).
+- **Mixes** are reported by monastery books, apothecary transcripts, pamphlets and folk tales (never herbal tales), and only simple ones: two brews of 2 + 2 or 3 + 2 plants (see *Mixes* below).
 - **Claims are implied, never numeric.** A source tells what happened ("my boy could suddenly carry two full buckets instead of one"); the agent infers the relation (a doubling: sweet, or a stronger base) and finds the exact values and quantities by experiment. **No source hints at quantities**: counts are found only by experiment. Some facts appear in no source and can only be found by experiment.
 - **Vagueness is separate from falsity:** a true fact can be told vaguely (folk tales especially), and a false one clearly.
 - **Contradictions:** several sources may support a fact and others deny it.
@@ -195,14 +195,26 @@ Pairs that share no group: mint–rosemary, elderberry–sage, basil–nettle, c
   - **Selection** (seed 17): **6 per focus plant**, 3 of 2 + 2 (one per naming style) and 3 of 3 + 2, each with something to reveal. **W:** every plant gets **1 W mix** (a 3 + 2 whose plants contain W's set, e.g. `{X, dill}` + Harrow's End), with W the revealed stat; no other mix reaches W. No source describes a 4-plant brew, so these are the only written evidence for W.
   - With up to 5 plants a mix can act on two stats (one in the current selection); only one is revealed.
 - **Guarantees:**
-  - **in the pool:** every 2-plant brew, 3-plant brew and soil hint has at least one true source that names its plants (name or alias);
+  - **in the pool:** every 2-plant brew, 3-plant brew and soil hint has at least one true source that names its plants (name or alias), and every mix has at least one true source;
   - **in the sample:** every alias and group has at least one true source (the repair rule below). The books cover most of the rest.
 - **Building the pool**, in layers:
   1. the catalogue of true facts, classified as above;
   2. the myth pool;
-  3. the source sheets;
+  3. the source sheets (`python -m corpus.sheets` → `content/sheets.json`, seed 17), below;
   4. the texts, generated from the sheets, each **checked** against its sheet: every fact stated with its intended truth, nothing else;
   5. the sampler.
+- **The source sheets:** 44 per plant, 352 in the pool. Each sheet holds its kind, focus plant, target length, padding share, and its facts, each with its truth, what it tells (the truth or the kind's myth), whether it is told vaguely, and how a brew names its co-ingredients (the focus plant is always named).
+
+| Kind | Per plant | Facts per source | Fact types | Padding | Words | Vague | Co-ingredients named by (name / alias / group) |
+|---|---|---|---|---|---|---|---|
+| Book | 1 | 25 | 3 aliases, 3 groups, 3 soils, all 7 pairs, 7 of 21 triples, 2 of 6 mixes | 20% | 1200–1800 | 0% | official names |
+| Transcript | 8 | 5 | brews and mixes; **one** of the 8 has one extra: an alias, a group, or more about one of its mixes (another effect, or which plant a group reference means) | 20% | 300–500 | 0% | official names |
+| Herbal tale | 5 | 4 | aliases, groups, soils; **one** of the 5 also has a brew | 75% (the facts buried in it) | 600–900 | 30% | 40 / 40 / 20% |
+| Pamphlet | 15 | 1–3 | any, mixes included | 40% | 100–200 | 20% | 60 / 25 / 15% |
+| Folk tale | 15 | 1–3 | any, mixes included | 55% | 150–300 | 70% | 40 / 30 / 30% |
+
+  - **Spread:** within a kind, a plant's sources take facts from a shuffled cycle of its rows, so rows are covered evenly before any repeats (the 8 transcripts' 40 slots cover all 34 brew and mix rows).
+  - **Truth:** drawn per stated fact at the kind's rate; then any soil hint, brew or mix with no true source in the pool (brews: none naming its plants) has its mention in the most reliable kind set true (2 repairs). If a sheet uses an alias inside a brew or mix, its statement of that alias is true.
 - **Sampling:** the sampler draws texts per kind with `corpus_seed` (books rarely). Then, for every non-experimental fact with **no true source** in the sample, it adds one from the pool, starting with the least reliable kind: a folk tale stating the truth, if none a pamphlet, then a herbal tale, a transcript, and last the plant's book. This keeps the guarantee from becoming "a book for every plant that matters".
 - **Retrieval:** BM25 over passages. `search` takes queries and returns the top-k passages with their source's title, author and kind. `read` returns whole sources, but only those returned by a `search` **in the current turn**; to read again in a later turn, the agent must search again.
 
@@ -351,7 +363,8 @@ The turn loop, the LLM client and agent (thinking discarded, cut after the first
 - [x] **(content)** The corpus structure: a pool sampled per episode, experimental and non-experimental facts (see *Sources*)
 - [x] **(content)** The fact catalogue's tables, guarantees and the rules for names and groups (see *Plant names and groups*, *Sources*)
 - [x] **(content)** The myth pool (see *Sources*)
-- [ ] **(content)** The glossary; the source sheets and texts; pool and sample sizes per kind; 5–10 requests with their translations and success checks
+- [x] **(content)** The source sheets (see *Sources*)
+- [ ] **(content)** The glossary; the texts; pool and sample sizes per kind; 5–10 requests with their translations and success checks
 - [x] The validator's grammar (see *Validator*)
 - [x] The record fields of claims, beliefs and requirements (see *Notebook*)
 - [ ] `search` k and passage length (the `kb_lookup` row limit is 30)
