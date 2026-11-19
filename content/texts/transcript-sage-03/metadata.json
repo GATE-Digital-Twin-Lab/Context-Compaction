@@ -7,7 +7,7 @@
   "padding": 0.2,
   "teaches": [
     "a brew of sage, elderberry, nettle: toxic",
-    "a brew of sage, mint, basil: fragrant; warming",
+    "a brew of sage, mint, basil: fragrant; shimmering",
     "a brew of sage, chamomile, rosemary: sweet",
     "\"Prior Anselm's leaf\" is a folk name for sage"
   ],
@@ -20,8 +20,8 @@
     },
     {
       "n": "F5",
-      "says": "a brew of sage, basil, rosemary: acts on dexterity (D); fragrant; warming",
-      "truth": "a brew of sage, basil, rosemary: fragrant; warming",
+      "says": "a brew of sage, basil, rosemary: acts on dexterity (D); fragrant; shimmering",
+      "truth": "a brew of sage, basil, rosemary: fragrant; shimmering",
       "issue": "claims it acts on dexterity (D), but no stat acts"
     }
   ],
@@ -71,7 +71,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of sage, mint, basil: fragrant; warming",
+      "says": "a brew of sage, mint, basil: fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -81,7 +81,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -110,7 +110,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of sage, basil, rosemary: acts on dexterity (D); fragrant; warming",
+      "says": "a brew of sage, basil, rosemary: acts on dexterity (D); fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -120,11 +120,11 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of sage, basil, rosemary: fragrant; warming",
+      "truth": "a brew of sage, basil, rosemary: fragrant; shimmering",
       "issue": "claims it acts on dexterity (D), but no stat acts"
     },
     {

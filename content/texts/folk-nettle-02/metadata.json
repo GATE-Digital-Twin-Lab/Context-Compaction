@@ -6,7 +6,7 @@
   "words": 174,
   "padding": 0.55,
   "teaches": [
-    "a brew of nettle, \"Ferrow\", \"a plant of Harrow's End\": warming"
+    "a brew of nettle, \"Ferrow\", \"a plant of Harrow's End\": shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -15,7 +15,7 @@
       "type": "triple",
       "true": true,
       "vague": true,
-      "says": "a brew of nettle, \"Ferrow\", \"a plant of Harrow's End\": warming",
+      "says": "a brew of nettle, \"Ferrow\", \"a plant of Harrow's End\": shimmering",
       "names": {
         "Ferrow": "mint",
         "a plant of Harrow's End": "chamomile"
@@ -27,7 +27,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

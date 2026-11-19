@@ -183,7 +183,7 @@ def test_used_potion_cannot_be_mixed_again():
 def test_a_mixed_potion_can_meet_the_request():
     world = make_world(Request("s30", "text", "S", threshold=30))
     world.inventory.add_plants({"mint": 2, "chamomile": 5, "rosemary": 2, "nettle": 1})
-    world.brew_all([{"mint": 2, "chamomile": 4, "rosemary": 2}, {"chamomile": 1, "nettle": 1}])   # S 20; warming
+    world.brew_all([{"mint": 2, "chamomile": 4, "rosemary": 2}, {"chamomile": 1, "nettle": 1}])   # S 20; shimmering
     world.end_turn()
     (mixed,) = world.mix_all([[1, 2]])
     assert mixed.effect.positive == {"S": 30}

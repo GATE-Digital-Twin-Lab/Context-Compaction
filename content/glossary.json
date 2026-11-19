@@ -1,5 +1,5 @@
 {
-  "note": "A story may tell of a drinker who gained or lost: either way the potion acts on that stat. Whether your own brew raises or lowers it depends on the quantities, which no story gives. A label is noticed in the potion itself, at the moment of drinking: its smell, its taste, its look, or how it feels going down. A change in what the drinker can do afterwards is a stat. When labels that help and labels that harm meet in one potion, they cancel, and it tastes like plain water.",
+  "note": "A story may tell of a drinker who gained or lost: either way the potion acts on that stat. Whether your own brew raises or lowers it depends on the quantities, which no story gives. A label is noticed in the potion itself, at the moment of drinking: its smell, its taste or its look. A change in what the drinker can do afterwards is a stat. When labels that help and labels that harm meet in one potion, they cancel, and it tastes like plain water.",
   "stats": {
     "S": {
       "name": "strength",
@@ -39,7 +39,7 @@
   },
   "labels": {
     "fragrant": {"words": ["fragrant", "fragrance"], "cues": ["the scent of a spring meadow", "a perfume that fills the room"], "near": ["meadow", "meadows", "perfume", "perfumed"]},
-    "warming": {"words": ["warming", "warm", "warmth"], "cues": ["a glow in the throat as it goes down", "a cup that feels hot in the hands though it was poured cold"], "near": ["glow", "glowing", "heat"]},
+    "shimmering": {"words": ["shimmering", "shimmer", "shimmers", "shimmered"], "cues": ["a brew as clear and bright as a gemstone", "a potion that catches the light in the cup"], "near": ["gleam", "gleaming", "sparkle", "sparkling", "glitter", "glittering"]},
     "sweet": {"words": ["sweet", "sweetness"], "cues": ["the taste of honey", "children asking for more"], "near": ["honey", "honeyed", "hive", "honeycomb", "comb"]},
     "bitter": {"words": ["bitter", "bitterness"], "cues": ["a harsh taste that twists the mouth", "a taste that makes the drinker grimace"], "near": ["harsh", "twisted"]},
     "murky": {"words": ["murky", "murkiness"], "cues": ["a cloudy, muddy look", "dregs that never settle"], "near": ["cloudy", "muddy", "dregs"]},

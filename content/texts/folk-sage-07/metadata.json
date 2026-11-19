@@ -6,7 +6,7 @@
   "words": 263,
   "padding": 0.55,
   "teaches": [
-    "a brew of sage, dill, basil: warming"
+    "a brew of sage, dill, basil: shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -15,7 +15,7 @@
       "type": "triple",
       "true": true,
       "vague": true,
-      "says": "a brew of sage, dill, basil: warming",
+      "says": "a brew of sage, dill, basil: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -24,7 +24,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

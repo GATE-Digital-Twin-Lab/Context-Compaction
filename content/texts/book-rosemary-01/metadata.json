@@ -27,9 +27,9 @@
     "a brew of rosemary, chamomile, dill: bitter",
     "a brew of rosemary, sage, chamomile: sweet",
     "a brew of rosemary, elderberry, sage: murky",
-    "a brew of rosemary, sage, basil: fragrant; warming",
-    "a brew of rosemary, nettle, chamomile: warming",
-    "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming",
+    "a brew of rosemary, sage, basil: fragrant; shimmering",
+    "a brew of rosemary, nettle, chamomile: shimmering",
+    "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; shimmering",
     "a brew of dill and rosemary poured into a brew of \"a plant of the mill pond\" and \"a plant of Wendle Cross\": the mix: bitter; murky"
   ],
   "false claims": [],
@@ -316,7 +316,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of rosemary, sage, basil: fragrant; warming",
+      "says": "a brew of rosemary, sage, basil: fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -326,7 +326,7 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -336,7 +336,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of rosemary, nettle, chamomile: warming",
+      "says": "a brew of rosemary, nettle, chamomile: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -345,7 +345,7 @@
           "rosemary"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -355,7 +355,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming",
+      "says": "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -370,13 +370,13 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
             "fragrant",
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }

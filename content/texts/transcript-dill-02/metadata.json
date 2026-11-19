@@ -10,7 +10,7 @@
     "a brew of dill, mint, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of dill, chamomile, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of chamomile and dill poured into a brew of \"a plant of the mill pond\" and \"a plant of Ashby Row\": the mix: sweet",
-    "a brew of dill, sage, basil: warming"
+    "a brew of dill, sage, basil: shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -105,7 +105,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of dill, sage, basil: warming",
+      "says": "a brew of dill, sage, basil: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -114,7 +114,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

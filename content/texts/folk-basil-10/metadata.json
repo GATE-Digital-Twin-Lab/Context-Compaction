@@ -6,14 +6,14 @@
   "words": 299,
   "padding": 0.55,
   "teaches": [
-    "a brew of basil, nettle, \"a plant of Coldharbour\": warming",
+    "a brew of basil, nettle, \"a plant of Coldharbour\": shimmering",
     "a brew of basil, \"Saint Osric's leaf\", \"a plant of Coldharbour\": nothing: it tastes, smells and looks like plain water, and no drinker changes"
   ],
   "false claims": [
     {
       "n": "F2",
-      "says": "a brew of basil, \"a plant of Brackley\", \"Corbin's leaf\": fragrant; warming",
-      "truth": "a brew of basil, \"a plant of Brackley\", \"Corbin's leaf\": warming",
+      "says": "a brew of basil, \"a plant of Brackley\", \"Corbin's leaf\": fragrant; shimmering",
+      "truth": "a brew of basil, \"a plant of Brackley\", \"Corbin's leaf\": shimmering",
       "issue": "adds fragrant, which is not there"
     }
   ],
@@ -23,7 +23,7 @@
       "type": "triple",
       "true": true,
       "vague": true,
-      "says": "a brew of basil, nettle, \"a plant of Coldharbour\": warming",
+      "says": "a brew of basil, nettle, \"a plant of Coldharbour\": shimmering",
       "names": {
         "a plant of Coldharbour": "sage"
       },
@@ -34,7 +34,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -44,7 +44,7 @@
       "type": "triple",
       "true": false,
       "vague": true,
-      "says": "a brew of basil, \"a plant of Brackley\", \"Corbin's leaf\": fragrant; warming",
+      "says": "a brew of basil, \"a plant of Brackley\", \"Corbin's leaf\": fragrant; shimmering",
       "names": {
         "a plant of Brackley": "sage",
         "Corbin's leaf": "dill"
@@ -56,11 +56,11 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of basil, \"a plant of Brackley\", \"Corbin's leaf\": warming",
+      "truth": "a brew of basil, \"a plant of Brackley\", \"Corbin's leaf\": shimmering",
       "issue": "adds fragrant, which is not there"
     },
     {

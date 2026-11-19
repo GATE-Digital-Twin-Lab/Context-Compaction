@@ -51,7 +51,7 @@ POTIONS = brewed(
     {"mint": 1, "dill": 1},                                   # 3 sweet
     {"mint": 1, "rosemary": 1},                               # 4 nothing
     {"nettle": 1, "sage": 1, "rosemary": 2},                  # 5 +D 5
-    {"nettle": 2, "sage": 1, "rosemary": 2, "basil": 1},      # 6 +D 9 (5 × 1.75): fragrant, warming
+    {"nettle": 2, "sage": 1, "rosemary": 2, "basil": 1},      # 6 +D 9 (5 × 1.75): fragrant, shimmering
 )
 
 

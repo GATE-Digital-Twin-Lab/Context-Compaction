@@ -6,8 +6,8 @@
   "words": 466,
   "padding": 0.2,
   "teaches": [
-    "a brew of sage and basil poured into a brew of \"Wenna's sprig\" and \"Mother Hale's herb\": the mix: fragrant; warming; sweet",
-    "a brew of sage, elderberry, basil: warming"
+    "a brew of sage and basil poured into a brew of \"Wenna's sprig\" and \"Mother Hale's herb\": the mix: fragrant; shimmering; sweet",
+    "a brew of sage, elderberry, basil: shimmering"
   ],
   "false claims": [
     {
@@ -35,7 +35,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of sage and basil poured into a brew of \"Wenna's sprig\" and \"Mother Hale's herb\": the mix: fragrant; warming; sweet",
+      "says": "a brew of sage and basil poured into a brew of \"Wenna's sprig\" and \"Mother Hale's herb\": the mix: fragrant; shimmering; sweet",
       "names": {
         "Wenna's sprig": "mint",
         "Mother Hale's herb": "chamomile"
@@ -53,14 +53,14 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
             "fragrant",
-            "warming",
+            "shimmering",
             "sweet"
           ],
           "drinkable": true
@@ -113,7 +113,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of sage, elderberry, basil: warming",
+      "says": "a brew of sage, elderberry, basil: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -122,7 +122,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

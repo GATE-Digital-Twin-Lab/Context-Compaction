@@ -10,8 +10,8 @@
     {
       "n": "F1",
       "says": "a brew of sage, \"a plant of Ashby Row\": bitter",
-      "truth": "a brew of sage, \"a plant of Ashby Row\": warming",
-      "issue": "says bitter instead of warming"
+      "truth": "a brew of sage, \"a plant of Ashby Row\": shimmering",
+      "issue": "says bitter instead of shimmering"
     },
     {
       "n": "F2",
@@ -21,8 +21,8 @@
     },
     {
       "n": "F3",
-      "says": "a brew of sage, \"a plant of Harrow's End\", basil: fragrant; warming; sweet",
-      "truth": "a brew of sage, \"a plant of Harrow's End\", basil: warming; sweet",
+      "says": "a brew of sage, \"a plant of Harrow's End\", basil: fragrant; shimmering; sweet",
+      "truth": "a brew of sage, \"a plant of Harrow's End\", basil: shimmering; sweet",
       "issue": "adds fragrant, which is not there"
     }
   ],
@@ -42,12 +42,12 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of sage, \"a plant of Ashby Row\": warming",
-      "issue": "says bitter instead of warming"
+      "truth": "a brew of sage, \"a plant of Ashby Row\": shimmering",
+      "issue": "says bitter instead of shimmering"
     },
     {
       "n": "F2",
@@ -77,7 +77,7 @@
       "type": "triple",
       "true": false,
       "vague": true,
-      "says": "a brew of sage, \"a plant of Harrow's End\", basil: fragrant; warming; sweet",
+      "says": "a brew of sage, \"a plant of Harrow's End\", basil: fragrant; shimmering; sweet",
       "names": {
         "a plant of Harrow's End": "chamomile"
       },
@@ -88,12 +88,12 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of sage, \"a plant of Harrow's End\", basil: warming; sweet",
+      "truth": "a brew of sage, \"a plant of Harrow's End\", basil: shimmering; sweet",
       "issue": "adds fragrant, which is not there"
     }
   ]

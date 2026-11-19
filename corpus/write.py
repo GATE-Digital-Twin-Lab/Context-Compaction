@@ -41,7 +41,7 @@ ROOT = Path(__file__).parent.parent
 LOG_DIR = ROOT / "temp" / "corpus_write"
 LOCK_FILE = ROOT / "temp" / "corpus_write.lock"
 EXAMPLES = {"book": "book:mint:01", "transcript": "transcript:mint:04", "herbal": "herbal:mint:05",
-            "pamphlet": "pamphlet:mint:13", "folk": "folk:mint:03", "trials": "transcript:mint:04"}
+            "pamphlet": "pamphlet:mint:13", "folk": "folk:mint:03", "trials": "trials:S"}
 RECENT = 40                     # earlier images per effect shown to the writer (all are checked)
 
 STYLE = {
@@ -57,7 +57,8 @@ STYLE = {
               "brewed, any brew poured into it, who drank it, and one piece of their work counted before and "
               "after drinking (stones lifted, sacks carried, sums worked), then what was noticed while drinking; "
               "terse, a little table-like; may end with a summary table in Markdown "
-              "(| Day | Herbs | Before | After | Noticed |).",
+              "(| Day | Herbs | Before | After | Noticed |). Every entry brews the same plants of this one kind of "
+              "potion: never suggest that one batch was made differently from another.",
     "folk": "a tale told second-hand at an inn or a fireside, with named locals; the facts come up in the "
             "story and are hedged as hearsay.",
 }
@@ -102,7 +103,7 @@ Glossary (the player has it; you must not copy its words):
 Kinds of image that work (never copy these either; find your own):
 {examples}
 
-The text is a {KIND_NAMES[sheet['kind']]}: {STYLE[sheet['kind']]}
+The text is {"an" if KIND_NAMES[sheet['kind']][0] in "aeiou" else "a"} {KIND_NAMES[sheet['kind']]}: {STYLE[sheet['kind']]}
 
 Answer in exactly this form:
 TITLE: <title>
@@ -144,7 +145,7 @@ Kinds of claim, each as a JSON object:
 - identity: the text says which plant a "plant of <place>" was. {{"type": "identity", "ref": "a plant of <place>", "plant": "<plant>"}}
 - trial: someone's work counted before and after drinking a brew. Use this, not brew or mix, whenever the text gives both counts. {{"type": "trial", "plants": [<plants of the brew they drank>], "added": [[<plants of each brew poured into it>]], "before": <count>, "after": <count>, "effects": [<the stat letter if the work changed>, <each label noticed while drinking>]}}
 
-Effects: a stat letter (S, D, V, I, W) when a drinker changed, whether they gained or lost; a label (fragrant, warming, sweet, bitter, murky, toxic) for what was noticed. Use the glossary to tell which. A brew the text says did nothing has "effects": [].
+Effects: a stat letter (S, D, V, I, W) when a drinker changed, whether they gained or lost; a label (fragrant, shimmering, sweet, bitter, murky, toxic) for what was noticed. Use the glossary to tell which. A brew the text says did nothing has "effects": [].
 
 Glossary:
 {glossary}

@@ -18,11 +18,11 @@
     "a brew of chamomile, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of chamomile, sage: sweet",
     "a brew of chamomile, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of chamomile, nettle: warming",
+    "a brew of chamomile, nettle: shimmering",
     "a brew of chamomile, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of chamomile, mint: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of chamomile, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of chamomile, nettle, rosemary: warming",
+    "a brew of chamomile, nettle, rosemary: shimmering",
     "a brew of chamomile, sage, rosemary: sweet",
     "a brew of chamomile, mint, sage: fragrant; sweet",
     "a brew of chamomile, dill, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
@@ -152,7 +152,7 @@
       "type": "pair",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, nettle: warming",
+      "says": "a brew of chamomile, nettle: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -160,7 +160,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -218,7 +218,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, nettle, rosemary: warming",
+      "says": "a brew of chamomile, nettle, rosemary: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -227,7 +227,7 @@
           "rosemary"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

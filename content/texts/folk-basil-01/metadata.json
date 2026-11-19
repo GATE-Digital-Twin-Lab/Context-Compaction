@@ -21,8 +21,8 @@
     },
     {
       "n": "F3",
-      "says": "a brew of basil, \"Tobin's wort\", chamomile: warming; sweet",
-      "truth": "a brew of basil, \"Tobin's wort\", chamomile: warming",
+      "says": "a brew of basil, \"Tobin's wort\", chamomile: shimmering; sweet",
+      "truth": "a brew of basil, \"Tobin's wort\", chamomile: shimmering",
       "issue": "adds sweet, which is not there"
     }
   ],
@@ -65,7 +65,7 @@
       "type": "triple",
       "true": false,
       "vague": true,
-      "says": "a brew of basil, \"Tobin's wort\", chamomile: warming; sweet",
+      "says": "a brew of basil, \"Tobin's wort\", chamomile: shimmering; sweet",
       "names": {
         "Tobin's wort": "nettle"
       },
@@ -76,11 +76,11 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of basil, \"Tobin's wort\", chamomile: warming",
+      "truth": "a brew of basil, \"Tobin's wort\", chamomile: shimmering",
       "issue": "adds sweet, which is not there"
     }
   ]

@@ -18,8 +18,8 @@
     {
       "n": "F3",
       "says": "a brew of chamomile, \"Saint Aldhelm's herb\", \"Tobin's wort\": bitter",
-      "truth": "a brew of chamomile, \"Saint Aldhelm's herb\", \"Tobin's wort\": warming",
-      "issue": "says bitter instead of warming"
+      "truth": "a brew of chamomile, \"Saint Aldhelm's herb\", \"Tobin's wort\": shimmering",
+      "issue": "says bitter instead of shimmering"
     }
   ],
   "claims": [
@@ -86,12 +86,12 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of chamomile, \"Saint Aldhelm's herb\", \"Tobin's wort\": warming",
-      "issue": "says bitter instead of warming"
+      "truth": "a brew of chamomile, \"Saint Aldhelm's herb\", \"Tobin's wort\": shimmering",
+      "issue": "says bitter instead of shimmering"
     }
   ]
 }

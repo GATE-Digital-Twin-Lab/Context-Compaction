@@ -6,7 +6,7 @@
   "words": 170,
   "padding": 0.55,
   "teaches": [
-    "a brew of rosemary, \"Prior Anselm's leaf\", \"a plant of Coldharbour\": fragrant; warming"
+    "a brew of rosemary, \"Prior Anselm's leaf\", \"a plant of Coldharbour\": fragrant; shimmering"
   ],
   "false claims": [
     {
@@ -22,7 +22,7 @@
       "type": "triple",
       "true": true,
       "vague": true,
-      "says": "a brew of rosemary, \"Prior Anselm's leaf\", \"a plant of Coldharbour\": fragrant; warming",
+      "says": "a brew of rosemary, \"Prior Anselm's leaf\", \"a plant of Coldharbour\": fragrant; shimmering",
       "names": {
         "Prior Anselm's leaf": "sage",
         "a plant of Coldharbour": "basil"
@@ -35,7 +35,7 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

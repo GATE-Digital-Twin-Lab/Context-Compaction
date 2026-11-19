@@ -10,7 +10,7 @@
     "a brew of sage, chamomile: sweet",
     "a brew of sage, elderberry, dill: acts on intelligence (I)",
     "a brew of sage, dill, rosemary: bitter",
-    "a brew of sage, nettle, basil: warming"
+    "a brew of sage, nettle, basil: shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -111,7 +111,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of sage, nettle, basil: warming",
+      "says": "a brew of sage, nettle, basil: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -120,7 +120,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

@@ -7,10 +7,10 @@
   "padding": 0.2,
   "teaches": [
     "a brew of basil, elderberry, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming",
+    "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; shimmering",
     "a brew of chamomile and basil poured into a brew of all three plants of Wendle Cross: the mix: acts on wisdom (W)",
     "a brew of basil, chamomile, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of basil, sage, dill: warming"
+    "a brew of basil, sage, dill: shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -36,7 +36,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming",
+      "says": "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -51,13 +51,13 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
             "fragrant",
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }
@@ -123,7 +123,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of basil, sage, dill: warming",
+      "says": "a brew of basil, sage, dill: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -132,7 +132,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

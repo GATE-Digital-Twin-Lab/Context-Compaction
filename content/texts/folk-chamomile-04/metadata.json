@@ -21,8 +21,8 @@
     },
     {
       "n": "F3",
-      "says": "a brew of chamomile, \"a plant of Brackley\", basil: fragrant; warming; sweet",
-      "truth": "a brew of chamomile, \"a plant of Brackley\", basil: warming; sweet",
+      "says": "a brew of chamomile, \"a plant of Brackley\", basil: fragrant; shimmering; sweet",
+      "truth": "a brew of chamomile, \"a plant of Brackley\", basil: shimmering; sweet",
       "issue": "adds fragrant, which is not there"
     }
   ],
@@ -61,7 +61,7 @@
       "type": "triple",
       "true": false,
       "vague": true,
-      "says": "a brew of chamomile, \"a plant of Brackley\", basil: fragrant; warming; sweet",
+      "says": "a brew of chamomile, \"a plant of Brackley\", basil: fragrant; shimmering; sweet",
       "names": {
         "a plant of Brackley": "sage"
       },
@@ -72,12 +72,12 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of chamomile, \"a plant of Brackley\", basil: warming; sweet",
+      "truth": "a brew of chamomile, \"a plant of Brackley\", basil: shimmering; sweet",
       "issue": "adds fragrant, which is not there"
     }
   ]

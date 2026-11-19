@@ -15,8 +15,8 @@
     },
     {
       "n": "F2",
-      "says": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": acts on intelligence (I); warming",
-      "truth": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": warming",
+      "says": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": acts on intelligence (I); shimmering",
+      "truth": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": shimmering",
       "issue": "claims it acts on intelligence (I), but no stat acts"
     },
     {
@@ -52,7 +52,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": acts on intelligence (I); warming",
+      "says": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": acts on intelligence (I); shimmering",
       "names": {
         "Prior Anselm's leaf": "sage",
         "a plant of Harrow's End": "basil"
@@ -64,11 +64,11 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": warming",
+      "truth": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": shimmering",
       "issue": "claims it acts on intelligence (I), but no stat acts"
     },
     {

@@ -6,7 +6,7 @@
   "words": 121,
   "padding": 0.4,
   "teaches": [
-    "a brew of basil, \"a plant of Kettlebury\": warming"
+    "a brew of basil, \"a plant of Kettlebury\": shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -15,7 +15,7 @@
       "type": "pair",
       "true": true,
       "vague": false,
-      "says": "a brew of basil, \"a plant of Kettlebury\": warming",
+      "says": "a brew of basil, \"a plant of Kettlebury\": shimmering",
       "names": {
         "a plant of Kettlebury": "sage"
       },
@@ -25,7 +25,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

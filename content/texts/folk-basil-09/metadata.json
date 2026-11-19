@@ -11,8 +11,8 @@
   "false claims": [
     {
       "n": "F2",
-      "says": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": acts on strength (S); fragrant; warming",
-      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": fragrant; warming",
+      "says": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": acts on strength (S); fragrant; shimmering",
+      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": fragrant; shimmering",
       "issue": "claims it acts on strength (S), but no stat acts"
     }
   ],
@@ -43,7 +43,7 @@
       "type": "triple",
       "true": false,
       "vague": true,
-      "says": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": acts on strength (S); fragrant; warming",
+      "says": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": acts on strength (S); fragrant; shimmering",
       "names": {
         "Prior Anselm's leaf": "sage",
         "Morrick": "rosemary"
@@ -56,11 +56,11 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": fragrant; warming",
+      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": fragrant; shimmering",
       "issue": "claims it acts on strength (S), but no stat acts"
     }
   ]

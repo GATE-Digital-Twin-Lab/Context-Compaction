@@ -21,9 +21,10 @@ from environment.brewer import MODIFIERS, PLANTS, STAT_SETS, apply_modifier, eff
 BASE_LEVELS = (10, 20)          # the hidden base intensities a ledger uses (either sign)
 MAX_COUNT = 4                   # counts of a base brew's plants, 1..MAX_COUNT
 ROLES = ("alone", "boost", "weaken", "negative", "cancel", "counts")
-BEFORE = (2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100)   # plausible counts of work
+BEFORE = (2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100)   # S only: its ledger was written
+HAND_PICKED = ("S",)            # by hand with counts drawn from this list, so S keeps it
 RATE = 0.8                      # an apothecary transcript's facts are correct at this rate
-WORDS = (450, 650)
+WORDS = (500, 700)
 PADDING = 0.2
 
 
@@ -99,15 +100,21 @@ def candidates(stat: str) -> dict[str, list[dict]]:
     return by_role
 
 
-def _numbers(percent: int, rng: random.Random) -> tuple[int, int]:
-    """A before and an after count of work, whole numbers, that differ by exactly this percent."""
-    options = [b for b in BEFORE if b * (100 + percent) % 100 == 0 and b * (100 + percent) > 0]
-    before = rng.choice(options)
+def _numbers(percent: int, rng: random.Random, stat: str) -> tuple[int, int]:
+    """A before and an after count of work, whole numbers, that differ by exactly this percent: X is drawn
+    from 1-100, and the first X from there on (wrapping round after 100) for which X x (1 + percent/100) is
+    whole is the before count. X = 100 always works. (S keeps its hand-picked list, see HAND_PICKED.)"""
+    if stat in HAND_PICKED:
+        options = [b for b in BEFORE if b * (100 + percent) % 100 == 0 and b * (100 + percent) > 0]
+        before = rng.choice(options)
+    else:
+        start = rng.randint(1, 100)
+        before = next(x for x in [*range(start, 101), *range(1, start)] if x * (100 + percent) % 100 == 0)
     return before, before * (100 + percent) // 100
 
 
 def _told(stat: str, percent: int, labels: list[str], rng: random.Random) -> dict:
-    before, after = _numbers(percent, rng)
+    before, after = _numbers(percent, rng, stat)
     return {"stat": stat if after != before else None, "before": before, "after": after, "noticed": labels}
 
 

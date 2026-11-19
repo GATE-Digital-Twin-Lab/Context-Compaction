@@ -41,6 +41,7 @@ def test_every_trial_is_what_the_brewer_gives():
             assert effect.drinkable and set(effect.positive) | set(effect.negative) <= {stat}
             v = e["value"]
             assert v["after"] * 100 == v["before"] * (100 + e["result"])           # the work shows the result
+            assert 1 <= v["before"] <= 100
             assert v["noticed"] == noticed(e["labels"]) and v["stat"] == (stat if e["result"] else None)
             if e["role"] in ("boost", "weaken", "negative", "cancel"):              # label-driven, exact
                 base = signed(e["base"], stat)

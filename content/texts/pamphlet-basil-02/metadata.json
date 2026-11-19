@@ -6,7 +6,7 @@
   "words": 111,
   "padding": 0.4,
   "teaches": [
-    "a brew of basil, \"a plant of Ludding\", chamomile: warming"
+    "a brew of basil, \"a plant of Ludding\", chamomile: shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -15,7 +15,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of basil, \"a plant of Ludding\", chamomile: warming",
+      "says": "a brew of basil, \"a plant of Ludding\", chamomile: shimmering",
       "names": {
         "a plant of Ludding": "nettle"
       },
@@ -26,7 +26,7 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

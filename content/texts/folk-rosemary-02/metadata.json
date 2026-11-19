@@ -9,8 +9,8 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of rosemary, \"a plant of Ludding\", \"Saint Ermengild's sprig\": acts on vitality (V); warming",
-      "truth": "a brew of rosemary, \"a plant of Ludding\", \"Saint Ermengild's sprig\": warming",
+      "says": "a brew of rosemary, \"a plant of Ludding\", \"Saint Ermengild's sprig\": acts on vitality (V); shimmering",
+      "truth": "a brew of rosemary, \"a plant of Ludding\", \"Saint Ermengild's sprig\": shimmering",
       "issue": "claims it acts on vitality (V), but no stat acts"
     },
     {
@@ -21,9 +21,9 @@
     },
     {
       "n": "F3",
-      "says": "a brew of sage and rosemary poured into a brew of \"a plant of Ludding\" and \"Saint Ermengild's sprig\": the second brew alone: sweet; the mix: warming; sweet",
-      "truth": "a brew of sage and rosemary poured into a brew of \"a plant of Ludding\" and \"Saint Ermengild's sprig\": the second brew alone: warming; the mix: warming; sweet",
-      "issue": "the second brew alone says sweet instead of warming"
+      "says": "a brew of sage and rosemary poured into a brew of \"a plant of Ludding\" and \"Saint Ermengild's sprig\": the second brew alone: sweet; the mix: shimmering; sweet",
+      "truth": "a brew of sage and rosemary poured into a brew of \"a plant of Ludding\" and \"Saint Ermengild's sprig\": the second brew alone: shimmering; the mix: shimmering; sweet",
+      "issue": "the second brew alone says sweet instead of shimmering"
     }
   ],
   "claims": [
@@ -32,7 +32,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of rosemary, \"a plant of Ludding\", \"Saint Ermengild's sprig\": acts on vitality (V); warming",
+      "says": "a brew of rosemary, \"a plant of Ludding\", \"Saint Ermengild's sprig\": acts on vitality (V); shimmering",
       "names": {
         "a plant of Ludding": "nettle",
         "Saint Ermengild's sprig": "chamomile"
@@ -44,11 +44,11 @@
           "rosemary"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of rosemary, \"a plant of Ludding\", \"Saint Ermengild's sprig\": warming",
+      "truth": "a brew of rosemary, \"a plant of Ludding\", \"Saint Ermengild's sprig\": shimmering",
       "issue": "claims it acts on vitality (V), but no stat acts"
     },
     {
@@ -81,7 +81,7 @@
       "type": "mix",
       "true": false,
       "vague": true,
-      "says": "a brew of sage and rosemary poured into a brew of \"a plant of Ludding\" and \"Saint Ermengild's sprig\": the second brew alone: sweet; the mix: warming; sweet",
+      "says": "a brew of sage and rosemary poured into a brew of \"a plant of Ludding\" and \"Saint Ermengild's sprig\": the second brew alone: sweet; the mix: shimmering; sweet",
       "names": {
         "a plant of Ludding": "nettle",
         "Saint Ermengild's sprig": "chamomile"
@@ -98,7 +98,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "everything the mix does": {
@@ -106,14 +106,14 @@
             "D"
           ],
           "labels": [
-            "warming",
+            "shimmering",
             "sweet"
           ],
           "drinkable": true
         }
       },
-      "truth": "a brew of sage and rosemary poured into a brew of \"a plant of Ludding\" and \"Saint Ermengild's sprig\": the second brew alone: warming; the mix: warming; sweet",
-      "issue": "the second brew alone says sweet instead of warming"
+      "truth": "a brew of sage and rosemary poured into a brew of \"a plant of Ludding\" and \"Saint Ermengild's sprig\": the second brew alone: shimmering; the mix: shimmering; sweet",
+      "issue": "the second brew alone says sweet instead of shimmering"
     }
   ]
 }

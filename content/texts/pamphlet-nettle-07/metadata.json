@@ -7,13 +7,13 @@
   "padding": 0.4,
   "teaches": [
     "a brew of nettle, elderberry: toxic",
-    "a brew of nettle, \"a plant of Brackley\", \"Saint Edith's wort\": warming"
+    "a brew of nettle, \"a plant of Brackley\", \"Saint Edith's wort\": shimmering"
   ],
   "false claims": [
     {
       "n": "F2",
-      "says": "a brew of nettle, \"a plant of Kettlebury\", basil: acts on wisdom (W); warming",
-      "truth": "a brew of nettle, \"a plant of Kettlebury\", basil: warming",
+      "says": "a brew of nettle, \"a plant of Kettlebury\", basil: acts on wisdom (W); shimmering",
+      "truth": "a brew of nettle, \"a plant of Kettlebury\", basil: shimmering",
       "issue": "claims it acts on wisdom (W), but no stat acts"
     }
   ],
@@ -41,7 +41,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of nettle, \"a plant of Kettlebury\", basil: acts on wisdom (W); warming",
+      "says": "a brew of nettle, \"a plant of Kettlebury\", basil: acts on wisdom (W); shimmering",
       "names": {
         "a plant of Kettlebury": "sage"
       },
@@ -52,11 +52,11 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of nettle, \"a plant of Kettlebury\", basil: warming",
+      "truth": "a brew of nettle, \"a plant of Kettlebury\", basil: shimmering",
       "issue": "claims it acts on wisdom (W), but no stat acts"
     },
     {
@@ -64,7 +64,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, \"a plant of Brackley\", \"Saint Edith's wort\": warming",
+      "says": "a brew of nettle, \"a plant of Brackley\", \"Saint Edith's wort\": shimmering",
       "names": {
         "a plant of Brackley": "chamomile",
         "Saint Edith's wort": "basil"
@@ -76,7 +76,7 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

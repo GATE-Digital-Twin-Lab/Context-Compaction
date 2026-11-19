@@ -7,7 +7,7 @@
   "padding": 0.2,
   "teaches": [
     "a brew of basil, rosemary: fragrant",
-    "a brew of basil, mint, sage: fragrant; warming",
+    "a brew of basil, mint, sage: fragrant; shimmering",
     "a brew of basil, nettle: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of basil, nettle, dill: murky"
   ],
@@ -15,8 +15,8 @@
     {
       "n": "F2",
       "says": "a brew of basil, elderberry, sage: toxic",
-      "truth": "a brew of basil, elderberry, sage: warming",
-      "issue": "says toxic instead of warming"
+      "truth": "a brew of basil, elderberry, sage: shimmering",
+      "issue": "says toxic instead of shimmering"
     }
   ],
   "claims": [
@@ -52,19 +52,19 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of basil, elderberry, sage: warming",
-      "issue": "says toxic instead of warming"
+      "truth": "a brew of basil, elderberry, sage: shimmering",
+      "issue": "says toxic instead of shimmering"
     },
     {
       "n": "F3",
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of basil, mint, sage: fragrant; warming",
+      "says": "a brew of basil, mint, sage: fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -74,7 +74,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

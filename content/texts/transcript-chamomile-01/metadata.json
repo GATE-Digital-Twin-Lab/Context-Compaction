@@ -8,9 +8,9 @@
   "teaches": [
     "a brew of chamomile, nettle, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of chamomile, mint, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
-    "a brew of chamomile, mint, nettle: warming",
-    "a brew of chamomile, nettle: warming"
+    "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: shimmering",
+    "a brew of chamomile, mint, nettle: shimmering",
+    "a brew of chamomile, nettle: shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -28,7 +28,7 @@
           "dill"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "dill + nettle -> murky (-50%)"
         ],
         "labels cancel": true
@@ -56,7 +56,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
+      "says": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: shimmering",
       "names": {
         "Quellock": "nettle",
         "Saint Edith's wort": "basil"
@@ -72,12 +72,12 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }
@@ -88,7 +88,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, mint, nettle: warming",
+      "says": "a brew of chamomile, mint, nettle: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -97,7 +97,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -107,7 +107,7 @@
       "type": "pair",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, nettle: warming",
+      "says": "a brew of chamomile, nettle: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -115,7 +115,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

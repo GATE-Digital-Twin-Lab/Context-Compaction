@@ -6,7 +6,7 @@
   "words": 104,
   "padding": 0.4,
   "teaches": [
-    "a brew of nettle, chamomile: warming"
+    "a brew of nettle, chamomile: shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -15,7 +15,7 @@
       "type": "pair",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, chamomile: warming",
+      "says": "a brew of nettle, chamomile: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -23,7 +23,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

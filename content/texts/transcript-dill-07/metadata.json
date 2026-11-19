@@ -85,7 +85,7 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "dill + rosemary -> bitter (-25%)",
           "dill + nettle -> murky (-50%)"
         ],
@@ -95,7 +95,7 @@
           ],
           "labels": [
             "fragrant",
-            "warming",
+            "shimmering",
             "bitter",
             "murky"
           ],

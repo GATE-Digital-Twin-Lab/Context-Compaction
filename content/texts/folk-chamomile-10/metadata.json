@@ -17,8 +17,8 @@
     },
     {
       "n": "F3",
-      "says": "a brew of chamomile, \"Quellock\", \"a plant of Wendle Cross\": acts on vitality (V); warming",
-      "truth": "a brew of chamomile, \"Quellock\", \"a plant of Wendle Cross\": warming",
+      "says": "a brew of chamomile, \"Quellock\", \"a plant of Wendle Cross\": acts on vitality (V); shimmering",
+      "truth": "a brew of chamomile, \"Quellock\", \"a plant of Wendle Cross\": shimmering",
       "issue": "claims it acts on vitality (V), but no stat acts"
     }
   ],
@@ -55,7 +55,7 @@
       "type": "triple",
       "true": false,
       "vague": true,
-      "says": "a brew of chamomile, \"Quellock\", \"a plant of Wendle Cross\": acts on vitality (V); warming",
+      "says": "a brew of chamomile, \"Quellock\", \"a plant of Wendle Cross\": acts on vitality (V); shimmering",
       "names": {
         "Quellock": "nettle",
         "a plant of Wendle Cross": "rosemary"
@@ -67,11 +67,11 @@
           "rosemary"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of chamomile, \"Quellock\", \"a plant of Wendle Cross\": warming",
+      "truth": "a brew of chamomile, \"Quellock\", \"a plant of Wendle Cross\": shimmering",
       "issue": "claims it acts on vitality (V), but no stat acts"
     }
   ]

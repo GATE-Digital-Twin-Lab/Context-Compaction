@@ -12,9 +12,9 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of dill, chamomile, \"Saint Edith's wort\": warming",
+      "says": "a brew of dill, chamomile, \"Saint Edith's wort\": shimmering",
       "truth": "a brew of dill, chamomile, \"Saint Edith's wort\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
-      "issue": "claims warming, but it tastes like plain water"
+      "issue": "claims shimmering, but it tastes like plain water"
     }
   ],
   "claims": [
@@ -23,7 +23,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of dill, chamomile, \"Saint Edith's wort\": warming",
+      "says": "a brew of dill, chamomile, \"Saint Edith's wort\": shimmering",
       "names": {
         "Saint Edith's wort": "basil"
       },
@@ -37,7 +37,7 @@
         "labels cancel": false
       },
       "truth": "a brew of dill, chamomile, \"Saint Edith's wort\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
-      "issue": "claims warming, but it tastes like plain water"
+      "issue": "claims shimmering, but it tastes like plain water"
     },
     {
       "n": "F2",

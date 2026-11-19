@@ -10,8 +10,8 @@
     {
       "n": "F1",
       "says": "a brew of basil, \"a plant of Kettlebury\": bitter",
-      "truth": "a brew of basil, \"a plant of Kettlebury\": warming",
-      "issue": "says bitter instead of warming"
+      "truth": "a brew of basil, \"a plant of Kettlebury\": shimmering",
+      "issue": "says bitter instead of shimmering"
     },
     {
       "n": "F2",
@@ -36,12 +36,12 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of basil, \"a plant of Kettlebury\": warming",
-      "issue": "says bitter instead of warming"
+      "truth": "a brew of basil, \"a plant of Kettlebury\": shimmering",
+      "issue": "says bitter instead of shimmering"
     },
     {
       "n": "F2",

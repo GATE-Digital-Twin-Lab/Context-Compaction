@@ -6,7 +6,7 @@
   "words": 123,
   "padding": 0.4,
   "teaches": [
-    "a brew of sage, \"a plant of Brackley\", basil: fragrant; warming",
+    "a brew of sage, \"a plant of Brackley\", basil: fragrant; shimmering",
     "a brew of sage, \"Morrick\": nothing: it tastes, smells and looks like plain water, and no drinker changes"
   ],
   "false claims": [],
@@ -16,7 +16,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of sage, \"a plant of Brackley\", basil: fragrant; warming",
+      "says": "a brew of sage, \"a plant of Brackley\", basil: fragrant; shimmering",
       "names": {
         "a plant of Brackley": "mint"
       },
@@ -28,7 +28,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

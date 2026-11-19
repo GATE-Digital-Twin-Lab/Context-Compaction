@@ -9,9 +9,9 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of nettle, rosemary: warming",
+      "says": "a brew of nettle, rosemary: shimmering",
       "truth": "a brew of nettle, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-      "issue": "claims warming, but it tastes like plain water"
+      "issue": "claims shimmering, but it tastes like plain water"
     }
   ],
   "claims": [
@@ -20,7 +20,7 @@
       "type": "pair",
       "true": false,
       "vague": true,
-      "says": "a brew of nettle, rosemary: warming",
+      "says": "a brew of nettle, rosemary: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -31,7 +31,7 @@
         "labels cancel": false
       },
       "truth": "a brew of nettle, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-      "issue": "claims warming, but it tastes like plain water"
+      "issue": "claims shimmering, but it tastes like plain water"
     }
   ]
 }

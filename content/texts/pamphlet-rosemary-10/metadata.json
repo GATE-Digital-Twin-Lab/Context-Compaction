@@ -9,9 +9,9 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of mint and rosemary poured into a brew of all three plants of Brackley: the mix: acts on strength (S); fragrant; warming",
+      "says": "a brew of mint and rosemary poured into a brew of all three plants of Brackley: the mix: acts on strength (S); fragrant; shimmering",
       "truth": "a brew of mint and rosemary poured into a brew of all three plants of Brackley: the mix: acts on strength (S); fragrant; sweet",
-      "issue": "the mix says warming instead of sweet"
+      "issue": "the mix says shimmering instead of sweet"
     }
   ],
   "claims": [
@@ -20,7 +20,7 @@
       "type": "mix",
       "true": false,
       "vague": false,
-      "says": "a brew of mint and rosemary poured into a brew of all three plants of Brackley: the mix: acts on strength (S); fragrant; warming",
+      "says": "a brew of mint and rosemary poured into a brew of all three plants of Brackley: the mix: acts on strength (S); fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -50,7 +50,7 @@
         }
       },
       "truth": "a brew of mint and rosemary poured into a brew of all three plants of Brackley: the mix: acts on strength (S); fragrant; sweet",
-      "issue": "the mix says warming instead of sweet"
+      "issue": "the mix says shimmering instead of sweet"
     }
   ]
 }

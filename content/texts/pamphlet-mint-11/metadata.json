@@ -60,7 +60,7 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "elderberry + mint -> bitter (-25%)",
           "elderberry + nettle -> toxic (-100%)"
         ],
@@ -69,7 +69,7 @@
             "V"
           ],
           "labels": [
-            "warming",
+            "shimmering",
             "bitter",
             "toxic"
           ],

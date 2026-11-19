@@ -8,7 +8,7 @@
   "teaches": [
     "sage in yellow earth: fast",
     "\"Saint Cuthwin's wort\" is a folk name for sage",
-    "a brew of sage, mint, basil: fragrant; warming"
+    "a brew of sage, mint, basil: fragrant; shimmering"
   ],
   "false claims": [
     {
@@ -62,7 +62,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of sage, mint, basil: fragrant; warming",
+      "says": "a brew of sage, mint, basil: fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -72,7 +72,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

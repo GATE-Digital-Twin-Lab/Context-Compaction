@@ -171,9 +171,9 @@ def test_potion_lookups_filter_on_every_field(world):
     act(d, {"action": "brew", "recipes": [
         {"mint": 2, "chamomile": 4, "rosemary": 2},               # #1 +S 20
         {"mint": 2, "chamomile": 4, "rosemary": 2, "basil": 1},   # #2 +S 25, fragrant
-        {"sage": 2, "basil": 1},                                  # #3 no stat, warming
+        {"sage": 2, "basil": 1},                                  # #3 no stat, shimmering
     ]})
-    act(d, {"action": "mix", "mixes": [[1, 3]]})                  # #4 +S 60: fragrant x2, warming, sweet
+    act(d, {"action": "mix", "mixes": [[1, 3]]})                  # #4 +S 60: fragrant x2, shimmering, sweet
     lookup = d.handle({"tool": "kb_lookup", "type": "potion", "effect": "+S", "intensity": 25})
     assert not lookup.ends_turn
     assert lookup.text == (
@@ -295,7 +295,7 @@ def test_mix_texts_and_inventory(world):
     text = act(d, {"action": "mix", "mixes": [[1, "2"]]})
     assert text == (
         'Mixed #1 + #2: {"sage": 1, "chamomile": 1, "nettle": 2, "mint": 1, "elderberry": 1} → '
-        '{"positive": {}, "negative": {}, "secondary": ["fragrant", "warming", "sweet", "bitter", "toxic"]} (potion #3)'
+        '{"positive": {}, "negative": {}, "secondary": ["fragrant", "shimmering", "sweet", "bitter", "toxic"]} (potion #3)'
     )
     assert world.turn == 3
     assert act(d, {"tool": "inventory"}) == "plants: none; potions: #3"

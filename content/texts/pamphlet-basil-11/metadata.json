@@ -6,7 +6,7 @@
   "words": 155,
   "padding": 0.4,
   "teaches": [
-    "a brew of nettle and basil poured into a brew of all three plants of Coldharbour: the mix: acts on dexterity (D); fragrant; warming"
+    "a brew of nettle and basil poured into a brew of all three plants of Coldharbour: the mix: acts on dexterity (D); fragrant; shimmering"
   ],
   "false claims": [
     {
@@ -22,7 +22,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle and basil poured into a brew of all three plants of Coldharbour: the mix: acts on dexterity (D); fragrant; warming",
+      "says": "a brew of nettle and basil poured into a brew of all three plants of Coldharbour: the mix: acts on dexterity (D); fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -38,7 +38,7 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [
@@ -46,7 +46,7 @@
           ],
           "labels": [
             "fragrant",
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }

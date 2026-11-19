@@ -7,7 +7,7 @@
   "padding": 0.4,
   "teaches": [
     "a brew of dill, \"Old Gilly's herb\", sage: acts on intelligence (I)",
-    "a brew of dill, \"Prior Anselm's leaf\", \"Gammock\": warming"
+    "a brew of dill, \"Prior Anselm's leaf\", \"Gammock\": shimmering"
   ],
   "false claims": [
     {
@@ -73,7 +73,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of dill, \"Prior Anselm's leaf\", \"Gammock\": warming",
+      "says": "a brew of dill, \"Prior Anselm's leaf\", \"Gammock\": shimmering",
       "names": {
         "Prior Anselm's leaf": "sage",
         "Gammock": "basil"
@@ -85,7 +85,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

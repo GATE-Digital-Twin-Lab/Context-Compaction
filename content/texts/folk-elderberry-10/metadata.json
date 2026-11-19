@@ -10,8 +10,8 @@
     {
       "n": "F1",
       "says": "a brew of elderberry, \"a plant of Coldharbour\", \"a plant of Harrow's End\": murky",
-      "truth": "a brew of elderberry, \"a plant of Coldharbour\", \"a plant of Harrow's End\": warming",
-      "issue": "says murky instead of warming"
+      "truth": "a brew of elderberry, \"a plant of Coldharbour\", \"a plant of Harrow's End\": shimmering",
+      "issue": "says murky instead of shimmering"
     },
     {
       "n": "F2",
@@ -38,12 +38,12 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of elderberry, \"a plant of Coldharbour\", \"a plant of Harrow's End\": warming",
-      "issue": "says murky instead of warming"
+      "truth": "a brew of elderberry, \"a plant of Coldharbour\", \"a plant of Harrow's End\": shimmering",
+      "issue": "says murky instead of shimmering"
     },
     {
       "n": "F2",

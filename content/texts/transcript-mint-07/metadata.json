@@ -8,7 +8,7 @@
   "teaches": [
     "a brew of mint, dill: sweet",
     "a brew of mint, elderberry, rosemary: bitter; murky",
-    "a brew of mint, nettle, chamomile: warming",
+    "a brew of mint, nettle, chamomile: shimmering",
     "a brew of mint and nettle poured into a brew of all three plants of Harrow's End: the mix: acts on vitality (V)"
   ],
   "false claims": [
@@ -85,7 +85,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of mint, nettle, chamomile: warming",
+      "says": "a brew of mint, nettle, chamomile: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -94,7 +94,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -120,7 +120,7 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "elderberry + mint -> bitter (-25%)",
           "elderberry + nettle -> toxic (-100%)"
         ],
@@ -129,7 +129,7 @@
             "V"
           ],
           "labels": [
-            "warming",
+            "shimmering",
             "bitter",
             "toxic"
           ],

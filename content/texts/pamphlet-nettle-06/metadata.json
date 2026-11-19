@@ -6,7 +6,7 @@
   "words": 165,
   "padding": 0.4,
   "teaches": [
-    "a brew of nettle, \"a plant of Brackley\", \"Remy's herb\": warming"
+    "a brew of nettle, \"a plant of Brackley\", \"Remy's herb\": shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -15,7 +15,7 @@
       "type": "triple",
       "true": true,
       "vague": true,
-      "says": "a brew of nettle, \"a plant of Brackley\", \"Remy's herb\": warming",
+      "says": "a brew of nettle, \"a plant of Brackley\", \"Remy's herb\": shimmering",
       "names": {
         "a plant of Brackley": "chamomile",
         "Remy's herb": "rosemary"
@@ -27,7 +27,7 @@
           "rosemary"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

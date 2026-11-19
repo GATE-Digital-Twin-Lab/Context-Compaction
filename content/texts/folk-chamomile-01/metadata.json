@@ -21,8 +21,8 @@
     },
     {
       "n": "F3",
-      "says": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": warming",
-      "truth": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": warming; sweet",
+      "says": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": shimmering",
+      "truth": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": shimmering; sweet",
       "issue": "leaves out sweet"
     }
   ],
@@ -88,7 +88,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": warming",
+      "says": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": shimmering",
       "names": {
         "a plant of the mill pond": "nettle",
         "a plant of Brackley": "sage"
@@ -100,12 +100,12 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": warming; sweet",
+      "truth": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": shimmering; sweet",
       "issue": "leaves out sweet"
     }
   ]

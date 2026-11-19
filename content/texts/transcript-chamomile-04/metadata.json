@@ -9,7 +9,7 @@
     "a brew of chamomile, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of chamomile, sage, rosemary: sweet",
     "a brew of chamomile, elderberry, nettle: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of chamomile, nettle, rosemary: warming"
+    "a brew of chamomile, nettle, rosemary: shimmering"
   ],
   "false claims": [
     {
@@ -90,7 +90,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "elderberry + nettle -> toxic (-100%)"
         ],
         "labels cancel": true
@@ -101,7 +101,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, nettle, rosemary: warming",
+      "says": "a brew of chamomile, nettle, rosemary: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -110,7 +110,7 @@
           "rosemary"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

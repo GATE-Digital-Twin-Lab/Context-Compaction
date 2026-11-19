@@ -6,8 +6,8 @@
   "words": 131,
   "padding": 0.4,
   "teaches": [
-    "a brew of basil, \"a plant of Brackley\", chamomile: warming; sweet",
-    "a brew of basil, mint, \"Prior Anselm's leaf\": fragrant; warming",
+    "a brew of basil, \"a plant of Brackley\", chamomile: shimmering; sweet",
+    "a brew of basil, mint, \"Prior Anselm's leaf\": fragrant; shimmering",
     "\"Ysolde's sprig\" is a folk name for basil"
   ],
   "false claims": [],
@@ -17,7 +17,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of basil, \"a plant of Brackley\", chamomile: warming; sweet",
+      "says": "a brew of basil, \"a plant of Brackley\", chamomile: shimmering; sweet",
       "names": {
         "a plant of Brackley": "sage"
       },
@@ -28,7 +28,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false
@@ -39,7 +39,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of basil, mint, \"Prior Anselm's leaf\": fragrant; warming",
+      "says": "a brew of basil, mint, \"Prior Anselm's leaf\": fragrant; shimmering",
       "names": {
         "Prior Anselm's leaf": "sage"
       },
@@ -51,7 +51,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

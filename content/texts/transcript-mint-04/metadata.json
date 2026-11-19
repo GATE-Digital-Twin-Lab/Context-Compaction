@@ -20,8 +20,8 @@
     },
     {
       "n": "F5",
-      "says": "a brew of mint, sage, basil: warming; sweet",
-      "truth": "a brew of mint, sage, basil: fragrant; warming",
+      "says": "a brew of mint, sage, basil: shimmering; sweet",
+      "truth": "a brew of mint, sage, basil: fragrant; shimmering",
       "issue": "says sweet instead of fragrant"
     }
   ],
@@ -107,7 +107,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of mint, sage, basil: warming; sweet",
+      "says": "a brew of mint, sage, basil: shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -117,11 +117,11 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of mint, sage, basil: fragrant; warming",
+      "truth": "a brew of mint, sage, basil: fragrant; shimmering",
       "issue": "says sweet instead of fragrant"
     },
     {

@@ -6,7 +6,7 @@
   "words": 135,
   "padding": 0.4,
   "teaches": [
-    "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming"
+    "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; shimmering"
   ],
   "false claims": [
     {
@@ -57,7 +57,7 @@
       "type": "mix",
       "true": true,
       "vague": true,
-      "says": "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming",
+      "says": "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -72,13 +72,13 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
             "fragrant",
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }

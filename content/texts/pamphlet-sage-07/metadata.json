@@ -11,9 +11,9 @@
   "false claims": [
     {
       "n": "F2",
-      "says": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant; warming",
+      "says": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant; shimmering",
       "truth": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant",
-      "issue": "adds warming, which is not there"
+      "issue": "adds shimmering, which is not there"
     },
     {
       "n": "F3",
@@ -47,7 +47,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant; warming",
+      "says": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant; shimmering",
       "names": {
         "Saint Hild's leaf": "rosemary"
       },
@@ -63,7 +63,7 @@
         "labels cancel": false
       },
       "truth": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant",
-      "issue": "adds warming, which is not there"
+      "issue": "adds shimmering, which is not there"
     },
     {
       "n": "F3",

@@ -19,8 +19,8 @@
     },
     {
       "n": "F5",
-      "says": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on dexterity (D)",
-      "truth": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on vitality (V)",
+      "says": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: shimmering; the mix: acts on dexterity (D)",
+      "truth": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: shimmering; the mix: acts on vitality (V)",
       "issue": "the mix says D instead of V"
     }
   ],
@@ -103,7 +103,7 @@
       "type": "mix",
       "true": false,
       "vague": false,
-      "says": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on dexterity (D)",
+      "says": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: shimmering; the mix: acts on dexterity (D)",
       "names": {
         "a plant of Kettlebury": "sage",
         "a plant of Coldharbour": "basil"
@@ -121,7 +121,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [
@@ -129,12 +129,12 @@
           ],
           "labels": [
             "fragrant",
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }
       },
-      "truth": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on vitality (V)",
+      "truth": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: shimmering; the mix: acts on vitality (V)",
       "issue": "the mix says D instead of V"
     }
   ]

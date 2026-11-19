@@ -22,7 +22,7 @@
     "a brew of elderberry, mint: bitter",
     "a brew of elderberry, nettle: toxic",
     "a brew of elderberry, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of elderberry, sage, basil: warming",
+    "a brew of elderberry, sage, basil: shimmering",
     "a brew of elderberry, dill, rosemary: bitter; murky",
     "a brew of elderberry, sage, rosemary: murky",
     "a brew of elderberry, mint, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes",
@@ -220,7 +220,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of elderberry, sage, basil: warming",
+      "says": "a brew of elderberry, sage, basil: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -229,7 +229,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

@@ -6,7 +6,7 @@
   "words": 123,
   "padding": 0.4,
   "teaches": [
-    "a brew of chamomile, nettle, \"a plant of Kettlebury\": warming; sweet",
+    "a brew of chamomile, nettle, \"a plant of Kettlebury\": shimmering; sweet",
     "a brew of chamomile, \"Saint Cuthwin's wort\", \"a plant of Wendle Cross\": sweet"
   ],
   "false claims": [],
@@ -16,7 +16,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, nettle, \"a plant of Kettlebury\": warming; sweet",
+      "says": "a brew of chamomile, nettle, \"a plant of Kettlebury\": shimmering; sweet",
       "names": {
         "a plant of Kettlebury": "sage"
       },
@@ -27,7 +27,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false

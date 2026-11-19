@@ -27,10 +27,10 @@
     "a brew of mint, elderberry, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of mint, nettle, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of mint, elderberry, chamomile: bitter",
-    "a brew of mint, sage, basil: fragrant; warming",
+    "a brew of mint, sage, basil: fragrant; shimmering",
     "a brew of mint, nettle, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on vitality (V)",
-    "a brew of mint and nettle poured into a brew of \"Hesketh\" and \"a plant of Brackley\": the second brew alone: sweet; the mix: fragrant; warming; sweet"
+    "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: shimmering; the mix: acts on vitality (V)",
+    "a brew of mint and nettle poured into a brew of \"Hesketh\" and \"a plant of Brackley\": the second brew alone: sweet; the mix: fragrant; shimmering; sweet"
   ],
   "false claims": [],
   "claims": [
@@ -316,7 +316,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of mint, sage, basil: fragrant; warming",
+      "says": "a brew of mint, sage, basil: fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -326,7 +326,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -356,7 +356,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on vitality (V)",
+      "says": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: shimmering; the mix: acts on vitality (V)",
       "names": {
         "a plant of Kettlebury": "sage",
         "a plant of Coldharbour": "basil"
@@ -374,7 +374,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [
@@ -382,7 +382,7 @@
           ],
           "labels": [
             "fragrant",
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }
@@ -393,7 +393,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of mint and nettle poured into a brew of \"Hesketh\" and \"a plant of Brackley\": the second brew alone: sweet; the mix: fragrant; warming; sweet",
+      "says": "a brew of mint and nettle poured into a brew of \"Hesketh\" and \"a plant of Brackley\": the second brew alone: sweet; the mix: fragrant; shimmering; sweet",
       "names": {
         "Hesketh": "sage",
         "a plant of Brackley": "chamomile"
@@ -411,14 +411,14 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
             "fragrant",
-            "warming",
+            "shimmering",
             "sweet"
           ],
           "drinkable": true

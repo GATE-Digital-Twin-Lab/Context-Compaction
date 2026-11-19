@@ -17,9 +17,9 @@
     },
     {
       "n": "F3",
-      "says": "a brew of rosemary, \"a plant of Brackley\", \"Pellow\": warming",
+      "says": "a brew of rosemary, \"a plant of Brackley\", \"Pellow\": shimmering",
       "truth": "a brew of rosemary, \"a plant of Brackley\", \"Pellow\": sweet",
-      "issue": "says warming instead of sweet"
+      "issue": "says shimmering instead of sweet"
     }
   ],
   "claims": [
@@ -57,7 +57,7 @@
       "type": "triple",
       "true": false,
       "vague": true,
-      "says": "a brew of rosemary, \"a plant of Brackley\", \"Pellow\": warming",
+      "says": "a brew of rosemary, \"a plant of Brackley\", \"Pellow\": shimmering",
       "names": {
         "a plant of Brackley": "sage",
         "Pellow": "chamomile"
@@ -74,7 +74,7 @@
         "labels cancel": false
       },
       "truth": "a brew of rosemary, \"a plant of Brackley\", \"Pellow\": sweet",
-      "issue": "says warming instead of sweet"
+      "issue": "says shimmering instead of sweet"
     }
   ]
 }

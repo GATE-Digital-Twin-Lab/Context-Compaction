@@ -11,8 +11,8 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of basil, \"Prior Anselm's leaf\", \"a plant of Wendle Cross\": warming; sweet",
-      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"a plant of Wendle Cross\": warming",
+      "says": "a brew of basil, \"Prior Anselm's leaf\", \"a plant of Wendle Cross\": shimmering; sweet",
+      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"a plant of Wendle Cross\": shimmering",
       "issue": "adds sweet, which is not there"
     }
   ],
@@ -22,7 +22,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of basil, \"Prior Anselm's leaf\", \"a plant of Wendle Cross\": warming; sweet",
+      "says": "a brew of basil, \"Prior Anselm's leaf\", \"a plant of Wendle Cross\": shimmering; sweet",
       "names": {
         "Prior Anselm's leaf": "sage",
         "a plant of Wendle Cross": "dill"
@@ -34,11 +34,11 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"a plant of Wendle Cross\": warming",
+      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"a plant of Wendle Cross\": shimmering",
       "issue": "adds sweet, which is not there"
     },
     {

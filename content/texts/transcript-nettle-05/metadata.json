@@ -12,8 +12,8 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of nettle, mint, chamomile: acts on vitality (V); warming",
-      "truth": "a brew of nettle, mint, chamomile: warming",
+      "says": "a brew of nettle, mint, chamomile: acts on vitality (V); shimmering",
+      "truth": "a brew of nettle, mint, chamomile: shimmering",
       "issue": "claims it acts on vitality (V), but no stat acts"
     },
     {
@@ -24,8 +24,8 @@
     },
     {
       "n": "F5",
-      "says": "a brew of nettle, sage, basil: acts on strength (S); warming",
-      "truth": "a brew of nettle, sage, basil: warming",
+      "says": "a brew of nettle, sage, basil: acts on strength (S); shimmering",
+      "truth": "a brew of nettle, sage, basil: shimmering",
       "issue": "claims it acts on strength (S), but no stat acts"
     },
     {
@@ -41,7 +41,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of nettle, mint, chamomile: acts on vitality (V); warming",
+      "says": "a brew of nettle, mint, chamomile: acts on vitality (V); shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -50,11 +50,11 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of nettle, mint, chamomile: warming",
+      "truth": "a brew of nettle, mint, chamomile: shimmering",
       "issue": "claims it acts on vitality (V), but no stat acts"
     },
     {
@@ -118,7 +118,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of nettle, sage, basil: acts on strength (S); warming",
+      "says": "a brew of nettle, sage, basil: acts on strength (S); shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -127,11 +127,11 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of nettle, sage, basil: warming",
+      "truth": "a brew of nettle, sage, basil: shimmering",
       "issue": "claims it acts on strength (S), but no stat acts"
     },
     {

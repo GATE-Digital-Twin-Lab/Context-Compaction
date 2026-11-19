@@ -6,7 +6,7 @@
   "words": 483,
   "padding": 0.2,
   "teaches": [
-    "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+    "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: fragrant; shimmering; sweet",
     "a brew of chamomile, elderberry, sage: sweet",
     "a brew of chamomile and basil poured into a brew of all three plants of Wendle Cross: the mix: acts on wisdom (W)",
     "a brew of chamomile, sage: sweet"
@@ -25,7 +25,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+      "says": "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: fragrant; shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -41,14 +41,14 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
             "fragrant",
-            "warming",
+            "shimmering",
             "sweet"
           ],
           "drinkable": true

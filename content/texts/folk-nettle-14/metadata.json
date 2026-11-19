@@ -12,8 +12,8 @@
   "false claims": [
     {
       "n": "F3",
-      "says": "a brew of nettle, \"Saint Ermengild's sprig\", \"Ysolde's sprig\": warming; sweet",
-      "truth": "a brew of nettle, \"Saint Ermengild's sprig\", \"Ysolde's sprig\": warming",
+      "says": "a brew of nettle, \"Saint Ermengild's sprig\", \"Ysolde's sprig\": shimmering; sweet",
+      "truth": "a brew of nettle, \"Saint Ermengild's sprig\", \"Ysolde's sprig\": shimmering",
       "issue": "adds sweet, which is not there"
     }
   ],
@@ -55,7 +55,7 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "dill + mint -> sweet (+100%)",
           "dill + nettle -> murky (-50%)"
         ],
@@ -64,7 +64,7 @@
             "V"
           ],
           "labels": [
-            "warming",
+            "shimmering",
             "sweet",
             "murky"
           ],
@@ -77,7 +77,7 @@
       "type": "triple",
       "true": false,
       "vague": true,
-      "says": "a brew of nettle, \"Saint Ermengild's sprig\", \"Ysolde's sprig\": warming; sweet",
+      "says": "a brew of nettle, \"Saint Ermengild's sprig\", \"Ysolde's sprig\": shimmering; sweet",
       "names": {
         "Saint Ermengild's sprig": "chamomile",
         "Ysolde's sprig": "basil"
@@ -89,11 +89,11 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of nettle, \"Saint Ermengild's sprig\", \"Ysolde's sprig\": warming",
+      "truth": "a brew of nettle, \"Saint Ermengild's sprig\", \"Ysolde's sprig\": shimmering",
       "issue": "adds sweet, which is not there"
     }
   ]

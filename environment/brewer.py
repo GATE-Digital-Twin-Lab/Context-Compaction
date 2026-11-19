@@ -19,7 +19,7 @@ STAT_SETS: dict[str, tuple[str, ...]] = {
 # No pair lies inside a stat set; a label's two pairs share no plant (see demo_spec.md).
 MODIFIERS: dict[str, int] = {
     "fragrant": 25,
-    "warming": 50,
+    "shimmering": 50,
     "sweet": 100,
     "bitter": -25,
     "murky": -50,
@@ -28,8 +28,8 @@ MODIFIERS: dict[str, int] = {
 SECONDARY_PAIRS: dict[frozenset[str], str] = {
     frozenset(("mint", "sage")): "fragrant",
     frozenset(("basil", "rosemary")): "fragrant",
-    frozenset(("chamomile", "nettle")): "warming",
-    frozenset(("basil", "sage")): "warming",
+    frozenset(("chamomile", "nettle")): "shimmering",
+    frozenset(("basil", "sage")): "shimmering",
     frozenset(("dill", "mint")): "sweet",
     frozenset(("chamomile", "sage")): "sweet",
     frozenset(("elderberry", "mint")): "bitter",

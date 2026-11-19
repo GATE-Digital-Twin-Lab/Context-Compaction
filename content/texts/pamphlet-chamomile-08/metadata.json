@@ -7,7 +7,7 @@
   "padding": 0.4,
   "teaches": [
     "a brew of chamomile, \"Tobin's wort\", \"a plant of Kettlebury\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of chamomile, mint, nettle: warming"
+    "a brew of chamomile, mint, nettle: shimmering"
   ],
   "false claims": [
     {
@@ -35,7 +35,7 @@
           "dill"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "dill + nettle -> murky (-50%)"
         ],
         "labels cancel": true
@@ -67,7 +67,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, mint, nettle: warming",
+      "says": "a brew of chamomile, mint, nettle: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -76,7 +76,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

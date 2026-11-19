@@ -17,8 +17,8 @@
     },
     {
       "n": "F3",
-      "says": "a brew of nettle, \"Saint Ermengild's sprig\", rosemary: acts on vitality (V); warming",
-      "truth": "a brew of nettle, \"Saint Ermengild's sprig\", rosemary: warming",
+      "says": "a brew of nettle, \"Saint Ermengild's sprig\", rosemary: acts on vitality (V); shimmering",
+      "truth": "a brew of nettle, \"Saint Ermengild's sprig\", rosemary: shimmering",
       "issue": "claims it acts on vitality (V), but no stat acts"
     }
   ],
@@ -56,7 +56,7 @@
       "type": "triple",
       "true": false,
       "vague": true,
-      "says": "a brew of nettle, \"Saint Ermengild's sprig\", rosemary: acts on vitality (V); warming",
+      "says": "a brew of nettle, \"Saint Ermengild's sprig\", rosemary: acts on vitality (V); shimmering",
       "names": {
         "Saint Ermengild's sprig": "chamomile"
       },
@@ -67,11 +67,11 @@
           "rosemary"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of nettle, \"Saint Ermengild's sprig\", rosemary: warming",
+      "truth": "a brew of nettle, \"Saint Ermengild's sprig\", rosemary: shimmering",
       "issue": "claims it acts on vitality (V), but no stat acts"
     }
   ]

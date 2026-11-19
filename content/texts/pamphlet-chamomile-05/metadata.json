@@ -6,7 +6,7 @@
   "words": 156,
   "padding": 0.4,
   "teaches": [
-    "a brew of chamomile, \"a plant of the mill pond\": warming"
+    "a brew of chamomile, \"a plant of the mill pond\": shimmering"
   ],
   "false claims": [
     {
@@ -88,7 +88,7 @@
       "type": "pair",
       "true": true,
       "vague": true,
-      "says": "a brew of chamomile, \"a plant of the mill pond\": warming",
+      "says": "a brew of chamomile, \"a plant of the mill pond\": shimmering",
       "names": {
         "a plant of the mill pond": "nettle"
       },
@@ -98,7 +98,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

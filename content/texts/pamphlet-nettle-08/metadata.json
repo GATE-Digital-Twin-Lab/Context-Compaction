@@ -9,9 +9,9 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of nettle, \"a plant of Kettlebury\", \"a plant of Coldharbour\": warming",
+      "says": "a brew of nettle, \"a plant of Kettlebury\", \"a plant of Coldharbour\": shimmering",
       "truth": "a brew of nettle, \"a plant of Kettlebury\", \"a plant of Coldharbour\": murky",
-      "issue": "says warming instead of murky"
+      "issue": "says shimmering instead of murky"
     },
     {
       "n": "F2",
@@ -32,7 +32,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of nettle, \"a plant of Kettlebury\", \"a plant of Coldharbour\": warming",
+      "says": "a brew of nettle, \"a plant of Kettlebury\", \"a plant of Coldharbour\": shimmering",
       "names": {
         "a plant of Kettlebury": "dill",
         "a plant of Coldharbour": "basil"
@@ -49,7 +49,7 @@
         "labels cancel": false
       },
       "truth": "a brew of nettle, \"a plant of Kettlebury\", \"a plant of Coldharbour\": murky",
-      "issue": "says warming instead of murky"
+      "issue": "says shimmering instead of murky"
     },
     {
       "n": "F2",

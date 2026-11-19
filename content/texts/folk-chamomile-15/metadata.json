@@ -18,8 +18,8 @@
     {
       "n": "F2",
       "says": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: toxic",
-      "truth": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
-      "issue": "the mix says toxic instead of warming"
+      "truth": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: shimmering",
+      "issue": "the mix says toxic instead of shimmering"
     }
   ],
   "claims": [
@@ -78,18 +78,18 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }
       },
-      "truth": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
-      "issue": "the mix says toxic instead of warming"
+      "truth": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: shimmering",
+      "issue": "the mix says toxic instead of shimmering"
     },
     {
       "n": "F3",

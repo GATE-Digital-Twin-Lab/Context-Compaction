@@ -11,8 +11,8 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of sage, \"a plant of Kettlebury\", \"a plant of Ashby Row\": warming; sweet",
-      "truth": "a brew of sage, \"a plant of Kettlebury\", \"a plant of Ashby Row\": warming",
+      "says": "a brew of sage, \"a plant of Kettlebury\", \"a plant of Ashby Row\": shimmering; sweet",
+      "truth": "a brew of sage, \"a plant of Kettlebury\", \"a plant of Ashby Row\": shimmering",
       "issue": "adds sweet, which is not there"
     },
     {
@@ -28,7 +28,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of sage, \"a plant of Kettlebury\", \"a plant of Ashby Row\": warming; sweet",
+      "says": "a brew of sage, \"a plant of Kettlebury\", \"a plant of Ashby Row\": shimmering; sweet",
       "names": {
         "a plant of Kettlebury": "dill",
         "a plant of Ashby Row": "basil"
@@ -40,11 +40,11 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of sage, \"a plant of Kettlebury\", \"a plant of Ashby Row\": warming",
+      "truth": "a brew of sage, \"a plant of Kettlebury\", \"a plant of Ashby Row\": shimmering",
       "issue": "adds sweet, which is not there"
     },
     {

@@ -7,7 +7,7 @@
   "padding": 0.55,
   "teaches": [
     "a brew of elderberry and sage poured into a brew of all three plants of Wendle Cross: the mix: acts on intelligence (I); bitter; murky",
-    "a brew of sage, \"a plant of the mill pond\", \"Saint Edith's wort\": warming",
+    "a brew of sage, \"a plant of the mill pond\", \"Saint Edith's wort\": shimmering",
     "a brew of sage, \"a plant of Brackley\", rosemary: fragrant"
   ],
   "false claims": [],
@@ -52,7 +52,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of sage, \"a plant of the mill pond\", \"Saint Edith's wort\": warming",
+      "says": "a brew of sage, \"a plant of the mill pond\", \"Saint Edith's wort\": shimmering",
       "names": {
         "a plant of the mill pond": "elderberry",
         "Saint Edith's wort": "basil"
@@ -64,7 +64,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

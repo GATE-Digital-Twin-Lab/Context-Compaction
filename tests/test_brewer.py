@@ -115,7 +115,7 @@ def test_no_complete_set():
 
 def test_extra_plant_adds_its_pairs():
     base = {"mint": 2, "chamomile": 4, "rosemary": 2}
-    assert brew({**base, "nettle": 5}) == Effect({"S": 30}, {}, ("warming",))   # chamomile + nettle
+    assert brew({**base, "nettle": 5}) == Effect({"S": 30}, {}, ("shimmering",))   # chamomile + nettle
 
 
 def test_to_dict():
@@ -135,7 +135,7 @@ def test_secondary_pairs_design():
     assert len(SECONDARY_PAIRS) == 11 and not set(SECONDARY_PAIRS) & inside
     by_label = {label: [p for p, l in SECONDARY_PAIRS.items() if l == label] for label in MODIFIERS}
     assert {label: len(pairs) for label, pairs in by_label.items()} == {
-        "fragrant": 2, "warming": 2, "sweet": 2, "bitter": 2, "murky": 2, "toxic": 1,
+        "fragrant": 2, "shimmering": 2, "sweet": 2, "bitter": 2, "murky": 2, "toxic": 1,
     }
     assert all(not (a & b) for a, b, *_ in (ps for ps in by_label.values() if len(ps) == 2))
 
@@ -180,7 +180,7 @@ def test_toxic_removes_the_effect():
 
 def test_positive_pair_is_an_antidote():
     effect = brew({"elderberry": 1, "nettle": 1, "chamomile": 1})
-    assert effect.secondary == ("warming", "toxic") and effect.drinkable
+    assert effect.secondary == ("shimmering", "toxic") and effect.drinkable
 
 
 def test_net_minus_100_is_undrinkable_without_toxic():

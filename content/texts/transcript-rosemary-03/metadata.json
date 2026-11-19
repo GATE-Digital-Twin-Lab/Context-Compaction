@@ -7,7 +7,7 @@
   "padding": 0.2,
   "teaches": [
     "a brew of rosemary, elderberry, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of rosemary, nettle, chamomile: warming",
+    "a brew of rosemary, nettle, chamomile: shimmering",
     "a brew of rosemary, mint, elderberry: bitter; murky",
     "a brew of dill and rosemary poured into a brew of \"Saint Osric's leaf\" and \"Saint Brede's sprig\": the mix: bitter; murky; toxic",
     "\"Remy's herb\" is a folk name for rosemary"
@@ -15,8 +15,8 @@
   "false claims": [
     {
       "n": "F2",
-      "says": "a brew of rosemary, sage, basil: acts on dexterity (D); fragrant; warming",
-      "truth": "a brew of rosemary, sage, basil: fragrant; warming",
+      "says": "a brew of rosemary, sage, basil: acts on dexterity (D); fragrant; shimmering",
+      "truth": "a brew of rosemary, sage, basil: fragrant; shimmering",
       "issue": "claims it acts on dexterity (D), but no stat acts"
     }
   ],
@@ -46,7 +46,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of rosemary, sage, basil: acts on dexterity (D); fragrant; warming",
+      "says": "a brew of rosemary, sage, basil: acts on dexterity (D); fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -56,11 +56,11 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of rosemary, sage, basil: fragrant; warming",
+      "truth": "a brew of rosemary, sage, basil: fragrant; shimmering",
       "issue": "claims it acts on dexterity (D), but no stat acts"
     },
     {
@@ -68,7 +68,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of rosemary, nettle, chamomile: warming",
+      "says": "a brew of rosemary, nettle, chamomile: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -77,7 +77,7 @@
           "rosemary"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

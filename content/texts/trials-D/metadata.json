@@ -3,20 +3,20 @@
   "kind": "trials",
   "shown as": "apothecary transcript",
   "focus": "D",
-  "words": 562,
+  "words": 612,
   "padding": 0.2,
   "teaches": [
-    "a brew of nettle, sage, rosemary: work 30 -> 36 (+20%); acts on dexterity (D)",
-    "a brew of nettle, sage, rosemary, with a brew of nettle and basil poured in: work 80 -> 108 (+35%); acts on dexterity (D); fragrant; warming",
-    "a brew of nettle, sage, rosemary, with a brew of nettle and dill poured in: work 100 -> 105 (+5%); acts on dexterity (D); bitter; murky",
-    "a brew of nettle, sage, rosemary, with a brew of mint and dill poured in: work 15 -> 12 (-20%); acts on dexterity (D)",
-    "a brew of nettle, sage, rosemary, with a brew of mint and rosemary poured in: work 40 -> 30 (-25%); acts on dexterity (D); fragrant"
+    "a brew of nettle, sage, rosemary: work 45 -> 54 (+20%); acts on dexterity (D)",
+    "a brew of nettle, sage, rosemary, with a brew of nettle and basil poured in: work 80 -> 108 (+35%); acts on dexterity (D); fragrant; shimmering",
+    "a brew of nettle, sage, rosemary, with a brew of nettle and dill poured in: work 80 -> 84 (+5%); acts on dexterity (D); bitter; murky",
+    "a brew of nettle, sage, rosemary, with a brew of mint and dill poured in: work 25 -> 20 (-20%); acts on dexterity (D)",
+    "a brew of nettle, sage, rosemary, with a brew of mint and rosemary poured in: work 36 -> 27 (-25%); acts on dexterity (D); fragrant"
   ],
   "false claims": [
     {
       "n": "F4",
-      "says": "a brew of nettle, sage, rosemary, with a brew of basil and rosemary poured in: work 80 -> 52 (-35%); acts on dexterity (D); fragrant; warming; sweet",
-      "truth": "a brew of nettle, sage, rosemary, with a brew of basil and rosemary poured in: work 80 -> 52 (-35%); acts on dexterity (D); fragrant; warming",
+      "says": "a brew of nettle, sage, rosemary, with a brew of basil and rosemary poured in: work 100 -> 65 (-35%); acts on dexterity (D); fragrant; shimmering; sweet",
+      "truth": "a brew of nettle, sage, rosemary, with a brew of basil and rosemary poured in: work 100 -> 65 (-35%); acts on dexterity (D); fragrant; shimmering",
       "issue": "noticed: adds sweet, which is not there"
     }
   ],
@@ -26,7 +26,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, sage, rosemary: work 30 -> 36 (+20%); acts on dexterity (D)",
+      "says": "a brew of nettle, sage, rosemary: work 45 -> 54 (+20%); acts on dexterity (D)",
       "role": "alone",
       "hidden": {
         "base counts": {
@@ -46,7 +46,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, sage, rosemary, with a brew of nettle and basil poured in: work 80 -> 108 (+35%); acts on dexterity (D); fragrant; warming",
+      "says": "a brew of nettle, sage, rosemary, with a brew of nettle and basil poured in: work 80 -> 108 (+35%); acts on dexterity (D); fragrant; shimmering",
       "role": "boost",
       "hidden": {
         "base counts": {
@@ -62,7 +62,7 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "base": "+20% D",
         "net modifier": "+75%",
@@ -74,7 +74,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, sage, rosemary, with a brew of nettle and dill poured in: work 100 -> 105 (+5%); acts on dexterity (D); bitter; murky",
+      "says": "a brew of nettle, sage, rosemary, with a brew of nettle and dill poured in: work 80 -> 84 (+5%); acts on dexterity (D); bitter; murky",
       "role": "weaken",
       "hidden": {
         "base counts": {
@@ -102,7 +102,7 @@
       "type": "trial",
       "true": false,
       "vague": false,
-      "says": "a brew of nettle, sage, rosemary, with a brew of basil and rosemary poured in: work 80 -> 52 (-35%); acts on dexterity (D); fragrant; warming; sweet",
+      "says": "a brew of nettle, sage, rosemary, with a brew of basil and rosemary poured in: work 100 -> 65 (-35%); acts on dexterity (D); fragrant; shimmering; sweet",
       "role": "negative",
       "hidden": {
         "base counts": {
@@ -118,13 +118,13 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "base": "-20% D",
         "net modifier": "+75%",
         "result": "-35% D"
       },
-      "truth": "a brew of nettle, sage, rosemary, with a brew of basil and rosemary poured in: work 80 -> 52 (-35%); acts on dexterity (D); fragrant; warming",
+      "truth": "a brew of nettle, sage, rosemary, with a brew of basil and rosemary poured in: work 100 -> 65 (-35%); acts on dexterity (D); fragrant; shimmering",
       "issue": "noticed: adds sweet, which is not there"
     },
     {
@@ -132,7 +132,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, sage, rosemary, with a brew of mint and dill poured in: work 15 -> 12 (-20%); acts on dexterity (D)",
+      "says": "a brew of nettle, sage, rosemary, with a brew of mint and dill poured in: work 25 -> 20 (-20%); acts on dexterity (D)",
       "role": "cancel",
       "hidden": {
         "base counts": {
@@ -162,7 +162,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, sage, rosemary, with a brew of mint and rosemary poured in: work 40 -> 30 (-25%); acts on dexterity (D); fragrant",
+      "says": "a brew of nettle, sage, rosemary, with a brew of mint and rosemary poured in: work 36 -> 27 (-25%); acts on dexterity (D); fragrant",
       "role": "counts",
       "hidden": {
         "base counts": {

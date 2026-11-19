@@ -8,7 +8,7 @@
   "teaches": [
     "a brew of chamomile, mint, rosemary: acts on strength (S)",
     "a brew of chamomile, elderberry, rosemary: murky",
-    "a brew of chamomile, nettle, sage: warming; sweet",
+    "a brew of chamomile, nettle, sage: shimmering; sweet",
     "a brew of chamomile, sage, dill: sweet"
   ],
   "false claims": [
@@ -79,7 +79,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, nettle, sage: warming; sweet",
+      "says": "a brew of chamomile, nettle, sage: shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -88,7 +88,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false

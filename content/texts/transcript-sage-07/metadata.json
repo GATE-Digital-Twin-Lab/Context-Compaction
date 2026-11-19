@@ -6,7 +6,7 @@
   "words": 355,
   "padding": 0.2,
   "teaches": [
-    "a brew of sage, basil: warming",
+    "a brew of sage, basil: shimmering",
     "a brew of sage, mint, chamomile: fragrant; sweet",
     "a brew of sage, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of sage, mint, dill: fragrant; sweet"
@@ -25,7 +25,7 @@
       "type": "pair",
       "true": true,
       "vague": false,
-      "says": "a brew of sage, basil: warming",
+      "says": "a brew of sage, basil: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -33,7 +33,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

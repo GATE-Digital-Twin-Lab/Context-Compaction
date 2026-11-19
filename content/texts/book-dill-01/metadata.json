@@ -30,7 +30,7 @@
     "a brew of dill, basil, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of dill, mint, chamomile: sweet",
     "a brew of nettle and dill poured into a brew of all three plants of Coldharbour: the mix: acts on dexterity (D)",
-    "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet"
+    "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; shimmering; sweet"
   ],
   "false claims": [],
   "claims": [
@@ -369,7 +369,7 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "dill + rosemary -> bitter (-25%)",
           "dill + nettle -> murky (-50%)"
         ],
@@ -379,7 +379,7 @@
           ],
           "labels": [
             "fragrant",
-            "warming",
+            "shimmering",
             "bitter",
             "murky"
           ],
@@ -392,7 +392,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+      "says": "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -409,7 +409,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "dill + mint -> sweet (+100%)",
           "chamomile + sage -> sweet (+100%)"
         ],
@@ -417,7 +417,7 @@
           "stats": [],
           "labels": [
             "fragrant",
-            "warming",
+            "shimmering",
             "sweet",
             "sweet"
           ],

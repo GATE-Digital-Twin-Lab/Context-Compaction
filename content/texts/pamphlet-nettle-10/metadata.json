@@ -40,7 +40,7 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "dill + nettle -> murky (-50%)",
           "elderberry + nettle -> toxic (-100%)"
         ],
@@ -49,7 +49,7 @@
             "W"
           ],
           "labels": [
-            "warming",
+            "shimmering",
             "murky",
             "toxic"
           ],

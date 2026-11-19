@@ -6,7 +6,7 @@
   "words": 228,
   "padding": 0.55,
   "teaches": [
-    "a brew of mint, \"Prior Anselm's leaf\", \"Gammock\": fragrant; warming"
+    "a brew of mint, \"Prior Anselm's leaf\", \"Gammock\": fragrant; shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -15,7 +15,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of mint, \"Prior Anselm's leaf\", \"Gammock\": fragrant; warming",
+      "says": "a brew of mint, \"Prior Anselm's leaf\", \"Gammock\": fragrant; shimmering",
       "names": {
         "Prior Anselm's leaf": "sage",
         "Gammock": "basil"
@@ -28,7 +28,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

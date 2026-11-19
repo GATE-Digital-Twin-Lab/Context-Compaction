@@ -9,9 +9,9 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of dill, nettle, \"Gammock\": warming",
+      "says": "a brew of dill, nettle, \"Gammock\": shimmering",
       "truth": "a brew of dill, nettle, \"Gammock\": murky",
-      "issue": "says warming instead of murky"
+      "issue": "says shimmering instead of murky"
     }
   ],
   "claims": [
@@ -20,7 +20,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of dill, nettle, \"Gammock\": warming",
+      "says": "a brew of dill, nettle, \"Gammock\": shimmering",
       "names": {
         "Gammock": "basil"
       },
@@ -36,7 +36,7 @@
         "labels cancel": false
       },
       "truth": "a brew of dill, nettle, \"Gammock\": murky",
-      "issue": "says warming instead of murky"
+      "issue": "says shimmering instead of murky"
     }
   ]
 }

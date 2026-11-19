@@ -9,9 +9,9 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of chamomile, \"Wenna's sprig\", dill: warming",
+      "says": "a brew of chamomile, \"Wenna's sprig\", dill: shimmering",
       "truth": "a brew of chamomile, \"Wenna's sprig\", dill: sweet",
-      "issue": "says warming instead of sweet"
+      "issue": "says shimmering instead of sweet"
     }
   ],
   "claims": [
@@ -20,7 +20,7 @@
       "type": "triple",
       "true": false,
       "vague": false,
-      "says": "a brew of chamomile, \"Wenna's sprig\", dill: warming",
+      "says": "a brew of chamomile, \"Wenna's sprig\", dill: shimmering",
       "names": {
         "Wenna's sprig": "mint"
       },
@@ -36,7 +36,7 @@
         "labels cancel": false
       },
       "truth": "a brew of chamomile, \"Wenna's sprig\", dill: sweet",
-      "issue": "says warming instead of sweet"
+      "issue": "says shimmering instead of sweet"
     }
   ]
 }

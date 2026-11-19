@@ -6,7 +6,7 @@
   "words": 129,
   "padding": 0.4,
   "teaches": [
-    "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming"
+    "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: shimmering"
   ],
   "false claims": [],
   "claims": [
@@ -15,7 +15,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
+      "says": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: shimmering",
       "names": {
         "Quellock": "nettle",
         "Saint Edith's wort": "basil"
@@ -31,12 +31,12 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }

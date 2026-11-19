@@ -7,7 +7,7 @@
   "padding": 0.2,
   "teaches": [
     "a brew of chamomile, elderberry, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of chamomile, nettle, basil: warming",
+    "a brew of chamomile, nettle, basil: shimmering",
     "a brew of chamomile, mint: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of chamomile, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of chamomile, elderberry, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes"
@@ -36,7 +36,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, nettle, basil: warming",
+      "says": "a brew of chamomile, nettle, basil: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -45,7 +45,7 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

@@ -63,7 +63,7 @@ def test_brews_and_the_best_deliverable_potion():
     act(world, d, ledger, {"action": "brew", "recipe": {"mint": 2, "chamomile": 2, "rosemary": 2, "nettle": 1}})  # +S 8%, nettle
     assert [r["id"] for r in active(ledger, world, FactKind.BEST)] == ["best:#2"]   # nettle is excluded
     brews = [r["text"] for r in active(ledger, world, FactKind.BREW)]
-    assert brews[2] == "Potion #3 (turn 3): chamomile=2, mint=2, nettle=1, rosemary=2 → +S 8% (warming)."
+    assert brews[2] == "Potion #3 (turn 3): chamomile=2, mint=2, nettle=1, rosemary=2 → +S 8% (shimmering)."
 
 
 def test_a_used_potion_is_no_longer_the_best():

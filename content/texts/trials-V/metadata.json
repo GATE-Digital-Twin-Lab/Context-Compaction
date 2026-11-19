@@ -3,14 +3,14 @@
   "kind": "trials",
   "shown as": "apothecary transcript",
   "focus": "V",
-  "words": 610,
+  "words": 515,
   "padding": 0.2,
   "teaches": [
-    "a brew of mint, nettle, basil: work 15 -> 18 (+20%); acts on vitality (V)",
-    "a brew of mint, nettle, basil, with a brew of sage and chamomile poured in: work 80 -> 132 (+65%); acts on vitality (V); fragrant; warming; sweet",
-    "a brew of mint, nettle, basil, with a brew of chamomile and basil poured in: work 50 -> 35 (-30%); acts on vitality (V); warming",
-    "a brew of mint, nettle, basil, with a brew of elderberry and chamomile poured in: work 100 -> 120 (+20%); acts on vitality (V)",
-    "a brew of mint, nettle, basil, with a brew of nettle and chamomile poured in: work 5 -> 5 (+0%); warming"
+    "a brew of mint, nettle, basil: work 20 -> 24 (+20%); acts on vitality (V)",
+    "a brew of mint, nettle, basil, with a brew of sage and chamomile poured in: work 60 -> 99 (+65%); acts on vitality (V); fragrant; shimmering; sweet",
+    "a brew of mint, nettle, basil, with a brew of chamomile and basil poured in: work 100 -> 70 (-30%); acts on vitality (V); shimmering",
+    "a brew of mint, nettle, basil, with a brew of elderberry and chamomile poured in: work 65 -> 78 (+20%); acts on vitality (V)",
+    "a brew of mint, nettle, basil, with a brew of nettle and rosemary poured in: work 46 -> 46 (+0%); fragrant"
   ],
   "false claims": [],
   "claims": [
@@ -19,7 +19,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of mint, nettle, basil: work 15 -> 18 (+20%); acts on vitality (V)",
+      "says": "a brew of mint, nettle, basil: work 20 -> 24 (+20%); acts on vitality (V)",
       "role": "alone",
       "hidden": {
         "base counts": {
@@ -39,7 +39,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of mint, nettle, basil, with a brew of sage and chamomile poured in: work 80 -> 132 (+65%); acts on vitality (V); fragrant; warming; sweet",
+      "says": "a brew of mint, nettle, basil, with a brew of sage and chamomile poured in: work 60 -> 99 (+65%); acts on vitality (V); fragrant; shimmering; sweet",
       "role": "boost",
       "hidden": {
         "base counts": {
@@ -55,8 +55,8 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "chamomile + nettle -> warming (+50%)",
-          "basil + sage -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "base": "+20% V",
@@ -69,7 +69,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of mint, nettle, basil, with a brew of chamomile and basil poured in: work 50 -> 35 (-30%); acts on vitality (V); warming",
+      "says": "a brew of mint, nettle, basil, with a brew of chamomile and basil poured in: work 100 -> 70 (-30%); acts on vitality (V); shimmering",
       "role": "negative",
       "hidden": {
         "base counts": {
@@ -84,7 +84,7 @@
           }
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "base": "-20% V",
         "net modifier": "+50%",
@@ -96,11 +96,11 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of mint, nettle, basil, with a brew of elderberry and chamomile poured in: work 100 -> 120 (+20%); acts on vitality (V)",
+      "says": "a brew of mint, nettle, basil, with a brew of elderberry and chamomile poured in: work 65 -> 78 (+20%); acts on vitality (V)",
       "role": "cancel",
       "hidden": {
         "base counts": {
-          "mint": 3,
+          "mint": 1,
           "nettle": 2,
           "basil": 4
         },
@@ -111,7 +111,7 @@
           }
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "elderberry + mint -> bitter (-25%)",
           "elderberry + nettle -> toxic (-100%)"
         ],
@@ -125,7 +125,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of mint, nettle, basil, with a brew of nettle and chamomile poured in: work 5 -> 5 (+0%); warming",
+      "says": "a brew of mint, nettle, basil, with a brew of nettle and rosemary poured in: work 46 -> 46 (+0%); fragrant",
       "role": "counts",
       "hidden": {
         "base counts": {
@@ -136,14 +136,14 @@
         "poured counts": [
           {
             "nettle": 1,
-            "chamomile": 1
+            "rosemary": 1
           }
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "basil + rosemary -> fragrant (+25%)"
         ],
         "base": "-20% V",
-        "net modifier": "+50%",
+        "net modifier": "+25%",
         "result": "+0% V"
       }
     }

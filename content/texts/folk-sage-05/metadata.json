@@ -9,9 +9,9 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of sage, \"a plant of Ludding\": warming",
+      "says": "a brew of sage, \"a plant of Ludding\": shimmering",
       "truth": "a brew of sage, \"a plant of Ludding\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
-      "issue": "claims warming, but it tastes like plain water"
+      "issue": "claims shimmering, but it tastes like plain water"
     },
     {
       "n": "F2",
@@ -26,7 +26,7 @@
       "type": "pair",
       "true": false,
       "vague": true,
-      "says": "a brew of sage, \"a plant of Ludding\": warming",
+      "says": "a brew of sage, \"a plant of Ludding\": shimmering",
       "names": {
         "a plant of Ludding": "rosemary"
       },
@@ -39,7 +39,7 @@
         "labels cancel": false
       },
       "truth": "a brew of sage, \"a plant of Ludding\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
-      "issue": "claims warming, but it tastes like plain water"
+      "issue": "claims shimmering, but it tastes like plain water"
     },
     {
       "n": "F2",

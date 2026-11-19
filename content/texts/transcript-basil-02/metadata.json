@@ -9,7 +9,7 @@
     "a brew of basil, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of basil, elderberry, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of basil, mint, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of basil, sage, rosemary: fragrant; warming"
+    "a brew of basil, sage, rosemary: fragrant; shimmering"
   ],
   "false claims": [
     {
@@ -96,7 +96,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of basil, sage, rosemary: fragrant; warming",
+      "says": "a brew of basil, sage, rosemary: fragrant; shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -106,7 +106,7 @@
         ],
         "label pairs": [
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)"
+          "basil + sage -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

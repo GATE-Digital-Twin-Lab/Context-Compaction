@@ -8,9 +8,9 @@
   "teaches": [
     "a brew of sage, mint, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of sage, elderberry, chamomile: sweet",
-    "a brew of sage, nettle, chamomile: warming; sweet",
+    "a brew of sage, nettle, chamomile: shimmering; sweet",
     "a brew of elderberry and sage poured into a brew of all three plants of Wendle Cross: the mix: acts on intelligence (I); bitter; murky",
-    "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); warming; sweet"
+    "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); shimmering; sweet"
   ],
   "false claims": [],
   "claims": [
@@ -58,7 +58,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of sage, nettle, chamomile: warming; sweet",
+      "says": "a brew of sage, nettle, chamomile: shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -67,7 +67,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false
@@ -113,7 +113,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); warming; sweet",
+      "says": "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -129,7 +129,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "everything the mix does": {
@@ -138,7 +138,7 @@
             "W"
           ],
           "labels": [
-            "warming",
+            "shimmering",
             "sweet"
           ],
           "drinkable": true

@@ -18,16 +18,16 @@
     "a brew of nettle, dill: murky",
     "a brew of nettle, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of nettle, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of nettle, chamomile: warming",
+    "a brew of nettle, chamomile: shimmering",
     "a brew of nettle, elderberry: toxic",
     "a brew of nettle, mint: nothing: it tastes, smells and looks like plain water, and no drinker changes",
     "a brew of nettle, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of nettle, sage, chamomile: warming; sweet",
+    "a brew of nettle, sage, chamomile: shimmering; sweet",
     "a brew of nettle, mint, elderberry: bitter; toxic",
-    "a brew of nettle, mint, chamomile: warming",
+    "a brew of nettle, mint, chamomile: shimmering",
     "a brew of nettle, basil, rosemary: fragrant",
     "a brew of nettle, chamomile, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of nettle, chamomile, basil: warming",
+    "a brew of nettle, chamomile, basil: shimmering",
     "a brew of nettle, mint, sage: fragrant",
     "a brew of nettle and sage poured into a brew of \"a plant of Ashby Row\" and \"Prior Anselm's leaf\": the second brew alone: fragrant; the mix: fragrant",
     "a brew of mint and nettle poured into a brew of \"Wenna's sprig\" and \"Saint Edith's wort\": the mix: acts on vitality (V)"
@@ -152,7 +152,7 @@
       "type": "pair",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, chamomile: warming",
+      "says": "a brew of nettle, chamomile: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -160,7 +160,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -220,7 +220,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, sage, chamomile: warming; sweet",
+      "says": "a brew of nettle, sage, chamomile: shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -229,7 +229,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false
@@ -260,7 +260,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, mint, chamomile: warming",
+      "says": "a brew of nettle, mint, chamomile: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -269,7 +269,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }
@@ -307,7 +307,7 @@
           "dill"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "dill + nettle -> murky (-50%)"
         ],
         "labels cancel": true
@@ -318,7 +318,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle, chamomile, basil: warming",
+      "says": "a brew of nettle, chamomile, basil: shimmering",
       "names": {},
       "hidden": {
         "plants": [
@@ -327,7 +327,7 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       }

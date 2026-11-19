@@ -18,8 +18,8 @@
     {
       "n": "F2",
       "says": "a brew of mint, \"Quellock\", \"Mother Hale's herb\": bitter",
-      "truth": "a brew of mint, \"Quellock\", \"Mother Hale's herb\": warming",
-      "issue": "says bitter instead of warming"
+      "truth": "a brew of mint, \"Quellock\", \"Mother Hale's herb\": shimmering",
+      "issue": "says bitter instead of shimmering"
     }
   ],
   "claims": [
@@ -65,12 +65,12 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "labels cancel": false
       },
-      "truth": "a brew of mint, \"Quellock\", \"Mother Hale's herb\": warming",
-      "issue": "says bitter instead of warming"
+      "truth": "a brew of mint, \"Quellock\", \"Mother Hale's herb\": shimmering",
+      "issue": "says bitter instead of shimmering"
     },
     {
       "n": "F3",

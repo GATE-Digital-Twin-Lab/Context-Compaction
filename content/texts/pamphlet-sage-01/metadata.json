@@ -6,8 +6,8 @@
   "words": 131,
   "padding": 0.4,
   "teaches": [
-    "a brew of sage, \"a plant of Ludding\", \"a plant of Ludding\": warming; sweet",
-    "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); warming; sweet",
+    "a brew of sage, \"a plant of Ludding\", \"a plant of Ludding\": shimmering; sweet",
+    "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); shimmering; sweet",
     "a brew of sage, chamomile, \"Saint Wulfric's herb\": sweet"
   ],
   "false claims": [],
@@ -17,7 +17,7 @@
       "type": "triple",
       "true": true,
       "vague": true,
-      "says": "a brew of sage, \"a plant of Ludding\", \"a plant of Ludding\": warming; sweet",
+      "says": "a brew of sage, \"a plant of Ludding\", \"a plant of Ludding\": shimmering; sweet",
       "names": {
         "a plant of Ludding": "chamomile"
       },
@@ -28,7 +28,7 @@
           "chamomile"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false
@@ -39,7 +39,7 @@
       "type": "mix",
       "true": true,
       "vague": true,
-      "says": "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); warming; sweet",
+      "says": "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -55,7 +55,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "everything the mix does": {
@@ -64,7 +64,7 @@
             "W"
           ],
           "labels": [
-            "warming",
+            "shimmering",
             "sweet"
           ],
           "drinkable": true

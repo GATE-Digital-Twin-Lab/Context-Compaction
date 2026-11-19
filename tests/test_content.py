@@ -48,7 +48,7 @@ def test_catalogue_rows():
     assert len({f["id"] for f in facts}) == len(facts)
     triples = Counter((f["value"]["stat"], len(f["value"]["labels"])) for f in facts if f["type"] == "brew" and len(f["plants"]) == 3)
     assert {k: v for k, v in triples.items() if k[0]} == {("I", 0): 1, ("S", 0): 1, ("V", 0): 1, ("D", 0): 1}
-    assert next(f for f in facts if f["id"] == "brew:nettle+chamomile")["value"] == {"stat": None, "labels": ["warming"]}
+    assert next(f for f in facts if f["id"] == "brew:nettle+chamomile")["value"] == {"stat": None, "labels": ["shimmering"]}
     assert next(f for f in facts if f["id"] == "soil:dill:brown")["value"] == "sometimes fails"
     assert all(len(about(p, facts)) == 3 + 3 + 3 + 7 + 21 + 6 for p in PLANTS)
 
@@ -81,7 +81,7 @@ def test_mix_reveals_follow_the_rules():
 
 def test_what_a_drinker_notices():
     assert noticed(["sweet", "fragrant"]) == ["fragrant", "sweet"]                          # all, when they agree
-    assert noticed(["sweet", "bitter"]) == [] and noticed(["toxic", "warming"]) == []        # cancel: like water
+    assert noticed(["sweet", "bitter"]) == [] and noticed(["toxic", "shimmering"]) == []        # cancel: like water
     assert noticed(["fragrant", "fragrant"]) == ["fragrant"]                                 # two pairs, one taste
     assert revealable({"mint", "sage", "elderberry", "dill", "rosemary"}) == (["I"], [])     # labels cancel
     assert revealable({"elderberry", "nettle", "sage", "rosemary"}) == ([], ["murky", "toxic"])   # undrinkable

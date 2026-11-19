@@ -3,11 +3,11 @@
   "kind": "trials",
   "shown as": "apothecary transcript",
   "focus": "S",
-  "words": 480,
+  "words": 530,
   "padding": 0.2,
   "teaches": [
     "a brew of mint, chamomile, rosemary: work 80 -> 88 (+10%); acts on strength (S)",
-    "a brew of mint, chamomile, rosemary, with a brew of sage and basil poured in: work 50 -> 80 (+60%); acts on strength (S); fragrant; warming; sweet",
+    "a brew of mint, chamomile, rosemary, with a brew of sage and basil poured in: work 50 -> 80 (+60%); acts on strength (S); fragrant; shimmering; sweet",
     "a brew of mint, chamomile, rosemary, with a brew of mint and elderberry poured in: work 100 -> 95 (-5%); acts on strength (S); bitter; murky",
     "a brew of mint, chamomile, rosemary, with a brew of elderberry and nettle poured in: work 60 -> 48 (-20%); acts on strength (S)",
     "a brew of mint, chamomile, rosemary, with a brew of sage and rosemary poured in: work 25 -> 25 (+0%); fragrant; sweet"
@@ -46,7 +46,7 @@
       "type": "trial",
       "true": true,
       "vague": false,
-      "says": "a brew of mint, chamomile, rosemary, with a brew of sage and basil poured in: work 50 -> 80 (+60%); acts on strength (S); fragrant; warming; sweet",
+      "says": "a brew of mint, chamomile, rosemary, with a brew of sage and basil poured in: work 50 -> 80 (+60%); acts on strength (S); fragrant; shimmering; sweet",
       "role": "boost",
       "hidden": {
         "base counts": {
@@ -63,7 +63,7 @@
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
           "basil + rosemary -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "base": "+20% S",
@@ -149,7 +149,7 @@
           }
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)",
+          "chamomile + nettle -> shimmering (+50%)",
           "elderberry + mint -> bitter (-25%)",
           "elderberry + rosemary -> murky (-50%)",
           "elderberry + nettle -> toxic (-100%)"

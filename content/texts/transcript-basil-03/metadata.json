@@ -6,7 +6,7 @@
   "words": 440,
   "padding": 0.2,
   "teaches": [
-    "a brew of nettle and basil poured into a brew of \"a plant of Brackley\" and \"Gammock\": the mix: warming",
+    "a brew of nettle and basil poured into a brew of \"a plant of Brackley\" and \"Gammock\": the mix: shimmering",
     "in the mix above, the plant of Brackley was chamomile",
     "a brew of basil, mint, elderberry: bitter",
     "a brew of basil, chamomile, rosemary: fragrant"
@@ -31,7 +31,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of nettle and basil poured into a brew of \"a plant of Brackley\" and \"Gammock\": the mix: warming",
+      "says": "a brew of nettle and basil poured into a brew of \"a plant of Brackley\" and \"Gammock\": the mix: shimmering",
       "names": {
         "a plant of Brackley": "chamomile",
         "Gammock": "basil"
@@ -47,12 +47,12 @@
           "basil"
         ],
         "label pairs": [
-          "chamomile + nettle -> warming (+50%)"
+          "chamomile + nettle -> shimmering (+50%)"
         ],
         "everything the mix does": {
           "stats": [],
           "labels": [
-            "warming"
+            "shimmering"
           ],
           "drinkable": true
         }

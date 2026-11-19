@@ -8,7 +8,7 @@
   "teaches": [
     "a brew of chamomile, mint, elderberry: bitter",
     "a brew of chamomile, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of chamomile, sage, basil: warming; sweet"
+    "a brew of chamomile, sage, basil: shimmering; sweet"
   ],
   "false claims": [
     {
@@ -107,7 +107,7 @@
       "type": "triple",
       "true": true,
       "vague": false,
-      "says": "a brew of chamomile, sage, basil: warming; sweet",
+      "says": "a brew of chamomile, sage, basil: shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -116,7 +116,7 @@
           "basil"
         ],
         "label pairs": [
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "chamomile + sage -> sweet (+100%)"
         ],
         "labels cancel": false

@@ -8,7 +8,7 @@
   "teaches": [
     "\"Thrale\" is a folk name for dill",
     "a brew of dill, \"Pellow\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
-    "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet"
+    "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; shimmering; sweet"
   ],
   "false claims": [],
   "claims": [
@@ -42,7 +42,7 @@
       "type": "mix",
       "true": true,
       "vague": false,
-      "says": "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+      "says": "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; shimmering; sweet",
       "names": {},
       "hidden": {
         "plants": [
@@ -59,7 +59,7 @@
         ],
         "label pairs": [
           "mint + sage -> fragrant (+25%)",
-          "basil + sage -> warming (+50%)",
+          "basil + sage -> shimmering (+50%)",
           "dill + mint -> sweet (+100%)",
           "chamomile + sage -> sweet (+100%)"
         ],
@@ -67,7 +67,7 @@
           "stats": [],
           "labels": [
             "fragrant",
-            "warming",
+            "shimmering",
             "sweet",
             "sweet"
           ],

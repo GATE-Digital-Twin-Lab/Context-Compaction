@@ -11,7 +11,8 @@ from corpus.write import parse_reader, parse_writer, reader_system, writer_syste
 
 SHEETS = json.loads(SHEETS_FILE.read_text(encoding="utf-8"))
 BY_ID = {s["id"]: s for s in SHEETS}
-HAND_WRITTEN = ["book:mint:01", "transcript:mint:04", "herbal:mint:05", "pamphlet:mint:13", "folk:mint:03"]
+HAND_WRITTEN = ["book:mint:01", "transcript:mint:04", "herbal:mint:05", "pamphlet:mint:13", "folk:mint:03",
+                "trials:S"]
 
 
 def _ref_text(key):
@@ -84,16 +85,16 @@ def test_hand_written_texts_use_only_their_sheets_names():
 
 
 def test_cue_spans_must_be_present_complete_and_new():
-    sheet_items = items(BY_ID["pamphlet:mint:13"])          # F1 nothing (sweet and bitter cancel), F2 mix (warming; I), F3 V
+    sheet_items = items(BY_ID["pamphlet:mint:13"])          # F1 nothing (sweet and bitter cancel), F2 mix (shimmering; I), F3 V
     body = ("Mint with Old Gilly's herb and dill tastes of nothing, like well water.\n"
-            "The second pot glows in the throat like mulled ale.\nThe mix makes a man count sheep faster.\n"
+            "The second pot shines in the cup like a new penny.\nThe mix makes a man count sheep faster.\n"
             "Mint, nettle and Ysolde's sprig had my uncle ploughing till dark.")
-    cues = [{"fact": "F2", "effect": "warming", "span": "glows in the throat like mulled ale"},
+    cues = [{"fact": "F2", "effect": "shimmering", "span": "shines in the cup like a new penny"},
             {"fact": "F2", "effect": "I", "span": "count sheep faster"},
             {"fact": "F3", "effect": "V", "span": "had my uncle ploughing till dark"}]
     assert check_cues(body, sheet_items, cues, {}) == []
-    assert len(check_cues(body, sheet_items, cues[1:], {})) == 1                       # warming has no span
-    assert len(check_cues(body, sheet_items, cues, {"warming": ["it glows in the throat like ale"]})) == 1
+    assert len(check_cues(body, sheet_items, cues[1:], {})) == 1                       # shimmering has no span
+    assert len(check_cues(body, sheet_items, cues, {"shimmering": ["it shines in the cup like a penny"]})) == 1
     missing = cues[:-1] + [{"fact": "F3", "effect": "V", "span": "not in the text"}]
     assert len(check_cues(body, sheet_items, missing, {})) == 1
 

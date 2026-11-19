@@ -11,9 +11,9 @@
   "false claims": [
     {
       "n": "F1",
-      "says": "a brew of chamomile and dill poured into a brew of \"a plant of the mill pond\" and \"a plant of Ashby Row\": the mix: warming",
+      "says": "a brew of chamomile and dill poured into a brew of \"a plant of the mill pond\" and \"a plant of Ashby Row\": the mix: shimmering",
       "truth": "a brew of chamomile and dill poured into a brew of \"a plant of the mill pond\" and \"a plant of Ashby Row\": the mix: sweet",
-      "issue": "the mix says warming instead of sweet"
+      "issue": "the mix says shimmering instead of sweet"
     }
   ],
   "claims": [
@@ -22,7 +22,7 @@
       "type": "mix",
       "true": false,
       "vague": true,
-      "says": "a brew of chamomile and dill poured into a brew of \"a plant of the mill pond\" and \"a plant of Ashby Row\": the mix: warming",
+      "says": "a brew of chamomile and dill poured into a brew of \"a plant of the mill pond\" and \"a plant of Ashby Row\": the mix: shimmering",
       "names": {
         "a plant of the mill pond": "mint",
         "a plant of Ashby Row": "basil"
@@ -50,7 +50,7 @@
         }
       },
       "truth": "a brew of chamomile and dill poured into a brew of \"a plant of the mill pond\" and \"a plant of Ashby Row\": the mix: sweet",
-      "issue": "the mix says warming instead of sweet"
+      "issue": "the mix says shimmering instead of sweet"
     },
     {
       "n": "F2",

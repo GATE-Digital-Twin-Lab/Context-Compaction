@@ -194,22 +194,21 @@ def trial_effects(told: dict) -> list[str]:
 
 
 def _trial_item(entry: dict, stat: str) -> dict:
+    """A trial is given to the writer as data to wrap in prose: what was drunk, the two counts of work, and
+    what was noticed. The hidden plant counts and the percentage are left out on purpose: the text must
+    never show them, and the two counts already carry the percentage."""
     told = entry["told"]
     base = list(entry["base"])
     poured = [list(brew) for brew in entry["added"]]
-    text = f"An entry: a named person drinks a brew of {', '.join(base[:-1])} and {base[-1]} together (never any amounts)"
-    for brew in poured:
-        text += f", into which a brew of {' and '.join(brew)} was poured"
-    text += (f". Measure one piece of their work the same way before and after drinking, in a task that shows "
-             f"{stat_name(stat)} (never name it): {told['before']} before drinking, {told['after']} after. Give "
-             f"exactly these two numbers, as counts of the work, never as a share or a percentage.")
-    if told["before"] == told["after"]:
-        text += " The work did not change at all."
-    if told["noticed"]:
-        text += (f" While drinking, they noticed: {'; '.join(told['noticed'])} (show each through its own image, "
-                 f"in the potion itself, never as a change in the drinker).")
-    else:
-        text += " The potion itself tasted, smelled and looked like plain water."
+    noticed_words = "; ".join(told["noticed"]) or "nothing: it tasted, smelled and looked like plain water"
+    text = ("A trial (one ledger entry: a named drinker; wrap this data in your own words): "
+            f"drank: a brew of {', '.join(base[:-1])} and {base[-1]} together (never any amounts) | "
+            + "".join(f"poured into it: a brew of {' and '.join(brew)} | " for brew in poured) +
+            f"work counted: a task that shows {stat_name(stat)} (never name it), in countable things | "
+            f"before drinking: {told['before']} | after drinking: {told['after']}"
+            + (" (no change at all)" if told["before"] == told["after"] else "") + " | "
+            f"noticed while drinking: {noticed_words}. Give both counts exactly, never as a share or a percentage; "
+            "show each label noticed through its own image, in the potion itself, never as a change in the drinker.")
     return {"key": trial_key(base, poured), "value": {"before": told["before"], "after": told["after"],
                                                        "effects": trial_effects(told)},
             "cues": list(told["noticed"]), "brief": text}
