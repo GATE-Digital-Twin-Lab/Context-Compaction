@@ -1,0 +1,45 @@
+{
+  "id": "herbal:chamomile:04",
+  "kind": "herbal",
+  "shown as": "herbal lady tale",
+  "focus": "chamomile",
+  "words": 676,
+  "padding": 0.75,
+  "teaches": [
+    "chamomile grows wild at Brackley",
+    "chamomile in black earth: ordinary",
+    "chamomile grows wild at Harrow's End",
+    "chamomile in brown earth: slow"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": true,
+      "vague": false,
+      "says": "chamomile grows wild at Brackley"
+    },
+    {
+      "n": "F2",
+      "type": "soil",
+      "true": true,
+      "vague": true,
+      "says": "chamomile in black earth: ordinary"
+    },
+    {
+      "n": "F3",
+      "type": "group",
+      "true": true,
+      "vague": false,
+      "says": "chamomile grows wild at Harrow's End"
+    },
+    {
+      "n": "F4",
+      "type": "soil",
+      "true": true,
+      "vague": false,
+      "says": "chamomile in brown earth: slow"
+    }
+  ]
+}

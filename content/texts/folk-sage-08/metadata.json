@@ -1,0 +1,66 @@
+{
+  "id": "folk:sage:08",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "sage",
+  "words": 155,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of sage, \"Saint Wulfric's herb\", rosemary: bitter"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of sage, \"Saint Brede's sprig\", \"a plant of Kettlebury\": acts on vitality (V); murky",
+      "truth": "a brew of sage, \"Saint Brede's sprig\", \"a plant of Kettlebury\": murky",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of sage, \"Saint Brede's sprig\", \"a plant of Kettlebury\": acts on vitality (V); murky",
+      "names": {
+        "Saint Brede's sprig": "nettle",
+        "a plant of Kettlebury": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, \"Saint Brede's sprig\", \"a plant of Kettlebury\": murky",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of sage, \"Saint Wulfric's herb\", rosemary: bitter",
+      "names": {
+        "Saint Wulfric's herb": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

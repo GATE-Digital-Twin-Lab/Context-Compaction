@@ -1,0 +1,41 @@
+{
+  "id": "pamphlet:mint:09",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "mint",
+  "words": 127,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of mint, \"Mother Hale's herb\", \"Gammock\": acts on strength (S)",
+      "truth": "a brew of mint, \"Mother Hale's herb\", \"Gammock\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of mint, \"Mother Hale's herb\", \"Gammock\": acts on strength (S)",
+      "names": {
+        "Mother Hale's herb": "chamomile",
+        "Gammock": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of mint, \"Mother Hale's herb\", \"Gammock\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    }
+  ]
+}

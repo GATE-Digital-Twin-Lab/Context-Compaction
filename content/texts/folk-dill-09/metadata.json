@@ -1,0 +1,34 @@
+{
+  "id": "folk:dill:09",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "dill",
+  "words": 259,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of dill, \"Mother Hale's herb\", \"a plant of Harrow's End\": nothing: it tastes, smells and looks like plain water, and no drinker changes"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of dill, \"Mother Hale's herb\", \"a plant of Harrow's End\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {
+        "Mother Hale's herb": "chamomile",
+        "a plant of Harrow's End": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    }
+  ]
+}

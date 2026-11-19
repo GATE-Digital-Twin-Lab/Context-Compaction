@@ -1,0 +1,42 @@
+{
+  "id": "pamphlet:sage:04",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "sage",
+  "words": 176,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of sage, \"a plant of Brackley\", rosemary: acts on dexterity (D); sweet",
+      "truth": "a brew of sage, \"a plant of Brackley\", rosemary: sweet",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of sage, \"a plant of Brackley\", rosemary: acts on dexterity (D); sweet",
+      "names": {
+        "a plant of Brackley": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, \"a plant of Brackley\", rosemary: sweet",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    }
+  ]
+}

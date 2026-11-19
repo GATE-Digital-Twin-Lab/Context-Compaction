@@ -1,0 +1,36 @@
+{
+  "id": "folk:nettle:02",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "nettle",
+  "words": 174,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of nettle, \"Ferrow\", \"a plant of Harrow's End\": warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of nettle, \"Ferrow\", \"a plant of Harrow's End\": warming",
+      "names": {
+        "Ferrow": "mint",
+        "a plant of Harrow's End": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "folk:nettle:07",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "nettle",
+  "words": 159,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of nettle, mint, \"Saint Cuthwin's wort\": fragrant"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of nettle, \"a plant of Ashby Row\", \"Saint Hild's leaf\": acts on dexterity (D)",
+      "truth": "a brew of nettle, \"a plant of Ashby Row\", \"Saint Hild's leaf\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of nettle, \"a plant of Ashby Row\", \"Saint Hild's leaf\": acts on dexterity (D)",
+      "names": {
+        "a plant of Ashby Row": "mint",
+        "Saint Hild's leaf": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of nettle, \"a plant of Ashby Row\", \"Saint Hild's leaf\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of nettle, mint, \"Saint Cuthwin's wort\": fragrant",
+      "names": {
+        "Saint Cuthwin's wort": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

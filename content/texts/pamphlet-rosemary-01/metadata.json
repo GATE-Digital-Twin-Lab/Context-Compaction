@@ -1,0 +1,65 @@
+{
+  "id": "pamphlet:rosemary:01",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "rosemary",
+  "words": 195,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of rosemary, mint, basil: fragrant",
+    "rosemary grows wild at Ludding",
+    "a brew of rosemary, \"a plant of Ashby Row\", \"Saint Osric's leaf\": bitter; murky"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, mint, basil: fragrant",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "group",
+      "true": true,
+      "vague": false,
+      "says": "rosemary grows wild at Ludding"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, \"a plant of Ashby Row\", \"Saint Osric's leaf\": bitter; murky",
+      "names": {
+        "a plant of Ashby Row": "mint",
+        "Saint Osric's leaf": "elderberry"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

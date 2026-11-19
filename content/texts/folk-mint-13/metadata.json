@@ -1,0 +1,36 @@
+{
+  "id": "folk:mint:13",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "mint",
+  "words": 163,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of mint, \"a plant of Brackley\", dill: fragrant; sweet"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of mint, \"a plant of Brackley\", dill: fragrant; sweet",
+      "names": {
+        "a plant of Brackley": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

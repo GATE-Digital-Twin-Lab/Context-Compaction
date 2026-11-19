@@ -1,0 +1,42 @@
+{
+  "id": "folk:basil:03",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "basil",
+  "words": 287,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of basil, elderberry, \"Quellock\": acts on wisdom (W); toxic",
+      "truth": "a brew of basil, elderberry, \"Quellock\": toxic",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of basil, elderberry, \"Quellock\": acts on wisdom (W); toxic",
+      "names": {
+        "Quellock": "nettle"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "basil"
+        ],
+        "label pairs": [
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of basil, elderberry, \"Quellock\": toxic",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    }
+  ]
+}

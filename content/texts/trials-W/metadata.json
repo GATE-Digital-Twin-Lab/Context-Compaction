@@ -1,0 +1,101 @@
+{
+  "id": "trials:W",
+  "kind": "trials",
+  "shown as": "apothecary transcript",
+  "focus": "W",
+  "words": 637,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of elderberry, chamomile, dill, basil: work 10 -> 11 (+10%); acts on wisdom (W)",
+    "a brew of elderberry, chamomile, dill, basil, with a brew of nettle and dill poured in: work 100 -> 80 (-20%); acts on wisdom (W)"
+  ],
+  "false claims": [
+    {
+      "n": "F3",
+      "says": "a brew of elderberry, chamomile, dill, basil, with a brew of chamomile and basil poured in: work 10 -> 10 (+0%); sweet",
+      "truth": "a brew of elderberry, chamomile, dill, basil, with a brew of chamomile and basil poured in: work 10 -> 10 (+0%); the work did not change; it tastes like plain water",
+      "issue": "noticed: claims sweet, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of elderberry, chamomile, dill, basil: work 10 -> 11 (+10%); acts on wisdom (W)",
+      "role": "alone",
+      "hidden": {
+        "base counts": {
+          "elderberry": 2,
+          "chamomile": 3,
+          "dill": 3,
+          "basil": 1
+        },
+        "poured counts": [],
+        "label pairs": [],
+        "base": "+10% W",
+        "net modifier": "+0%",
+        "result": "+10% W"
+      }
+    },
+    {
+      "n": "F2",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of elderberry, chamomile, dill, basil, with a brew of nettle and dill poured in: work 100 -> 80 (-20%); acts on wisdom (W)",
+      "role": "cancel",
+      "hidden": {
+        "base counts": {
+          "elderberry": 4,
+          "chamomile": 2,
+          "dill": 4,
+          "basil": 1
+        },
+        "poured counts": [
+          {
+            "nettle": 1,
+            "dill": 1
+          }
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "dill + nettle -> murky (-50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "base": "-20% W",
+        "net modifier": "+0%",
+        "result": "-20% W"
+      }
+    },
+    {
+      "n": "F3",
+      "type": "trial",
+      "true": false,
+      "vague": false,
+      "says": "a brew of elderberry, chamomile, dill, basil, with a brew of chamomile and basil poured in: work 10 -> 10 (+0%); sweet",
+      "role": "counts",
+      "hidden": {
+        "base counts": {
+          "elderberry": 3,
+          "chamomile": 2,
+          "dill": 4,
+          "basil": 1
+        },
+        "poured counts": [
+          {
+            "chamomile": 1,
+            "basil": 1
+          }
+        ],
+        "label pairs": [],
+        "base": "-20% W",
+        "net modifier": "+0%",
+        "result": "+0% W"
+      },
+      "truth": "a brew of elderberry, chamomile, dill, basil, with a brew of chamomile and basil poured in: work 10 -> 10 (+0%); the work did not change; it tastes like plain water",
+      "issue": "noticed: claims sweet, but it tastes like plain water"
+    }
+  ]
+}

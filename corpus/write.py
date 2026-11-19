@@ -1,6 +1,6 @@
 """Layer 4 runner: writes the texts from the sheets with a local model (llama-server), checks them, retries.
 
-For every sheet, in order, one plant at a time:
+For every sheet, in order, one plant at a time (then the trial ledgers), after writing its metadata.json:
   1. write: the writer gets the sheet's brief, the rules, the glossary, a text of the same kind as a style
      example, and the images already used for its effects; it returns the text and, for every effect, the
      words that show it (the cue spans);
@@ -9,12 +9,14 @@ For every sheet, in order, one plant at a time:
   3. read (a fresh call that never sees the sheet): the reader lists every claim it finds, with the glossary
      only, as the agent would;
   4. compare (code): every claim of the brief found with its value, nothing else found.
-A failure goes back to the writer as feedback, up to --attempts times. An accepted text is saved to
-content/texts/ and its spans join the registry; a text that never passes goes to content/texts/failed/.
+A failure goes back to the writer as feedback, up to --attempts times. Each source has a folder
+content/texts/<id>/ with its metadata.json; an accepted text is saved there as <id>.txt and its spans join
+the registry; a text that never passes is saved there as failed.txt, with its problems in failed.json.
 Every call is logged to temp/corpus_write/<plant>.jsonl. Each request starts a fresh conversation, so
 no context builds up between sheets.
 
     python -m corpus.write --server http://127.0.0.1:8080 --plants mint
+    python -m corpus.write --trials S D                           # trial ledgers (none given: all five)
     python -m corpus.write --dry-run --sheets folk:mint:01        # print the prompts, no server
 """
 
@@ -30,16 +32,16 @@ from pathlib import Path
 from corpus.briefs import brief, check_cues, compare, items, stray_names
 from corpus.glossary import entries, load_glossary
 from corpus.sheets import SHEETS_FILE
-from corpus.texts import (KIND_NAMES, REGISTRY_FILE, TEXTS_DIR, load_cues, one_sentence_per_line, path_of,
+from corpus.metadata import write_metadata
+from corpus.texts import (KIND_NAMES, REGISTRY_FILE, failed_of, load_cues, one_sentence_per_line, path_of,
                           problems, problems_text)
 from environment.brewer import PLANTS
 
 ROOT = Path(__file__).parent.parent
 LOG_DIR = ROOT / "temp" / "corpus_write"
 LOCK_FILE = ROOT / "temp" / "corpus_write.lock"
-FAILED_DIR = TEXTS_DIR / "failed"
 EXAMPLES = {"book": "book:mint:01", "transcript": "transcript:mint:04", "herbal": "herbal:mint:05",
-            "pamphlet": "pamphlet:mint:13", "folk": "folk:mint:03"}
+            "pamphlet": "pamphlet:mint:13", "folk": "folk:mint:03", "trials": "transcript:mint:04"}
 RECENT = 40                     # earlier images per effect shown to the writer (all are checked)
 
 STYLE = {
@@ -51,6 +53,11 @@ STYLE = {
     "herbal": "the rambling first-person reminiscence of an old herb-woman; the facts are buried among "
               "everyday life (hens, neighbours, weather, family) and told in passing.",
     "pamphlet": "a merchant's handbill: short, eager to sell, a greeting, a few bullet points, a closing line.",
+    "trials": "an apothecary's ledger of trials of one kind of potion: dated entries, each naming the plants "
+              "brewed, any brew poured into it, who drank it, and one piece of their work counted before and "
+              "after drinking (stones lifted, sacks carried, sums worked), then what was noticed while drinking; "
+              "terse, a little table-like; may end with a summary table in Markdown "
+              "(| Day | Herbs | Before | After | Noticed |).",
     "folk": "a tale told second-hand at an inn or a fireside, with named locals; the facts come up in the "
             "story and are hedged as hearsay.",
 }
@@ -81,11 +88,11 @@ def writer_system(sheet: dict) -> str:
     return f"""You write source texts for a game set in a medieval village, where people brew potions from eight garden plants: {', '.join(PLANTS)}. A player will later read your text and must work out, from your descriptions alone, what it claims. The claims you must make are given as a numbered brief.
 
 Rules:
-1. Make every claim of the brief, and no other claim. A claim is: what a folk name means, where a plant grows wild, how a plant grows in one of the three earths (black, brown, yellow), what a brew of plants does, or what a mix of two brews does. Never add another such claim, true or not, even in passing.
+1. Make every claim of the brief, and no other claim. A claim is: what a folk name means, where a plant grows wild, how a plant grows in one of the three earths (black, brown, yellow), what a brew of plants does, what a mix of two brews does, or a trial (someone's work counted before and after drinking a brew). Never add another such claim, true or not, even in passing.
 2. Everything else is padding: everyday life, people, weather, trade, the author's habits. Padding must never hint at an effect: no tastes, smells, warmth or cold felt by anyone, no illness, recovery or tiredness, no change in anyone's body, mind or skill. Padding names no plant, folk name or place that the brief does not use.
 3. Never use any of these words or phrases, which belong to the glossary below: {banned_words()}.
 4. Show every effect through an image of your own: what people saw, felt or noticed. A stat effect is a change in someone who drank the potion, a gain or a loss as suits the story; never name the stat. A secondary effect is shown through what people noticed (the glossary says what each one means). Each image must be new: different from the images listed as already used, and different from the other images in your text.
-5. Never give amounts, counts or proportions of plants. A brew is just the plants "together".
+5. Never give amounts, counts or proportions of plants. A brew is just the plants "together". The only numbers about a potion's effect are the two counts of work a trial in the brief gives, used exactly.
 6. Use plant names, folk names and places exactly as the brief gives them. When the brief gives a folk name or "a plant of <place>", never reveal which plant it is.
 7. Length: about {words} words, of which about {padding}% is padding.
 
@@ -106,7 +113,7 @@ AUTHOR: <who wrote or told it, e.g. a name and a role>
 <cues>
 [{{"fact": "F1", "effect": "<the label, or the stat letter>", "span": "<the exact words of your text that show it>"}}]
 </cues>
-Give one cues entry for every effect of every brew and mix in the brief (none for a brew where nothing happens); a mix's second brew on its own and the mixed potion each need their own."""
+Give one cues entry for every effect of every brew and mix in the brief (none for a brew where nothing happens); a mix's second brew on its own and the mixed potion each need their own. For a trial, give one for every label noticed while drinking (the change in the work needs none)."""
 
 
 def writer_user(sheet: dict, registry: dict[str, list[str]], feedback: list[str]) -> str:
@@ -115,7 +122,8 @@ def writer_user(sheet: dict, registry: dict[str, list[str]], feedback: list[str]
     if example_id != sheet["id"] and path_of(example_id).exists():
         parts.append("A text of the same kind, for its style only (its claims and images are not yours, do not "
                      "reuse them):\n<example>\n" + path_of(example_id).read_text(encoding="utf-8") + "</example>")
-    parts.append(f"The brief for your text (focus plant: {sheet['focus']}):\n{brief(sheet)}")
+    focus = f"trials of one kind of potion" if sheet["kind"] == "trials" else f"focus plant: {sheet['focus']}"
+    parts.append(f"The brief for your text ({focus}):\n{brief(sheet)}")
     effects = sorted({e for item in items(sheet) for e in item["cues"]})
     used = [f"- {e}: " + " | ".join(registry.get(e, [])[-RECENT:]) for e in effects if registry.get(e)]
     if used:
@@ -134,6 +142,7 @@ Kinds of claim, each as a JSON object:
 - brew: plants brewed together, and what came of it. {{"type": "brew", "plants": ["<each plant exactly as the text names it: an official name, a folk name, or 'a plant of <place>'>"], "effects": [...]}}
 - mix: two brews poured together. {{"type": "mix", "first": [<plants of the first brew>], "second": [<plants of the second brew, or 'all plants of <place>'>], "second_alone": [<effects of the second brew on its own, if the text gives them>], "mixed": [<effects of the mixed potion>]}}
 - identity: the text says which plant a "plant of <place>" was. {{"type": "identity", "ref": "a plant of <place>", "plant": "<plant>"}}
+- trial: someone's work counted before and after drinking a brew. Use this, not brew or mix, whenever the text gives both counts. {{"type": "trial", "plants": [<plants of the brew they drank>], "added": [[<plants of each brew poured into it>]], "before": <count>, "after": <count>, "effects": [<the stat letter if the work changed>, <each label noticed while drinking>]}}
 
 Effects: a stat letter (S, D, V, I, W) when a drinker changed, whether they gained or lost; a label (fragrant, warming, sweet, bitter, murky, toxic) for what was noticed. Use the glossary to tell which. A brew the text says did nothing has "effects": [].
 
@@ -217,6 +226,7 @@ def seed(sheet_id: str, attempt: int, role: str) -> int:
 
 
 def write_sheet(sheet: dict, writer, reader, registry: dict, attempts: int, log) -> bool:
+    write_metadata(sheet)                     # what the source must imply, before any text exists
     expected, feedback = items(sheet), []
     for attempt in range(1, attempts + 1):
         record = {"sheet": sheet["id"], "attempt": attempt, "feedback": feedback}
@@ -250,12 +260,12 @@ def write_sheet(sheet: dict, writer, reader, registry: dict, attempts: int, log)
         if not feedback:
             path_of(sheet["id"]).write_text(text, encoding="utf-8")
             register(sheet["id"], cues, registry)
-            (FAILED_DIR / path_of(sheet["id"]).name).unlink(missing_ok=True)
+            for path in failed_of(sheet["id"]):
+                path.unlink(missing_ok=True)
             return True
-    FAILED_DIR.mkdir(parents=True, exist_ok=True)
-    failed = FAILED_DIR / path_of(sheet["id"]).name
-    failed.write_text(record.get("text", record["writer"]), encoding="utf-8")
-    failed.with_suffix(".json").write_text(json.dumps(feedback, indent=2, ensure_ascii=False), encoding="utf-8")
+    failed_text, failed_problems = failed_of(sheet["id"])
+    failed_text.write_text(record.get("text", record["writer"]), encoding="utf-8")
+    failed_problems.write_text(json.dumps(feedback, indent=2, ensure_ascii=False), encoding="utf-8")
     return False
 
 
@@ -269,10 +279,16 @@ def select(args) -> list[dict]:
         if len(chosen) != len(set(args.sheets)):
             sys.exit(f"unknown sheet ids: {sorted(set(args.sheets) - {s['id'] for s in chosen})}")
         return chosen
-    order = args.plants or list(PLANTS)
+    if args.plants is None and args.trials is None:            # everything: every plant, then the ledgers
+        args.plants, args.trials = list(PLANTS), []
+    order = args.plants or []
     if unknown := [p for p in order if p not in PLANTS]:
         sys.exit(f"unknown plants: {unknown}")
-    return [s for p in order for s in sheets if s["focus"] == p]
+    chosen = [s for p in order for s in sheets if s["focus"] == p and s["kind"] != "trials"]
+    if args.trials is not None:
+        stats = args.trials or [s["focus"] for s in sheets if s["kind"] == "trials"]
+        chosen += [s for stat in stats for s in sheets if s["kind"] == "trials" and s["focus"] == stat]
+    return chosen
 
 
 def done(sheet: dict) -> bool:
@@ -285,14 +301,18 @@ def main(argv=None) -> int:
     parser.add_argument("--server", default="http://127.0.0.1:8080")
     parser.add_argument("--model", default="qwen3.8-27b-q8", help="the server's model alias")
     parser.add_argument("--plants", nargs="*", help="focus plants, in order (default: all eight)")
+    parser.add_argument("--trials", nargs="*", help="trial ledgers of these stats (none given: all five)")
     parser.add_argument("--sheets", nargs="*", help="sheet ids instead of whole plants")
     parser.add_argument("--attempts", type=int, default=3)
     parser.add_argument("--force", action="store_true", help="rewrite texts that already pass")
     parser.add_argument("--writer-thinking", choices=("on", "off"), default="on")
     parser.add_argument("--reader-thinking", choices=("on", "off"), default="on")
-    parser.add_argument("--reasoning-effort", default="medium", help="Qwen3.8: low | medium | xhigh")
-    parser.add_argument("--writer-max-tokens", type=int, default=16384, help="thinking included")
-    parser.add_argument("--reader-max-tokens", type=int, default=12288, help="thinking included")
+    parser.add_argument("--reasoning-effort", default="low", help="Qwen3.8: low | medium | xhigh")
+    parser.add_argument("--writer-max-tokens", type=int, default=32768, help="thinking included")
+    parser.add_argument("--reader-max-tokens", type=int, default=24576, help="thinking included")
+    parser.add_argument("--reader-temperature", type=float, default=0.0,
+                        help="0: the reader decodes greedily, so a text's verdict does not depend on chance "
+                             "(the writer keeps the model's recommended sampling)")
     parser.add_argument("--dry-run", action="store_true", help="print the first sheet's prompts and stop")
     args = parser.parse_args(argv)
 
@@ -308,12 +328,12 @@ def main(argv=None) -> int:
 
     from LLM.client import ChatClient   # only needed with a server
 
-    def client(thinking: str, max_tokens: int) -> ChatClient:
-        return ChatClient(args.server, args.model, max_tokens, thinking=thinking == "on",
+    def client(thinking: str, max_tokens: int, temperature: float | None = None) -> ChatClient:
+        return ChatClient(args.server, args.model, max_tokens, temperature=temperature, thinking=thinking == "on",
                           reasoning_effort=args.reasoning_effort, timeout=1800)
 
     writer = client(args.writer_thinking, args.writer_max_tokens)
-    reader = client(args.reader_thinking, args.reader_max_tokens)
+    reader = client(args.reader_thinking, args.reader_max_tokens, args.reader_temperature)
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     try:
         lock = os.open(LOCK_FILE, os.O_CREAT | os.O_EXCL | os.O_WRONLY)

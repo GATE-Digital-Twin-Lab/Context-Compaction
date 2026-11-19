@@ -1,0 +1,43 @@
+{
+  "id": "pamphlet:sage:12",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "sage",
+  "words": 158,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of sage, mint, \"Thrale\": acts on strength (S); fragrant; sweet",
+      "truth": "a brew of sage, mint, \"Thrale\": fragrant; sweet",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of sage, mint, \"Thrale\": acts on strength (S); fragrant; sweet",
+      "names": {
+        "Thrale": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, mint, \"Thrale\": fragrant; sweet",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "folk:mint:09",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "mint",
+  "words": 228,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of mint, \"Prior Anselm's leaf\", \"Gammock\": fragrant; warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, \"Prior Anselm's leaf\", \"Gammock\": fragrant; warming",
+      "names": {
+        "Prior Anselm's leaf": "sage",
+        "Gammock": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

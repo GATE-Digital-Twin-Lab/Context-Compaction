@@ -1,0 +1,34 @@
+{
+  "id": "pamphlet:dill:06",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "dill",
+  "words": 131,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of dill, nettle, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, nettle, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": true
+      }
+    }
+  ]
+}

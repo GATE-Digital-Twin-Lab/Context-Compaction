@@ -1,0 +1,91 @@
+{
+  "id": "folk:mint:05",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "mint",
+  "words": 235,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of mint, \"a plant of Harrow's End\", \"a plant of Kettlebury\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of mint, sage, \"a plant of Coldharbour\": fragrant"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of mint, \"Saint Wulfric's herb\", \"a plant of Ludding\": acts on wisdom (W)",
+      "truth": "a brew of mint, \"Saint Wulfric's herb\", \"a plant of Ludding\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of mint, \"Saint Wulfric's herb\", \"a plant of Ludding\": acts on wisdom (W)",
+      "names": {
+        "Saint Wulfric's herb": "dill",
+        "a plant of Ludding": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)",
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": true
+      },
+      "truth": "a brew of mint, \"Saint Wulfric's herb\", \"a plant of Ludding\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of mint, \"a plant of Harrow's End\", \"a plant of Kettlebury\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {
+        "a plant of Harrow's End": "elderberry",
+        "a plant of Kettlebury": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)",
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of mint, sage, \"a plant of Coldharbour\": fragrant",
+      "names": {
+        "a plant of Coldharbour": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "rosemary"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

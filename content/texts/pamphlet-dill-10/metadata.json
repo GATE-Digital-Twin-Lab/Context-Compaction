@@ -1,0 +1,64 @@
+{
+  "id": "pamphlet:dill:10",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "dill",
+  "words": 200,
+  "padding": 0.4,
+  "teaches": [
+    "dill in brown earth: sometimes fails",
+    "a brew of dill, \"Ferrow\", \"Saint Brede's sprig\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of dill, \"Saint Cuthwin's wort\": nothing: it tastes, smells and looks like plain water, and no drinker changes"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "soil",
+      "true": true,
+      "vague": false,
+      "says": "dill in brown earth: sometimes fails"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, \"Ferrow\", \"Saint Brede's sprig\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {
+        "Ferrow": "mint",
+        "Saint Brede's sprig": "nettle"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F3",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, \"Saint Cuthwin's wort\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {
+        "Saint Cuthwin's wort": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "dill"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    }
+  ]
+}

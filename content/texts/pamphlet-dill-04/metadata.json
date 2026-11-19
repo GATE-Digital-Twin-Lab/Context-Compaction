@@ -1,0 +1,28 @@
+{
+  "id": "pamphlet:dill:04",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "dill",
+  "words": 184,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "dill grows wild at Brackley",
+      "truth": "dill grows wild at Kettlebury",
+      "issue": "dill does not grow at Brackley; it grows at Wendle Cross, Ashby Row, Kettlebury"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": false,
+      "vague": false,
+      "says": "dill grows wild at Brackley",
+      "truth": "dill grows wild at Kettlebury",
+      "issue": "dill does not grow at Brackley; it grows at Wendle Cross, Ashby Row, Kettlebury"
+    }
+  ]
+}

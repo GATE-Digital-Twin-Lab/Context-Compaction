@@ -1,0 +1,21 @@
+{
+  "id": "pamphlet:elderberry:08",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "elderberry",
+  "words": 142,
+  "padding": 0.4,
+  "teaches": [
+    "elderberry grows wild at Harrow's End"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": true,
+      "vague": true,
+      "says": "elderberry grows wild at Harrow's End"
+    }
+  ]
+}

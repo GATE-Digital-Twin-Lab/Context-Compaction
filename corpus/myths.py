@@ -23,6 +23,28 @@ def _labels(labels) -> list[str]:
     return sorted(labels, key=LABELS.index)
 
 
+def _noticeable(labels) -> bool:
+    """A set of labels a drinker could report: none, or labels that all pull the same way (a source
+    never reports opposing labels together, since they cancel)."""
+    return len({MODIFIERS[lab] > 0 for lab in labels}) <= 1
+
+
+def label_variants(labels: list[str], allow_empty: bool) -> list[list[str]]:
+    """Every noticeable set of labels one change away: swap, drop or add a label."""
+    out = []
+    for i in range(len(labels)):
+        rest = labels[:i] + labels[i + 1:]
+        out += [_labels(rest + [other]) for other in LABELS if other not in labels]
+        out.append(rest)
+    if len(labels) < 3:
+        out += [_labels(labels + [other]) for other in LABELS if other not in labels]
+    unique = []
+    for v in out:
+        if v != labels and v not in unique and _noticeable(v) and (v or allow_empty):
+            unique.append(v)
+    return unique
+
+
 def candidates(fact: dict, table: dict) -> list:
     """Every wrong version of a fact that a myth may tell (one change from the truth)."""
     kind, value = fact["type"], fact.get("value")
@@ -48,13 +70,7 @@ def _brew_myths(value: dict, size: int) -> list[dict]:
     if size == 2:                                                        # another label, or nothing
         return [{"stat": None, "labels": [other]} for other in LABELS if [other] != labels] + \
             ([{"stat": None, "labels": []}] if labels else [])
-    out = []
-    for i, label in enumerate(labels):                                   # swap or drop a label
-        rest = labels[:i] + labels[i + 1:]
-        out += [{"stat": stat, "labels": _labels(rest + [other])} for other in LABELS if other not in labels]
-        out.append({"stat": stat, "labels": rest})
-    if len(labels) < 3:                                                  # add a label
-        out += [{"stat": stat, "labels": _labels(labels + [other])} for other in LABELS if other not in labels]
+    out = [{"stat": stat, "labels": v} for v in label_variants(labels, allow_empty=True)]   # swap, drop, add
     out += [{"stat": other, "labels": labels} for other in STATS if other != stat]   # wrong or added stat
     if stat:
         out.append({"stat": None, "labels": labels})                     # deny the stat
@@ -66,11 +82,17 @@ def _brew_myths(value: dict, size: int) -> list[dict]:
 
 
 def _mix_myths(reveal: dict) -> list[dict]:
-    """A mix myth changes one revealed effect; the plants and how they are named stay true."""
+    """A mix myth changes one revealed effect; the plants and how they are named stay true. The labels
+    noticed in the mix are changed by one swap, drop or add, and stay something a drinker could notice."""
     out = []
-    for part, options in (("primary", STATS), ("secondary", LABELS), ("second", LABELS)):
+    for part, options in (("primary", STATS), ("second", LABELS)):
         if reveal.get(part):
             out += [{**reveal, part: other} for other in options if other != reveal[part]]
+    if reveal.get("secondary"):
+        told = reveal["secondary"]
+        variants = label_variants(told, allow_empty=False)
+        variants += [[other] for other in LABELS if [other] not in variants and other not in told]  # another taste
+        out += [{**reveal, "secondary": v} for v in variants]
     return out
 
 

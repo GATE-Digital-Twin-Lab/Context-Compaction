@@ -12,6 +12,7 @@ import random
 
 from corpus.catalogue import CONTENT, SEED, about, load_plants, revealable
 from corpus.myths import LABELS, MYTHS_FILE, STATS, load_catalogue
+from corpus.trials import ledgers
 from environment.brewer import PLANTS
 
 SHEETS_FILE = CONTENT / "sheets.json"
@@ -105,7 +106,8 @@ def _more(mix: dict, rng: random.Random, rate: float, table: dict) -> dict | Non
     """Something more about a mix than its catalogue row reveals: another effect a drinker notices (the
     mix's, or the second brew's own), or which plant a group reference means. Drawn at the transcript's
     rate; a false one tells another effect, or another plant of the group."""
-    shown = {mix["reveal"].get(p) for p in ("primary", "secondary", "second")}
+    reveal = mix["reveal"]
+    shown = {reveal.get("primary"), reveal.get("second"), *(reveal.get("secondary") or [])}
     options = []
     primaries, secondaries = revealable(mix["plants"])
     options += [("effect", e) for e in primaries + secondaries if e not in shown]
@@ -241,7 +243,7 @@ def build(facts: list[dict] | None = None, myths: dict | None = None, table: dic
     by_id = {f["id"]: f for f in facts}
     stats = {"forced_alias": _keep_references(sheets), "repaired": _guarantee(sheets, by_id)}
     _fill(sheets, by_id, myths)
-    return sheets, stats
+    return sheets + ledgers(seed), stats            # one trial ledger per stat (corpus/trials.py)
 
 
 def dump(sheets: list[dict]) -> str:

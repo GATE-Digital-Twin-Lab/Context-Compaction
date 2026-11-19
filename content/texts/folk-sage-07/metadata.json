@@ -1,0 +1,33 @@
+{
+  "id": "folk:sage:07",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "sage",
+  "words": 263,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of sage, dill, basil: warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of sage, dill, basil: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "dill",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

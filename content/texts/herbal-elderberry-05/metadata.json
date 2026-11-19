@@ -1,0 +1,53 @@
+{
+  "id": "herbal:elderberry:05",
+  "kind": "herbal",
+  "shown as": "herbal lady tale",
+  "focus": "elderberry",
+  "words": 607,
+  "padding": 0.75,
+  "teaches": [
+    "elderberry grows wild at Wendle Cross",
+    "elderberry in brown earth: dies",
+    "\"Saint Osric's leaf\" is a folk name for elderberry"
+  ],
+  "false claims": [
+    {
+      "n": "F4",
+      "says": "elderberry in black earth: dies",
+      "truth": "elderberry in black earth: slow",
+      "issue": "it is slow there, not dies"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": true,
+      "vague": false,
+      "says": "elderberry grows wild at Wendle Cross"
+    },
+    {
+      "n": "F2",
+      "type": "soil",
+      "true": true,
+      "vague": false,
+      "says": "elderberry in brown earth: dies"
+    },
+    {
+      "n": "F3",
+      "type": "alias",
+      "true": true,
+      "vague": false,
+      "says": "\"Saint Osric's leaf\" is a folk name for elderberry"
+    },
+    {
+      "n": "F4",
+      "type": "soil",
+      "true": false,
+      "vague": false,
+      "says": "elderberry in black earth: dies",
+      "truth": "elderberry in black earth: slow",
+      "issue": "it is slow there, not dies"
+    }
+  ]
+}

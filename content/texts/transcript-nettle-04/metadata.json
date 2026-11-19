@@ -1,0 +1,134 @@
+{
+  "id": "transcript:nettle:04",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "nettle",
+  "words": 452,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of nettle, dill, rosemary: bitter; murky",
+    "a brew of nettle, mint, elderberry: bitter; toxic",
+    "a brew of nettle, mint, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of nettle and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+    "a brew of nettle, elderberry: toxic"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, dill, rosemary: bitter; murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, mint, elderberry: bitter; toxic",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "nettle"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, mint, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F4",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "elderberry",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "dill + nettle -> murky (-50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "W"
+          ],
+          "labels": [
+            "warming",
+            "murky",
+            "toxic"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F5",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, elderberry: toxic",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle"
+        ],
+        "label pairs": [
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

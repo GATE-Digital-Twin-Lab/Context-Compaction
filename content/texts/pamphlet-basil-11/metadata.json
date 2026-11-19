@@ -1,0 +1,90 @@
+{
+  "id": "pamphlet:basil:11",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "basil",
+  "words": 155,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of nettle and basil poured into a brew of all three plants of Coldharbour: the mix: acts on dexterity (D); fragrant; warming"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "a brew of dill and basil poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the mix: bitter; murky",
+      "truth": "a brew of dill and basil poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the mix: murky",
+      "issue": "the mix adds bitter, which is not there"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle and basil poured into a brew of all three plants of Coldharbour: the mix: acts on dexterity (D); fragrant; warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "second brew": [
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "D"
+          ],
+          "labels": [
+            "fragrant",
+            "warming"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of dill and basil poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the mix: bitter; murky",
+      "names": {
+        "a plant of Kettlebury": "nettle",
+        "a plant of Coldharbour": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "nettle",
+          "basil"
+        ],
+        "label pairs": [
+          "dill + nettle -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "murky"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of dill and basil poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the mix: murky",
+      "issue": "the mix adds bitter, which is not there"
+    }
+  ]
+}

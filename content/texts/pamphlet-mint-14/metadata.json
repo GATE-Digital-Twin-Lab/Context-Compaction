@@ -1,0 +1,34 @@
+{
+  "id": "pamphlet:mint:14",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "mint",
+  "words": 111,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of mint, \"Brannock\": bitter"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": true,
+      "says": "a brew of mint, \"Brannock\": bitter",
+      "names": {
+        "Brannock": "elderberry"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

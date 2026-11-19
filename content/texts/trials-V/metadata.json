@@ -1,0 +1,151 @@
+{
+  "id": "trials:V",
+  "kind": "trials",
+  "shown as": "apothecary transcript",
+  "focus": "V",
+  "words": 610,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of mint, nettle, basil: work 15 -> 18 (+20%); acts on vitality (V)",
+    "a brew of mint, nettle, basil, with a brew of sage and chamomile poured in: work 80 -> 132 (+65%); acts on vitality (V); fragrant; warming; sweet",
+    "a brew of mint, nettle, basil, with a brew of chamomile and basil poured in: work 50 -> 35 (-30%); acts on vitality (V); warming",
+    "a brew of mint, nettle, basil, with a brew of elderberry and chamomile poured in: work 100 -> 120 (+20%); acts on vitality (V)",
+    "a brew of mint, nettle, basil, with a brew of nettle and chamomile poured in: work 5 -> 5 (+0%); warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, nettle, basil: work 15 -> 18 (+20%); acts on vitality (V)",
+      "role": "alone",
+      "hidden": {
+        "base counts": {
+          "mint": 4,
+          "nettle": 2,
+          "basil": 4
+        },
+        "poured counts": [],
+        "label pairs": [],
+        "base": "+20% V",
+        "net modifier": "+0%",
+        "result": "+20% V"
+      }
+    },
+    {
+      "n": "F2",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, nettle, basil, with a brew of sage and chamomile poured in: work 80 -> 132 (+65%); acts on vitality (V); fragrant; warming; sweet",
+      "role": "boost",
+      "hidden": {
+        "base counts": {
+          "mint": 3,
+          "nettle": 4,
+          "basil": 4
+        },
+        "poured counts": [
+          {
+            "sage": 1,
+            "chamomile": 1
+          }
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "chamomile + nettle -> warming (+50%)",
+          "basil + sage -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "base": "+20% V",
+        "net modifier": "+225%",
+        "result": "+65% V"
+      }
+    },
+    {
+      "n": "F3",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, nettle, basil, with a brew of chamomile and basil poured in: work 50 -> 35 (-30%); acts on vitality (V); warming",
+      "role": "negative",
+      "hidden": {
+        "base counts": {
+          "mint": 2,
+          "nettle": 1,
+          "basil": 4
+        },
+        "poured counts": [
+          {
+            "chamomile": 1,
+            "basil": 1
+          }
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "base": "-20% V",
+        "net modifier": "+50%",
+        "result": "-30% V"
+      }
+    },
+    {
+      "n": "F4",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, nettle, basil, with a brew of elderberry and chamomile poured in: work 100 -> 120 (+20%); acts on vitality (V)",
+      "role": "cancel",
+      "hidden": {
+        "base counts": {
+          "mint": 3,
+          "nettle": 2,
+          "basil": 4
+        },
+        "poured counts": [
+          {
+            "elderberry": 1,
+            "chamomile": 1
+          }
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "base": "+20% V",
+        "net modifier": "+0%",
+        "result": "+20% V"
+      }
+    },
+    {
+      "n": "F5",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, nettle, basil, with a brew of nettle and chamomile poured in: work 5 -> 5 (+0%); warming",
+      "role": "counts",
+      "hidden": {
+        "base counts": {
+          "mint": 2,
+          "nettle": 3,
+          "basil": 4
+        },
+        "poured counts": [
+          {
+            "nettle": 1,
+            "chamomile": 1
+          }
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "base": "-20% V",
+        "net modifier": "+50%",
+        "result": "+0% V"
+      }
+    }
+  ]
+}

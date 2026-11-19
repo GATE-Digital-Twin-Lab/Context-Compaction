@@ -1,0 +1,129 @@
+{
+  "id": "transcript:sage:06",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "sage",
+  "words": 381,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of sage and chamomile poured into a brew of all three plants of Wendle Cross: the mix: acts on intelligence (I)",
+    "a brew of sage, chamomile: sweet",
+    "a brew of sage, elderberry, dill: acts on intelligence (I)",
+    "a brew of sage, dill, rosemary: bitter",
+    "a brew of sage, nettle, basil: warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage and chamomile poured into a brew of all three plants of Wendle Cross: the mix: acts on intelligence (I)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "chamomile",
+          "dill",
+          "rosemary"
+        ],
+        "second brew": [
+          "elderberry",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)",
+          "dill + rosemary -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "I"
+          ],
+          "labels": [
+            "sweet",
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, chamomile: sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, elderberry, dill: acts on intelligence (I)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, dill, rosemary: bitter",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F5",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, nettle, basil: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

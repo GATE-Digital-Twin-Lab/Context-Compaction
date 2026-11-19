@@ -1,0 +1,102 @@
+{
+  "id": "folk:chamomile:15",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "chamomile",
+  "words": 169,
+  "padding": 0.55,
+  "teaches": [
+    "chamomile in brown earth: slow"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of chamomile and dill poured into a brew of \"a plant of Brackley\" and \"a plant of Wendle Cross\": the mix: fragrant",
+      "truth": "a brew of chamomile and dill poured into a brew of \"a plant of Brackley\" and \"a plant of Wendle Cross\": the mix: bitter",
+      "issue": "the mix says fragrant instead of bitter"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: toxic",
+      "truth": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
+      "issue": "the mix says toxic instead of warming"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of chamomile and dill poured into a brew of \"a plant of Brackley\" and \"a plant of Wendle Cross\": the mix: fragrant",
+      "names": {
+        "a plant of Brackley": "chamomile",
+        "a plant of Wendle Cross": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "dill",
+          "rosemary"
+        ],
+        "second brew": [
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "bitter"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of chamomile and dill poured into a brew of \"a plant of Brackley\" and \"a plant of Wendle Cross\": the mix: bitter",
+      "issue": "the mix says fragrant instead of bitter"
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": false,
+      "vague": true,
+      "says": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: toxic",
+      "names": {
+        "Quellock": "nettle",
+        "Saint Edith's wort": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "basil"
+        ],
+        "second brew": [
+          "nettle",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "warming"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
+      "issue": "the mix says toxic instead of warming"
+    },
+    {
+      "n": "F3",
+      "type": "soil",
+      "true": true,
+      "vague": true,
+      "says": "chamomile in brown earth: slow"
+    }
+  ]
+}

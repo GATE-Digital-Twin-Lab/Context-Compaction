@@ -1,0 +1,37 @@
+{
+  "id": "folk:dill:03",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "dill",
+  "words": 159,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of dill, sage: fragrant",
+      "truth": "a brew of dill, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims fragrant, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": false,
+      "vague": true,
+      "says": "a brew of dill, sage: fragrant",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "dill"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of dill, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims fragrant, but it tastes like plain water"
+    }
+  ]
+}

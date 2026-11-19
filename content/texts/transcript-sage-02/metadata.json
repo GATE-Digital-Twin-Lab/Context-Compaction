@@ -1,0 +1,173 @@
+{
+  "id": "transcript:sage:02",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "sage",
+  "words": 466,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of sage and basil poured into a brew of \"Wenna's sprig\" and \"Mother Hale's herb\": the mix: fragrant; warming; sweet",
+    "a brew of sage, elderberry, basil: warming"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "a brew of elderberry and sage poured into a brew of \"a plant of the mill pond\" and \"a plant of Kettlebury\": the second brew alone: fragrant; the mix: acts on intelligence (I)",
+      "truth": "a brew of elderberry and sage poured into a brew of \"a plant of the mill pond\" and \"a plant of Kettlebury\": the second brew alone: sweet; the mix: acts on intelligence (I)",
+      "issue": "the second brew alone says fragrant instead of sweet"
+    },
+    {
+      "n": "F4",
+      "says": "a brew of sage, elderberry, rosemary: acts on dexterity (D); murky",
+      "truth": "a brew of sage, elderberry, rosemary: murky",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    },
+    {
+      "n": "F5",
+      "says": "a brew of sage, mint, nettle: sweet",
+      "truth": "a brew of sage, mint, nettle: fragrant",
+      "issue": "says sweet instead of fragrant"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage and basil poured into a brew of \"Wenna's sprig\" and \"Mother Hale's herb\": the mix: fragrant; warming; sweet",
+      "names": {
+        "Wenna's sprig": "mint",
+        "Mother Hale's herb": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "chamomile",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "chamomile"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant",
+            "warming",
+            "sweet"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of elderberry and sage poured into a brew of \"a plant of the mill pond\" and \"a plant of Kettlebury\": the second brew alone: fragrant; the mix: acts on intelligence (I)",
+      "names": {
+        "a plant of the mill pond": "mint",
+        "a plant of Kettlebury": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "sage",
+          "dill"
+        ],
+        "second brew": [
+          "mint",
+          "dill"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "dill + mint -> sweet (+100%)",
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "I"
+          ],
+          "labels": [
+            "fragrant",
+            "sweet",
+            "bitter"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of elderberry and sage poured into a brew of \"a plant of the mill pond\" and \"a plant of Kettlebury\": the second brew alone: sweet; the mix: acts on intelligence (I)",
+      "issue": "the second brew alone says fragrant instead of sweet"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, elderberry, basil: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of sage, elderberry, rosemary: acts on dexterity (D); murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, elderberry, rosemary: murky",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    },
+    {
+      "n": "F5",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of sage, mint, nettle: sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, mint, nettle: fragrant",
+      "issue": "says sweet instead of fragrant"
+    }
+  ]
+}

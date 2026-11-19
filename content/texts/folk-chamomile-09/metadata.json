@@ -1,0 +1,42 @@
+{
+  "id": "folk:chamomile:09",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "chamomile",
+  "words": 261,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of chamomile, \"Wenna's sprig\", dill: warming",
+      "truth": "a brew of chamomile, \"Wenna's sprig\", dill: sweet",
+      "issue": "says warming instead of sweet"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of chamomile, \"Wenna's sprig\", dill: warming",
+      "names": {
+        "Wenna's sprig": "mint"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of chamomile, \"Wenna's sprig\", dill: sweet",
+      "issue": "says warming instead of sweet"
+    }
+  ]
+}

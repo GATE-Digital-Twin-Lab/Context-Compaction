@@ -1,0 +1,28 @@
+{
+  "id": "pamphlet:mint:10",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "mint",
+  "words": 164,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "mint in brown earth: sometimes fails",
+      "truth": "mint in brown earth: fast",
+      "issue": "it is fast there, not sometimes fails"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "soil",
+      "true": false,
+      "vague": true,
+      "says": "mint in brown earth: sometimes fails",
+      "truth": "mint in brown earth: fast",
+      "issue": "it is fast there, not sometimes fails"
+    }
+  ]
+}

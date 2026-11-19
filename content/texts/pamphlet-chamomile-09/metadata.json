@@ -1,0 +1,46 @@
+{
+  "id": "pamphlet:chamomile:09",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "chamomile",
+  "words": 129,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
+      "names": {
+        "Quellock": "nettle",
+        "Saint Edith's wort": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "basil"
+        ],
+        "second brew": [
+          "nettle",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "warming"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

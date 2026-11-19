@@ -1,0 +1,34 @@
+{
+  "id": "folk:elderberry:12",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "elderberry",
+  "words": 156,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of elderberry, \"a plant of Ludding\": murky"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": true,
+      "says": "a brew of elderberry, \"a plant of Ludding\": murky",
+      "names": {
+        "a plant of Ludding": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

@@ -1,4 +1,6 @@
-"""Layer 4 of the corpus pool: the texts (demo_spec.md, Sources), one file per sheet in content/texts/.
+"""Layer 4 of the corpus pool: the texts (demo_spec.md, Sources), one folder per sheet in content/texts/:
+<id>/metadata.json (what the source implies, corpus/metadata.py), <id>/<id>.txt (the text, once one passes)
+and, while none has passed, <id>/failed.txt and failed.json (the last attempt and its problems).
 
 A text file starts with a header (Title, Author, Kind), a blank line, then the body. In the body every
 sentence ending in "." starts a new line, so the texts read easily (table rows are left alone).
@@ -15,7 +17,8 @@ TEXTS_DIR = CONTENT / "texts"
 CUES_FILE = CONTENT / "cues.json"
 HEADER = ("Title", "Author", "Kind")
 KIND_NAMES = {"book": "monastery book", "transcript": "apothecary transcript", "herbal": "herbal lady tale",
-              "pamphlet": "merchant pamphlet", "folk": "folk tale"}
+              "pamphlet": "merchant pamphlet", "folk": "folk tale",
+              "trials": "apothecary transcript"}          # a trial ledger is a transcript to the agent
 REGISTRY_FILE = TEXTS_DIR / "registry.json"     # the cue spans of accepted texts, by effect
 LENGTH_TOLERANCE = 0.15            # a text's words may differ from its sheet's target by this share
 
@@ -71,5 +74,16 @@ def problems_text(text: str, sheet: dict) -> list[str]:
     return out
 
 
+def folder_of(sheet_id: str) -> Path:
+    return TEXTS_DIR / sheet_id.replace(":", "-")
+
+
 def path_of(sheet_id: str) -> Path:
-    return TEXTS_DIR / (sheet_id.replace(":", "-") + ".txt")
+    folder = folder_of(sheet_id)
+    return folder / f"{folder.name}.txt"
+
+
+def failed_of(sheet_id: str) -> tuple[Path, Path]:
+    """The last failed attempt at a source and its problems."""
+    folder = folder_of(sheet_id)
+    return folder / "failed.txt", folder / "failed.json"

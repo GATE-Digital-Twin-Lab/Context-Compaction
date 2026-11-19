@@ -1,0 +1,21 @@
+{
+  "id": "folk:mint:01",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "mint",
+  "words": 177,
+  "padding": 0.55,
+  "teaches": [
+    "mint grows wild at the mill pond"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": true,
+      "vague": true,
+      "says": "mint grows wild at the mill pond"
+    }
+  ]
+}

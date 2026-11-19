@@ -1,0 +1,119 @@
+{
+  "id": "transcript:mint:03",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "mint",
+  "words": 364,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of mint and sage poured into a brew of \"Wenna's sprig\" and \"Morrick\": the mix: fragrant",
+    "a brew of mint, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of mint, elderberry: bitter",
+    "a brew of mint, nettle: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of mint, sage, rosemary: fragrant"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint and sage poured into a brew of \"Wenna's sprig\" and \"Morrick\": the mix: fragrant",
+      "names": {
+        "Wenna's sprig": "mint",
+        "Morrick": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "rosemary"
+        ],
+        "second brew": [
+          "mint",
+          "rosemary"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, elderberry: bitter",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F4",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, nettle: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F5",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, sage, rosemary: fragrant",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "rosemary"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

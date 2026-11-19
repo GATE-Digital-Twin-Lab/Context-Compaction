@@ -1,0 +1,37 @@
+{
+  "id": "pamphlet:chamomile:04",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "chamomile",
+  "words": 132,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of chamomile, \"Saint Cuthwin's wort\", \"Ysolde's sprig\": warming; sweet"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile, \"Saint Cuthwin's wort\", \"Ysolde's sprig\": warming; sweet",
+      "names": {
+        "Saint Cuthwin's wort": "sage",
+        "Ysolde's sprig": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

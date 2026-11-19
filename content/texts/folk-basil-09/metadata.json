@@ -1,0 +1,67 @@
+{
+  "id": "folk:basil:09",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "basil",
+  "words": 283,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of basil, \"Tobin's wort\", rosemary: fragrant"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": acts on strength (S); fragrant; warming",
+      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": fragrant; warming",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of basil, \"Tobin's wort\", rosemary: fragrant",
+      "names": {
+        "Tobin's wort": "nettle"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": acts on strength (S); fragrant; warming",
+      "names": {
+        "Prior Anselm's leaf": "sage",
+        "Morrick": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of basil, \"Prior Anselm's leaf\", \"Morrick\": fragrant; warming",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    }
+  ]
+}

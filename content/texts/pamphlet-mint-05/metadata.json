@@ -1,0 +1,94 @@
+{
+  "id": "pamphlet:mint:05",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "mint",
+  "words": 122,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "mint in yellow earth: sometimes fails",
+      "truth": "mint in yellow earth: slow",
+      "issue": "it is slow there, not sometimes fails"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of mint, \"Saint Hild's leaf\": murky",
+      "truth": "a brew of mint, \"Saint Hild's leaf\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims murky, but it tastes like plain water"
+    },
+    {
+      "n": "F3",
+      "says": "a brew of mint and sage poured into a brew of \"Wenna's sprig\" and \"Morrick\": the mix: bitter",
+      "truth": "a brew of mint and sage poured into a brew of \"Wenna's sprig\" and \"Morrick\": the mix: fragrant",
+      "issue": "the mix says bitter instead of fragrant"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "soil",
+      "true": false,
+      "vague": false,
+      "says": "mint in yellow earth: sometimes fails",
+      "truth": "mint in yellow earth: slow",
+      "issue": "it is slow there, not sometimes fails"
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": false,
+      "vague": false,
+      "says": "a brew of mint, \"Saint Hild's leaf\": murky",
+      "names": {
+        "Saint Hild's leaf": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of mint, \"Saint Hild's leaf\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims murky, but it tastes like plain water"
+    },
+    {
+      "n": "F3",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of mint and sage poured into a brew of \"Wenna's sprig\" and \"Morrick\": the mix: bitter",
+      "names": {
+        "Wenna's sprig": "mint",
+        "Morrick": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "rosemary"
+        ],
+        "second brew": [
+          "mint",
+          "rosemary"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of mint and sage poured into a brew of \"Wenna's sprig\" and \"Morrick\": the mix: fragrant",
+      "issue": "the mix says bitter instead of fragrant"
+    }
+  ]
+}

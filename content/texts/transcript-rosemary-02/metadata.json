@@ -1,0 +1,162 @@
+{
+  "id": "transcript:rosemary:02",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "rosemary",
+  "words": 489,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of rosemary, elderberry, chamomile: murky",
+    "a brew of dill and rosemary poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+    "a brew of dill and rosemary poured into a brew of \"a plant of the mill pond\" and \"a plant of Wendle Cross\": the mix: bitter; murky"
+  ],
+  "false claims": [
+    {
+      "n": "F3",
+      "says": "a brew of rosemary, elderberry, sage: acts on dexterity (D); murky",
+      "truth": "a brew of rosemary, elderberry, sage: murky",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    },
+    {
+      "n": "F4",
+      "says": "a brew of rosemary, chamomile, dill: acts on vitality (V); bitter",
+      "truth": "a brew of rosemary, chamomile, dill: bitter",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, elderberry, chamomile: murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill and rosemary poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "chamomile",
+          "dill",
+          "basil",
+          "rosemary"
+        ],
+        "second brew": [
+          "elderberry",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "dill + rosemary -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "W"
+          ],
+          "labels": [
+            "fragrant",
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of rosemary, elderberry, sage: acts on dexterity (D); murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of rosemary, elderberry, sage: murky",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of rosemary, chamomile, dill: acts on vitality (V); bitter",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of rosemary, chamomile, dill: bitter",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F5",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill and rosemary poured into a brew of \"a plant of the mill pond\" and \"a plant of Wendle Cross\": the mix: bitter; murky",
+      "names": {
+        "a plant of the mill pond": "nettle",
+        "a plant of Wendle Cross": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "dill",
+          "rosemary"
+        ],
+        "second brew": [
+          "nettle",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

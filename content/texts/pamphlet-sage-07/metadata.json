@@ -1,0 +1,110 @@
+{
+  "id": "pamphlet:sage:07",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "sage",
+  "words": 131,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of sage, mint, nettle: fragrant"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant; warming",
+      "truth": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant",
+      "issue": "adds warming, which is not there"
+    },
+    {
+      "n": "F3",
+      "says": "a brew of elderberry and sage poured into a brew of \"a plant of the mill pond\" and \"a plant of Kettlebury\": the second brew alone: murky; the mix: acts on intelligence (I)",
+      "truth": "a brew of elderberry and sage poured into a brew of \"a plant of the mill pond\" and \"a plant of Kettlebury\": the second brew alone: sweet; the mix: acts on intelligence (I)",
+      "issue": "the second brew alone says murky instead of sweet"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, mint, nettle: fragrant",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant; warming",
+      "names": {
+        "Saint Hild's leaf": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "rosemary"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, mint, \"Saint Hild's leaf\": fragrant",
+      "issue": "adds warming, which is not there"
+    },
+    {
+      "n": "F3",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of elderberry and sage poured into a brew of \"a plant of the mill pond\" and \"a plant of Kettlebury\": the second brew alone: murky; the mix: acts on intelligence (I)",
+      "names": {
+        "a plant of the mill pond": "mint",
+        "a plant of Kettlebury": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "sage",
+          "dill"
+        ],
+        "second brew": [
+          "mint",
+          "dill"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "dill + mint -> sweet (+100%)",
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "I"
+          ],
+          "labels": [
+            "fragrant",
+            "sweet",
+            "bitter"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of elderberry and sage poured into a brew of \"a plant of the mill pond\" and \"a plant of Kettlebury\": the second brew alone: sweet; the mix: acts on intelligence (I)",
+      "issue": "the second brew alone says murky instead of sweet"
+    }
+  ]
+}

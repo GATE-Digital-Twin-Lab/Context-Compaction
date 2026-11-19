@@ -1,0 +1,21 @@
+{
+  "id": "folk:elderberry:04",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "elderberry",
+  "words": 262,
+  "padding": 0.55,
+  "teaches": [
+    "elderberry grows wild at the mill pond"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": true,
+      "vague": true,
+      "says": "elderberry grows wild at the mill pond"
+    }
+  ]
+}

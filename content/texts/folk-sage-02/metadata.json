@@ -1,0 +1,41 @@
+{
+  "id": "folk:sage:02",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "sage",
+  "words": 154,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of sage, mint, basil: fragrant; sweet",
+      "truth": "a brew of sage, mint, basil: fragrant; warming",
+      "issue": "says sweet instead of warming"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of sage, mint, basil: fragrant; sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, mint, basil: fragrant; warming",
+      "issue": "says sweet instead of warming"
+    }
+  ]
+}

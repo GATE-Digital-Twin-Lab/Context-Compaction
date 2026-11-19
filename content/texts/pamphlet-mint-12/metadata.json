@@ -1,0 +1,33 @@
+{
+  "id": "pamphlet:mint:12",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "mint",
+  "words": 106,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of mint, chamomile, \"a plant of Wendle Cross\": acts on strength (S)"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, chamomile, \"a plant of Wendle Cross\": acts on strength (S)",
+      "names": {
+        "a plant of Wendle Cross": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    }
+  ]
+}

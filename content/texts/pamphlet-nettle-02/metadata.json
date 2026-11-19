@@ -1,0 +1,32 @@
+{
+  "id": "pamphlet:nettle:02",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "nettle",
+  "words": 104,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of nettle, chamomile: warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, chamomile: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

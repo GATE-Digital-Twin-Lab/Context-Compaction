@@ -1,0 +1,56 @@
+{
+  "id": "pamphlet:rosemary:14",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "rosemary",
+  "words": 184,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of rosemary, \"Saint Osric's leaf\": fragrant",
+      "truth": "a brew of rosemary, \"Saint Osric's leaf\": murky",
+      "issue": "says fragrant instead of murky"
+    },
+    {
+      "n": "F2",
+      "says": "rosemary in brown earth: sometimes fails",
+      "truth": "rosemary in brown earth: ordinary",
+      "issue": "it is ordinary there, not sometimes fails"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": false,
+      "vague": false,
+      "says": "a brew of rosemary, \"Saint Osric's leaf\": fragrant",
+      "names": {
+        "Saint Osric's leaf": "elderberry"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of rosemary, \"Saint Osric's leaf\": murky",
+      "issue": "says fragrant instead of murky"
+    },
+    {
+      "n": "F2",
+      "type": "soil",
+      "true": false,
+      "vague": false,
+      "says": "rosemary in brown earth: sometimes fails",
+      "truth": "rosemary in brown earth: ordinary",
+      "issue": "it is ordinary there, not sometimes fails"
+    }
+  ]
+}

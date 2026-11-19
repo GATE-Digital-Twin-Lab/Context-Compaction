@@ -1,0 +1,191 @@
+{
+  "id": "trials:S",
+  "kind": "trials",
+  "shown as": "apothecary transcript",
+  "focus": "S",
+  "words": 480,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of mint, chamomile, rosemary: work 80 -> 88 (+10%); acts on strength (S)",
+    "a brew of mint, chamomile, rosemary, with a brew of sage and basil poured in: work 50 -> 80 (+60%); acts on strength (S); fragrant; warming; sweet",
+    "a brew of mint, chamomile, rosemary, with a brew of mint and elderberry poured in: work 100 -> 95 (-5%); acts on strength (S); bitter; murky",
+    "a brew of mint, chamomile, rosemary, with a brew of elderberry and nettle poured in: work 60 -> 48 (-20%); acts on strength (S)",
+    "a brew of mint, chamomile, rosemary, with a brew of sage and rosemary poured in: work 25 -> 25 (+0%); fragrant; sweet"
+  ],
+  "false claims": [
+    {
+      "n": "F3",
+      "says": "a brew of mint, chamomile, rosemary, with a brew of elderberry and chamomile poured in: work 80 -> 84 (+5%); acts on strength (S); bitter",
+      "truth": "a brew of mint, chamomile, rosemary, with a brew of elderberry and chamomile poured in: work 80 -> 84 (+5%); acts on strength (S); bitter; murky",
+      "issue": "noticed: leaves out murky"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, chamomile, rosemary: work 80 -> 88 (+10%); acts on strength (S)",
+      "role": "alone",
+      "hidden": {
+        "base counts": {
+          "mint": 2,
+          "chamomile": 3,
+          "rosemary": 2
+        },
+        "poured counts": [],
+        "label pairs": [],
+        "base": "+10% S",
+        "net modifier": "+0%",
+        "result": "+10% S"
+      }
+    },
+    {
+      "n": "F2",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, chamomile, rosemary, with a brew of sage and basil poured in: work 50 -> 80 (+60%); acts on strength (S); fragrant; warming; sweet",
+      "role": "boost",
+      "hidden": {
+        "base counts": {
+          "mint": 2,
+          "chamomile": 4,
+          "rosemary": 2
+        },
+        "poured counts": [
+          {
+            "sage": 1,
+            "basil": 1
+          }
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + rosemary -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "base": "+20% S",
+        "net modifier": "+200%",
+        "result": "+60% S"
+      }
+    },
+    {
+      "n": "F3",
+      "type": "trial",
+      "true": false,
+      "vague": false,
+      "says": "a brew of mint, chamomile, rosemary, with a brew of elderberry and chamomile poured in: work 80 -> 84 (+5%); acts on strength (S); bitter",
+      "role": "weaken",
+      "hidden": {
+        "base counts": {
+          "mint": 2,
+          "chamomile": 4,
+          "rosemary": 2
+        },
+        "poured counts": [
+          {
+            "elderberry": 1,
+            "chamomile": 1
+          }
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "base": "+20% S",
+        "net modifier": "-75%",
+        "result": "+5% S"
+      },
+      "truth": "a brew of mint, chamomile, rosemary, with a brew of elderberry and chamomile poured in: work 80 -> 84 (+5%); acts on strength (S); bitter; murky",
+      "issue": "noticed: leaves out murky"
+    },
+    {
+      "n": "F4",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, chamomile, rosemary, with a brew of mint and elderberry poured in: work 100 -> 95 (-5%); acts on strength (S); bitter; murky",
+      "role": "negative",
+      "hidden": {
+        "base counts": {
+          "mint": 3,
+          "chamomile": 4,
+          "rosemary": 3
+        },
+        "poured counts": [
+          {
+            "mint": 1,
+            "elderberry": 1
+          }
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "base": "-20% S",
+        "net modifier": "-75%",
+        "result": "-5% S"
+      }
+    },
+    {
+      "n": "F5",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, chamomile, rosemary, with a brew of elderberry and nettle poured in: work 60 -> 48 (-20%); acts on strength (S)",
+      "role": "cancel",
+      "hidden": {
+        "base counts": {
+          "mint": 4,
+          "chamomile": 4,
+          "rosemary": 3
+        },
+        "poured counts": [
+          {
+            "elderberry": 1,
+            "nettle": 1
+          }
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "base": "-20% S",
+        "net modifier": "+0%",
+        "result": "-20% S"
+      }
+    },
+    {
+      "n": "F6",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, chamomile, rosemary, with a brew of sage and rosemary poured in: work 25 -> 25 (+0%); fragrant; sweet",
+      "role": "counts",
+      "hidden": {
+        "base counts": {
+          "mint": 3,
+          "chamomile": 3,
+          "rosemary": 1
+        },
+        "poured counts": [
+          {
+            "sage": 1,
+            "rosemary": 1
+          }
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "base": "-10% S",
+        "net modifier": "+125%",
+        "result": "+0% S"
+      }
+    }
+  ]
+}

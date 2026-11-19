@@ -1,0 +1,116 @@
+{
+  "id": "folk:chamomile:12",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "chamomile",
+  "words": 192,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": acts on vitality (V); sweet",
+      "truth": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": sweet",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: bitter",
+      "truth": "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+      "issue": "the mix says bitter instead of fragrant, warming, sweet"
+    },
+    {
+      "n": "F3",
+      "says": "a brew of chamomile, nettle, \"Thrale\": sweet",
+      "truth": "a brew of chamomile, nettle, \"Thrale\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims sweet, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": acts on vitality (V); sweet",
+      "names": {
+        "a plant of the mill pond": "elderberry",
+        "a plant of Brackley": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of chamomile, \"a plant of the mill pond\", \"a plant of Brackley\": sweet",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": false,
+      "vague": true,
+      "says": "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: bitter",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "chamomile",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant",
+            "warming",
+            "sweet"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+      "issue": "the mix says bitter instead of fragrant, warming, sweet"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of chamomile, nettle, \"Thrale\": sweet",
+      "names": {
+        "Thrale": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": true
+      },
+      "truth": "a brew of chamomile, nettle, \"Thrale\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims sweet, but it tastes like plain water"
+    }
+  ]
+}

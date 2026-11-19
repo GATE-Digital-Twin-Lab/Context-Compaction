@@ -1,0 +1,88 @@
+{
+  "id": "folk:elderberry:13",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "elderberry",
+  "words": 157,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of elderberry and rosemary poured into a brew of \"a plant of the mill pond\" and \"a plant of Brackley\": the mix: bitter",
+      "truth": "a brew of elderberry and rosemary poured into a brew of \"a plant of the mill pond\" and \"a plant of Brackley\": the mix: murky; toxic",
+      "issue": "the mix says bitter instead of murky, toxic"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of elderberry, \"a plant of the mill pond\", \"Ysolde's sprig\": acts on wisdom (W); toxic",
+      "truth": "a brew of elderberry, \"a plant of the mill pond\", \"Ysolde's sprig\": toxic",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of elderberry and rosemary poured into a brew of \"a plant of the mill pond\" and \"a plant of Brackley\": the mix: bitter",
+      "names": {
+        "a plant of the mill pond": "nettle",
+        "a plant of Brackley": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "sage",
+          "rosemary"
+        ],
+        "second brew": [
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "D"
+          ],
+          "labels": [
+            "murky",
+            "toxic"
+          ],
+          "drinkable": false
+        }
+      },
+      "truth": "a brew of elderberry and rosemary poured into a brew of \"a plant of the mill pond\" and \"a plant of Brackley\": the mix: murky; toxic",
+      "issue": "the mix says bitter instead of murky, toxic"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of elderberry, \"a plant of the mill pond\", \"Ysolde's sprig\": acts on wisdom (W); toxic",
+      "names": {
+        "a plant of the mill pond": "nettle",
+        "Ysolde's sprig": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "basil"
+        ],
+        "label pairs": [
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of elderberry, \"a plant of the mill pond\", \"Ysolde's sprig\": toxic",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    }
+  ]
+}

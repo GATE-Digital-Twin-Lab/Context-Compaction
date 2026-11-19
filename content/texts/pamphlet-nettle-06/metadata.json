@@ -1,0 +1,36 @@
+{
+  "id": "pamphlet:nettle:06",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "nettle",
+  "words": 165,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of nettle, \"a plant of Brackley\", \"Remy's herb\": warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of nettle, \"a plant of Brackley\", \"Remy's herb\": warming",
+      "names": {
+        "a plant of Brackley": "chamomile",
+        "Remy's herb": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

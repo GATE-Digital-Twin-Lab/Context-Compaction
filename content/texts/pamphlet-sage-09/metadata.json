@@ -1,0 +1,28 @@
+{
+  "id": "pamphlet:sage:09",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "sage",
+  "words": 148,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "sage grows wild at Ashby Row",
+      "truth": "sage grows wild at Coldharbour",
+      "issue": "sage does not grow at Ashby Row; it grows at Coldharbour, Brackley, Kettlebury"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": false,
+      "vague": false,
+      "says": "sage grows wild at Ashby Row",
+      "truth": "sage grows wild at Coldharbour",
+      "issue": "sage does not grow at Ashby Row; it grows at Coldharbour, Brackley, Kettlebury"
+    }
+  ]
+}

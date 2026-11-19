@@ -1,0 +1,54 @@
+{
+  "id": "folk:basil:07",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "basil",
+  "words": 256,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of basil, \"Saint Wulfric's herb\": sweet",
+      "truth": "a brew of basil, \"Saint Wulfric's herb\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims sweet, but it tastes like plain water"
+    },
+    {
+      "n": "F2",
+      "says": "basil grows wild at Ludding",
+      "truth": "basil grows wild at Ashby Row",
+      "issue": "basil does not grow at Ludding; it grows at Coldharbour, Harrow's End, Ashby Row"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": false,
+      "vague": true,
+      "says": "a brew of basil, \"Saint Wulfric's herb\": sweet",
+      "names": {
+        "Saint Wulfric's herb": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "dill",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of basil, \"Saint Wulfric's herb\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims sweet, but it tastes like plain water"
+    },
+    {
+      "n": "F2",
+      "type": "group",
+      "true": false,
+      "vague": true,
+      "says": "basil grows wild at Ludding",
+      "truth": "basil grows wild at Ashby Row",
+      "issue": "basil does not grow at Ludding; it grows at Coldharbour, Harrow's End, Ashby Row"
+    }
+  ]
+}

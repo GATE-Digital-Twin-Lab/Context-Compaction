@@ -1,0 +1,76 @@
+{
+  "id": "pamphlet:chamomile:02",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "chamomile",
+  "words": 167,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of chamomile and dill poured into a brew of \"a plant of Brackley\" and \"a plant of Wendle Cross\": the mix: bitter"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of chamomile, \"a plant of Ashby Row\", rosemary: acts on wisdom (W); fragrant",
+      "truth": "a brew of chamomile, \"a plant of Ashby Row\", rosemary: fragrant",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of chamomile, \"a plant of Ashby Row\", rosemary: acts on wisdom (W); fragrant",
+      "names": {
+        "a plant of Ashby Row": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of chamomile, \"a plant of Ashby Row\", rosemary: fragrant",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile and dill poured into a brew of \"a plant of Brackley\" and \"a plant of Wendle Cross\": the mix: bitter",
+      "names": {
+        "a plant of Brackley": "chamomile",
+        "a plant of Wendle Cross": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "dill",
+          "rosemary"
+        ],
+        "second brew": [
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "bitter"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

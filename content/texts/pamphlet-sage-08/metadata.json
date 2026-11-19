@@ -1,0 +1,55 @@
+{
+  "id": "pamphlet:sage:08",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "sage",
+  "words": 123,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of sage, \"a plant of Brackley\", basil: fragrant; warming",
+    "a brew of sage, \"Morrick\": nothing: it tastes, smells and looks like plain water, and no drinker changes"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, \"a plant of Brackley\", basil: fragrant; warming",
+      "names": {
+        "a plant of Brackley": "mint"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, \"Morrick\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {
+        "Morrick": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    }
+  ]
+}

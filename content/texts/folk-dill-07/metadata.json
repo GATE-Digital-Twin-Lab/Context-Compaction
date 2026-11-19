@@ -1,0 +1,36 @@
+{
+  "id": "folk:dill:07",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "dill",
+  "words": 268,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of dill, \"Wenna's sprig\", \"a plant of Brackley\": sweet"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of dill, \"Wenna's sprig\", \"a plant of Brackley\": sweet",
+      "names": {
+        "Wenna's sprig": "mint",
+        "a plant of Brackley": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

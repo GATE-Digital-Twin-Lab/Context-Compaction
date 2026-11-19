@@ -5,7 +5,7 @@ from collections import Counter
 from itertools import combinations
 from pathlib import Path
 
-from corpus.catalogue import CATALOGUE_FILE, STYLES, about, catalogue, dump, revealable
+from corpus.catalogue import CATALOGUE_FILE, STYLES, about, catalogue, dump, noticed, revealable
 from corpus.myths import FALLIBLE, MYTHS_FILE, myth_pool
 from corpus.myths import dump as myth_dump
 from corpus.sheets import BOOK, KINDS, SHEETS_FILE, SPEC, build, truth
@@ -71,7 +71,7 @@ def test_mix_reveals_follow_the_rules():
         primaries, secondaries = revealable(f["plants"])
         reveal = f["reveal"]
         assert reveal["primary"] or reveal["secondary"]
-        assert reveal["primary"] in primaries + [None] and reveal["secondary"] in secondaries + [None]
+        assert reveal["primary"] in primaries + [None] and reveal["secondary"] in (secondaries, None)   # all labels
         if f["kind"] == "2+2":
             assert not (reveal["primary"] and reveal["secondary"])
             assert reveal["second"] is None or any("group" in ref for ref in f["second"]["refs"])
@@ -80,8 +80,11 @@ def test_mix_reveals_follow_the_rules():
 
 
 def test_what_a_drinker_notices():
+    assert noticed(["sweet", "fragrant"]) == ["fragrant", "sweet"]                          # all, when they agree
+    assert noticed(["sweet", "bitter"]) == [] and noticed(["toxic", "warming"]) == []        # cancel: like water
+    assert noticed(["fragrant", "fragrant"]) == ["fragrant"]                                 # two pairs, one taste
     assert revealable({"mint", "sage", "elderberry", "dill", "rosemary"}) == (["I"], [])     # labels cancel
-    assert revealable({"elderberry", "nettle", "sage", "rosemary"}) == ([], ["toxic"])        # undrinkable
+    assert revealable({"elderberry", "nettle", "sage", "rosemary"}) == ([], ["murky", "toxic"])   # undrinkable
     assert revealable({"mint", "sage", "chamomile"}) == ([], ["fragrant", "sweet"])
     assert revealable({"mint", "nettle", "sage", "basil", "rosemary"})[0] == ["V", "D"]       # two stats
 
@@ -110,6 +113,8 @@ def test_every_fact_has_a_different_wrong_myth_per_kind():
             assert all(fact["plants"][0] not in TABLE["groups"][v["group"]] for v in values)
         if fact["type"] == "brew" and len(fact["plants"]) == 2:
             assert all(v["stat"] is None and len(v["labels"]) <= 1 for v in values)
+        if fact["type"] == "brew":                                                        # no opposing labels
+            assert all(noticed(v["labels"]) == v["labels"] for v in values)
         if fact["type"] == "mix":                                                         # one revealed effect changed
             assert all(sum(v[k] != truth[k] for k in truth) == 1 for v in values)
             assert all(v[k] for v in values for k in truth if truth[k])
@@ -117,7 +122,8 @@ def test_every_fact_has_a_different_wrong_myth_per_kind():
 
 # --- the source sheets -------------------------------------------------------------------------
 
-SHEETS, SHEET_STATS = build()
+ALL_SHEETS, SHEET_STATS = build()
+SHEETS = [s for s in ALL_SHEETS if s["kind"] != "trials"]          # the plant sources; ledgers: tests/test_trials.py
 FACTS = {f["id"]: f for f in catalogue()}
 MYTHS = json.loads(MYTHS_FILE.read_text(encoding="utf-8"))
 
@@ -127,7 +133,7 @@ def _of(kind, plant=None):
 
 
 def test_sheet_file_is_up_to_date():
-    assert SHEETS_FILE.read_text(encoding="utf-8") == sheet_dump(SHEETS), "run: python -m corpus.sheets"
+    assert SHEETS_FILE.read_text(encoding="utf-8") == sheet_dump(ALL_SHEETS), "run: python -m corpus.sheets"
 
 
 def test_sheets_per_plant_and_kind():
@@ -248,7 +254,11 @@ def test_one_sentence_per_line():
 
 
 def test_written_texts_pass_the_mechanical_checks():
-    for path in TEXTS_DIR.glob("*.txt"):
-        sheet_id = path.stem.replace("-", ":")
-        sheet = next(s for s in SHEETS if s["id"] == sheet_id)
+    """Every accepted text sits in its source's folder, named after it, and passes the checks."""
+    for path in TEXTS_DIR.glob("*/*.txt"):
+        if path.name == "failed.txt":
+            continue
+        sheet_id = path.parent.name.replace("-", ":")
+        sheet = next(s for s in ALL_SHEETS if s["id"] == sheet_id)
         assert path_of(sheet_id) == path and problems(path, sheet) == [], path.name
+    assert not list(TEXTS_DIR.glob("*.txt")), "texts belong in their source's folder"

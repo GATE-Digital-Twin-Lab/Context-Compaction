@@ -1,0 +1,84 @@
+{
+  "id": "pamphlet:dill:09",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "dill",
+  "words": 101,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of dill, \"Saint Ermengild's sprig\", rosemary: toxic",
+      "truth": "a brew of dill, \"Saint Ermengild's sprig\", rosemary: bitter",
+      "issue": "says toxic instead of bitter"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of dill, sage, chamomile: acts on vitality (V); sweet",
+      "truth": "a brew of dill, sage, chamomile: sweet",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F3",
+      "says": "dill in yellow earth: sometimes fails",
+      "truth": "dill in yellow earth: dies",
+      "issue": "it is dies there, not sometimes fails"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of dill, \"Saint Ermengild's sprig\", rosemary: toxic",
+      "names": {
+        "Saint Ermengild's sprig": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of dill, \"Saint Ermengild's sprig\", rosemary: bitter",
+      "issue": "says toxic instead of bitter"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of dill, sage, chamomile: acts on vitality (V); sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of dill, sage, chamomile: sweet",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F3",
+      "type": "soil",
+      "true": false,
+      "vague": false,
+      "says": "dill in yellow earth: sometimes fails",
+      "truth": "dill in yellow earth: dies",
+      "issue": "it is dies there, not sometimes fails"
+    }
+  ]
+}

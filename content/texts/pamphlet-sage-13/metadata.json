@@ -1,0 +1,79 @@
+{
+  "id": "pamphlet:sage:13",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "sage",
+  "words": 107,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of sage, nettle, dill: murky"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of sage, \"a plant of the mill pond\", \"a plant of Brackley\": acts on intelligence (I); sweet",
+      "truth": "a brew of sage, \"a plant of the mill pond\", \"a plant of Brackley\": sweet",
+      "issue": "claims it acts on intelligence (I), but no stat acts"
+    },
+    {
+      "n": "F3",
+      "says": "sage grows wild at Harrow's End",
+      "truth": "sage grows wild at Kettlebury",
+      "issue": "sage does not grow at Harrow's End; it grows at Coldharbour, Brackley, Kettlebury"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of sage, \"a plant of the mill pond\", \"a plant of Brackley\": acts on intelligence (I); sweet",
+      "names": {
+        "a plant of the mill pond": "elderberry",
+        "a plant of Brackley": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, \"a plant of the mill pond\", \"a plant of Brackley\": sweet",
+      "issue": "claims it acts on intelligence (I), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of sage, nettle, dill: murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "group",
+      "true": false,
+      "vague": true,
+      "says": "sage grows wild at Harrow's End",
+      "truth": "sage grows wild at Kettlebury",
+      "issue": "sage does not grow at Harrow's End; it grows at Coldharbour, Brackley, Kettlebury"
+    }
+  ]
+}

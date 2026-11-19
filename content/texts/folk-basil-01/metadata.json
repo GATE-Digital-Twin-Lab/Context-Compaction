@@ -1,0 +1,87 @@
+{
+  "id": "folk:basil:01",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "basil",
+  "words": 265,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "basil in brown earth: fast",
+      "truth": "basil in brown earth: slow",
+      "issue": "it is slow there, not fast"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of basil, \"Ferrow\", \"a plant of Ludding\": acts on vitality (V); fragrant",
+      "truth": "a brew of basil, \"Ferrow\", \"a plant of Ludding\": fragrant",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F3",
+      "says": "a brew of basil, \"Tobin's wort\", chamomile: warming; sweet",
+      "truth": "a brew of basil, \"Tobin's wort\", chamomile: warming",
+      "issue": "adds sweet, which is not there"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "soil",
+      "true": false,
+      "vague": true,
+      "says": "basil in brown earth: fast",
+      "truth": "basil in brown earth: slow",
+      "issue": "it is slow there, not fast"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of basil, \"Ferrow\", \"a plant of Ludding\": acts on vitality (V); fragrant",
+      "names": {
+        "Ferrow": "mint",
+        "a plant of Ludding": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of basil, \"Ferrow\", \"a plant of Ludding\": fragrant",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of basil, \"Tobin's wort\", chamomile: warming; sweet",
+      "names": {
+        "Tobin's wort": "nettle"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of basil, \"Tobin's wort\", chamomile: warming",
+      "issue": "adds sweet, which is not there"
+    }
+  ]
+}

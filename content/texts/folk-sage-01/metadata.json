@@ -1,0 +1,52 @@
+{
+  "id": "folk:sage:01",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "sage",
+  "words": 218,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of sage and chamomile poured into a brew of all three plants of Wendle Cross: the mix: acts on intelligence (I)"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": true,
+      "says": "a brew of sage and chamomile poured into a brew of all three plants of Wendle Cross: the mix: acts on intelligence (I)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "chamomile",
+          "dill",
+          "rosemary"
+        ],
+        "second brew": [
+          "elderberry",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)",
+          "dill + rosemary -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "I"
+          ],
+          "labels": [
+            "sweet",
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

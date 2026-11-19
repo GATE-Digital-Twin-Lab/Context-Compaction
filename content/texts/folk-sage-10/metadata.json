@@ -1,0 +1,100 @@
+{
+  "id": "folk:sage:10",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "sage",
+  "words": 216,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of sage, \"a plant of Ashby Row\": bitter",
+      "truth": "a brew of sage, \"a plant of Ashby Row\": warming",
+      "issue": "says bitter instead of warming"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of sage, elderberry, \"a plant of the mill pond\": bitter; toxic",
+      "truth": "a brew of sage, elderberry, \"a plant of the mill pond\": toxic",
+      "issue": "adds bitter, which is not there"
+    },
+    {
+      "n": "F3",
+      "says": "a brew of sage, \"a plant of Harrow's End\", basil: fragrant; warming; sweet",
+      "truth": "a brew of sage, \"a plant of Harrow's End\", basil: warming; sweet",
+      "issue": "adds fragrant, which is not there"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": false,
+      "vague": true,
+      "says": "a brew of sage, \"a plant of Ashby Row\": bitter",
+      "names": {
+        "a plant of Ashby Row": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, \"a plant of Ashby Row\": warming",
+      "issue": "says bitter instead of warming"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of sage, elderberry, \"a plant of the mill pond\": bitter; toxic",
+      "names": {
+        "a plant of the mill pond": "nettle"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, elderberry, \"a plant of the mill pond\": toxic",
+      "issue": "adds bitter, which is not there"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of sage, \"a plant of Harrow's End\", basil: fragrant; warming; sweet",
+      "names": {
+        "a plant of Harrow's End": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, \"a plant of Harrow's End\", basil: warming; sweet",
+      "issue": "adds fragrant, which is not there"
+    }
+  ]
+}

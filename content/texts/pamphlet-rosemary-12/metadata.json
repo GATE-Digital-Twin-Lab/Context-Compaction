@@ -1,0 +1,88 @@
+{
+  "id": "pamphlet:rosemary:12",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "rosemary",
+  "words": 173,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of rosemary, elderberry, \"a plant of Brackley\": toxic",
+      "truth": "a brew of rosemary, elderberry, \"a plant of Brackley\": murky",
+      "issue": "says toxic instead of murky"
+    },
+    {
+      "n": "F2",
+      "says": "rosemary grows wild at the mill pond",
+      "truth": "rosemary grows wild at Coldharbour",
+      "issue": "rosemary does not grow at the mill pond; it grows at Coldharbour, Wendle Cross, Ludding"
+    },
+    {
+      "n": "F3",
+      "says": "a brew of rosemary, \"a plant of Wendle Cross\", \"Gammock\": toxic",
+      "truth": "a brew of rosemary, \"a plant of Wendle Cross\", \"Gammock\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims toxic, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of rosemary, elderberry, \"a plant of Brackley\": toxic",
+      "names": {
+        "a plant of Brackley": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of rosemary, elderberry, \"a plant of Brackley\": murky",
+      "issue": "says toxic instead of murky"
+    },
+    {
+      "n": "F2",
+      "type": "group",
+      "true": false,
+      "vague": true,
+      "says": "rosemary grows wild at the mill pond",
+      "truth": "rosemary grows wild at Coldharbour",
+      "issue": "rosemary does not grow at the mill pond; it grows at Coldharbour, Wendle Cross, Ludding"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of rosemary, \"a plant of Wendle Cross\", \"Gammock\": toxic",
+      "names": {
+        "a plant of Wendle Cross": "elderberry",
+        "Gammock": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": true
+      },
+      "truth": "a brew of rosemary, \"a plant of Wendle Cross\", \"Gammock\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims toxic, but it tastes like plain water"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "id": "transcript:dill:02",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "dill",
+  "words": 340,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of dill, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of dill, mint, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of dill, chamomile, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of chamomile and dill poured into a brew of \"a plant of the mill pond\" and \"a plant of Ashby Row\": the mix: sweet",
+    "a brew of dill, sage, basil: warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "dill"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, mint, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)",
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, chamomile, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F4",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile and dill poured into a brew of \"a plant of the mill pond\" and \"a plant of Ashby Row\": the mix: sweet",
+      "names": {
+        "a plant of the mill pond": "mint",
+        "a plant of Ashby Row": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "basil"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "sweet"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F5",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, sage, basil: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "dill",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

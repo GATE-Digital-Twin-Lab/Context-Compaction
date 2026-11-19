@@ -38,10 +38,20 @@ def soil_value(plant: str, soil: str) -> str:
     return "fast" if time <= 3 else "slow" if time >= 5 else "ordinary"
 
 
+def noticed(labels) -> list[str]:
+    """What a drinker notices of a potion's secondary labels: every distinct label when they all pull the
+    same way (sweet and fragrant: both), and nothing when positive and negative ones meet, since they
+    cancel and the potion tastes like plain water. Two pairs with the same label are noticed once."""
+    labels = list(labels)
+    if any(MODIFIERS[lab] > 0 for lab in labels) and any(MODIFIERS[lab] < 0 for lab in labels):
+        return []
+    return sorted(set(labels), key=list(MODIFIERS).index)
+
+
 def brew_value(plants) -> dict:
-    """The stat whose set is these plants (direction left to experiment), and the labels."""
+    """The stat whose set is these plants (direction left to experiment), and the labels a drinker notices."""
     stat = next((s for s, members in STAT_SETS.items() if set(members) <= set(plants)), None)
-    return {"stat": stat, "labels": list(secondary_labels(plants))}
+    return {"stat": stat, "labels": noticed(secondary_labels(plants))}
 
 
 def _ordered(plants) -> list[str]:
@@ -62,16 +72,12 @@ def mix_value(plants) -> dict:
 
 
 def revealable(plants) -> tuple[list[str], list[str]]:
-    """What a drinker could tell of a mix: the stats it acts on, and the secondary labels that act.
-    Mixed-sign modifiers cancel (no secondary acts); an undrinkable mix shows no primary, only its
-    poison (toxic, or its negative labels)."""
+    """What a drinker could tell of a mix: the stats it acts on, and the labels noticed (see noticed():
+    all of them when they pull the same way, none when they cancel). An undrinkable mix shows no
+    primary, only its poison."""
     value = mix_value(plants)
-    labels, net = value["labels"], net_modifier(value["labels"])
-    if not value["drinkable"]:
-        return [], ["toxic"] if "toxic" in labels else sorted({lab for lab in labels if MODIFIERS[lab] < 0})
-    if net == 0:
-        return value["stats"], []
-    return value["stats"], sorted({lab for lab in labels if (MODIFIERS[lab] > 0) == (net > 0)})
+    labels = noticed(value["labels"])
+    return (value["stats"] if value["drinkable"] else []), labels
 
 
 def _reaches_w(plants) -> bool:
@@ -126,7 +132,7 @@ def mixes(table: dict, seed: int = SEED) -> list[dict]:
             rows.append(_mix(x, n, {"plants": _ordered(pair), "refs": refs, "style": style}, {
                 "second": rng.choice(own) if own else None,
                 "primary": shown if shown in primaries else None,
-                "secondary": shown if shown in secondaries else None,
+                "secondary": secondaries if shown in secondaries else None,     # every label noticed
             }))
         three = [(n, g) for n in named for g in table["groups"]]
         w = [m for m in three if _reaches_w(set(m[0]) | set(table["groups"][m[1]]))]
@@ -135,7 +141,7 @@ def mixes(table: dict, seed: int = SEED) -> list[dict]:
             primaries, secondaries = revealable(set(n) | set(table["groups"][g]))
             rows.append(_mix(x, n, {"plants": _ordered(table["groups"][g]), "group": g}, {
                 "primary": "W" if i == 0 else rng.choice(primaries) if primaries else None,
-                "secondary": rng.choice(secondaries) if secondaries else None,
+                "secondary": secondaries if secondaries and rng.choice(secondaries) else None,   # every label
             }))
     return rows
 

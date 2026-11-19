@@ -1,0 +1,30 @@
+{
+  "id": "pamphlet:sage:10",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "sage",
+  "words": 192,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of sage, nettle: nothing: it tastes, smells and looks like plain water, and no drinker changes"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, nettle: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    }
+  ]
+}

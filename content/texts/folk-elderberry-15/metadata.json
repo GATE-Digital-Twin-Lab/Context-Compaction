@@ -1,0 +1,39 @@
+{
+  "id": "folk:elderberry:15",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "elderberry",
+  "words": 294,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of elderberry, \"a plant of Brackley\": bitter",
+      "truth": "a brew of elderberry, \"a plant of Brackley\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": false,
+      "vague": false,
+      "says": "a brew of elderberry, \"a plant of Brackley\": bitter",
+      "names": {
+        "a plant of Brackley": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "chamomile"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of elderberry, \"a plant of Brackley\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    }
+  ]
+}

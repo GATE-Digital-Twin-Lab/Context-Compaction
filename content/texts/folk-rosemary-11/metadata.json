@@ -1,0 +1,44 @@
+{
+  "id": "folk:rosemary:11",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "rosemary",
+  "words": 202,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of rosemary, \"Saint Aldhelm's herb\", \"Brannock\": murky; toxic",
+      "truth": "a brew of rosemary, \"Saint Aldhelm's herb\", \"Brannock\": bitter; murky",
+      "issue": "says toxic instead of bitter"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of rosemary, \"Saint Aldhelm's herb\", \"Brannock\": murky; toxic",
+      "names": {
+        "Saint Aldhelm's herb": "mint",
+        "Brannock": "elderberry"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of rosemary, \"Saint Aldhelm's herb\", \"Brannock\": bitter; murky",
+      "issue": "says toxic instead of bitter"
+    }
+  ]
+}

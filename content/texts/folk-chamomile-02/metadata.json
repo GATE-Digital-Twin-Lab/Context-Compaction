@@ -1,0 +1,70 @@
+{
+  "id": "folk:chamomile:02",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "chamomile",
+  "words": 187,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of mint and chamomile poured into a brew of all three plants of Wendle Cross: the mix: acts on strength (S)"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "chamomile grows wild at Ashby Row",
+      "truth": "chamomile grows wild at Harrow's End",
+      "issue": "chamomile does not grow at Ashby Row; it grows at Harrow's End, Brackley, Ludding"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": false,
+      "vague": true,
+      "says": "chamomile grows wild at Ashby Row",
+      "truth": "chamomile grows wild at Harrow's End",
+      "issue": "chamomile does not grow at Ashby Row; it grows at Harrow's End, Brackley, Ludding"
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint and chamomile poured into a brew of all three plants of Wendle Cross: the mix: acts on strength (S)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "chamomile",
+          "dill",
+          "rosemary"
+        ],
+        "second brew": [
+          "elderberry",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)",
+          "elderberry + mint -> bitter (-25%)",
+          "dill + rosemary -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "S"
+          ],
+          "labels": [
+            "sweet",
+            "bitter",
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

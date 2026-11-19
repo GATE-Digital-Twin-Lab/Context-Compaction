@@ -1,0 +1,127 @@
+{
+  "id": "transcript:rosemary:04",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "rosemary",
+  "words": 332,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of rosemary, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of rosemary, elderberry, dill: bitter; murky",
+    "a brew of rosemary, basil: fragrant",
+    "a brew of rosemary, nettle, dill: bitter; murky",
+    "a brew of mint and rosemary poured into a brew of all three plants of Brackley: the mix: acts on strength (S); fragrant; sweet"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, elderberry, dill: bitter; murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, basil: fragrant",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, nettle, dill: bitter; murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F5",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint and rosemary poured into a brew of all three plants of Brackley: the mix: acts on strength (S); fragrant; sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "chamomile",
+          "rosemary"
+        ],
+        "second brew": [
+          "mint",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "S"
+          ],
+          "labels": [
+            "fragrant",
+            "sweet"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

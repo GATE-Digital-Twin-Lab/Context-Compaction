@@ -1,0 +1,141 @@
+{
+  "id": "transcript:mint:07",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "mint",
+  "words": 403,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of mint, dill: sweet",
+    "a brew of mint, elderberry, rosemary: bitter; murky",
+    "a brew of mint, nettle, chamomile: warming",
+    "a brew of mint and nettle poured into a brew of all three plants of Harrow's End: the mix: acts on vitality (V)"
+  ],
+  "false claims": [
+    {
+      "n": "F3",
+      "says": "a brew of mint, elderberry, nettle: acts on vitality (V); bitter; toxic",
+      "truth": "a brew of mint, elderberry, nettle: bitter; toxic",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, dill: sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, elderberry, rosemary: bitter; murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of mint, elderberry, nettle: acts on vitality (V); bitter; toxic",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "nettle"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of mint, elderberry, nettle: bitter; toxic",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, nettle, chamomile: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F5",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint and nettle poured into a brew of all three plants of Harrow's End: the mix: acts on vitality (V)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "nettle",
+          "chamomile",
+          "basil"
+        ],
+        "second brew": [
+          "elderberry",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "V"
+          ],
+          "labels": [
+            "warming",
+            "bitter",
+            "toxic"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

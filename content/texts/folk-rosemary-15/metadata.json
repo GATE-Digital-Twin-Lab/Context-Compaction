@@ -1,0 +1,53 @@
+{
+  "id": "folk:rosemary:15",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "rosemary",
+  "words": 170,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of rosemary, \"Prior Anselm's leaf\", \"a plant of Coldharbour\": fragrant; warming"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "rosemary in yellow earth: sometimes fails",
+      "truth": "rosemary in yellow earth: slow",
+      "issue": "it is slow there, not sometimes fails"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of rosemary, \"Prior Anselm's leaf\", \"a plant of Coldharbour\": fragrant; warming",
+      "names": {
+        "Prior Anselm's leaf": "sage",
+        "a plant of Coldharbour": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "soil",
+      "true": false,
+      "vague": true,
+      "says": "rosemary in yellow earth: sometimes fails",
+      "truth": "rosemary in yellow earth: slow",
+      "issue": "it is slow there, not sometimes fails"
+    }
+  ]
+}

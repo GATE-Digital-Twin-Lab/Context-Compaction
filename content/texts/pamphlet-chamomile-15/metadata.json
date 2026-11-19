@@ -1,0 +1,90 @@
+{
+  "id": "pamphlet:chamomile:15",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "chamomile",
+  "words": 128,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of chamomile, \"a plant of Ashby Row\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of chamomile, \"a plant of the mill pond\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of chamomile and basil poured into a brew of all three plants of Wendle Cross: the mix: acts on wisdom (W)"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile, \"a plant of Ashby Row\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {
+        "a plant of Ashby Row": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": true,
+      "vague": true,
+      "says": "a brew of chamomile, \"a plant of the mill pond\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {
+        "a plant of the mill pond": "mint"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile and basil poured into a brew of all three plants of Wendle Cross: the mix: acts on wisdom (W)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "chamomile",
+          "dill",
+          "basil",
+          "rosemary"
+        ],
+        "second brew": [
+          "elderberry",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "dill + rosemary -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "W"
+          ],
+          "labels": [
+            "fragrant",
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "folk:rosemary:01",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "rosemary",
+  "words": 174,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of dill and rosemary poured into a brew of \"a plant of the mill pond\" and \"a plant of Wendle Cross\": the mix: bitter; murky",
+    "rosemary in brown earth: ordinary"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": true,
+      "says": "a brew of dill and rosemary poured into a brew of \"a plant of the mill pond\" and \"a plant of Wendle Cross\": the mix: bitter; murky",
+      "names": {
+        "a plant of the mill pond": "nettle",
+        "a plant of Wendle Cross": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "dill",
+          "rosemary"
+        ],
+        "second brew": [
+          "nettle",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F2",
+      "type": "soil",
+      "true": true,
+      "vague": true,
+      "says": "rosemary in brown earth: ordinary"
+    }
+  ]
+}

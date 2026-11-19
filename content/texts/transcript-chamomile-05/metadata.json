@@ -1,0 +1,168 @@
+{
+  "id": "transcript:chamomile:05",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "chamomile",
+  "words": 483,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+    "a brew of chamomile, elderberry, sage: sweet",
+    "a brew of chamomile and basil poured into a brew of all three plants of Wendle Cross: the mix: acts on wisdom (W)",
+    "a brew of chamomile, sage: sweet"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "a brew of elderberry and chamomile poured into a brew of \"Saint Aldhelm's herb\" and \"a plant of Harrow's End\": the second brew alone: fragrant; the mix: bitter",
+      "truth": "a brew of elderberry and chamomile poured into a brew of \"Saint Aldhelm's herb\" and \"a plant of Harrow's End\": the second brew alone: bitter; the mix: bitter",
+      "issue": "the second brew alone says fragrant instead of bitter"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "chamomile",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant",
+            "warming",
+            "sweet"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of elderberry and chamomile poured into a brew of \"Saint Aldhelm's herb\" and \"a plant of Harrow's End\": the second brew alone: fragrant; the mix: bitter",
+      "names": {
+        "Saint Aldhelm's herb": "mint",
+        "a plant of Harrow's End": "elderberry"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "chamomile"
+        ],
+        "second brew": [
+          "mint",
+          "elderberry"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "bitter"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of elderberry and chamomile poured into a brew of \"Saint Aldhelm's herb\" and \"a plant of Harrow's End\": the second brew alone: bitter; the mix: bitter",
+      "issue": "the second brew alone says fragrant instead of bitter"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile, elderberry, sage: sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F4",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile and basil poured into a brew of all three plants of Wendle Cross: the mix: acts on wisdom (W)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "chamomile",
+          "dill",
+          "basil",
+          "rosemary"
+        ],
+        "second brew": [
+          "elderberry",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "dill + rosemary -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "W"
+          ],
+          "labels": [
+            "fragrant",
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F5",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile, sage: sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

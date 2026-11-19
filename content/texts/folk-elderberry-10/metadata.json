@@ -1,0 +1,58 @@
+{
+  "id": "folk:elderberry:10",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "elderberry",
+  "words": 240,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of elderberry, \"a plant of Coldharbour\", \"a plant of Harrow's End\": murky",
+      "truth": "a brew of elderberry, \"a plant of Coldharbour\", \"a plant of Harrow's End\": warming",
+      "issue": "says murky instead of warming"
+    },
+    {
+      "n": "F2",
+      "says": "\"Saint Osric's leaf\" is a folk name for chamomile",
+      "truth": "\"Saint Osric's leaf\" is a folk name for elderberry",
+      "issue": "it means elderberry, not chamomile (both grow at Harrow's End, so locals mix them up)"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of elderberry, \"a plant of Coldharbour\", \"a plant of Harrow's End\": murky",
+      "names": {
+        "a plant of Coldharbour": "sage",
+        "a plant of Harrow's End": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of elderberry, \"a plant of Coldharbour\", \"a plant of Harrow's End\": warming",
+      "issue": "says murky instead of warming"
+    },
+    {
+      "n": "F2",
+      "type": "alias",
+      "true": false,
+      "vague": true,
+      "says": "\"Saint Osric's leaf\" is a folk name for chamomile",
+      "truth": "\"Saint Osric's leaf\" is a folk name for elderberry",
+      "issue": "it means elderberry, not chamomile (both grow at Harrow's End, so locals mix them up)"
+    }
+  ]
+}

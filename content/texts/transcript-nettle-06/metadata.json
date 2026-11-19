@@ -1,0 +1,130 @@
+{
+  "id": "transcript:nettle:06",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "nettle",
+  "words": 499,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of nettle, elderberry, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of nettle, elderberry, basil: toxic",
+    "a brew of nettle and rosemary poured into a brew of \"a plant of Kettlebury\" and \"a plant of Harrow's End\": the second brew alone: warming; the mix: fragrant; warming",
+    "a brew of nettle, elderberry, rosemary: murky; toxic",
+    "a brew of nettle, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, elderberry, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, elderberry, basil: toxic",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "basil"
+        ],
+        "label pairs": [
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle and rosemary poured into a brew of \"a plant of Kettlebury\" and \"a plant of Harrow's End\": the second brew alone: warming; the mix: fragrant; warming",
+      "names": {
+        "a plant of Kettlebury": "sage",
+        "a plant of Harrow's End": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "second brew": [
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "D"
+          ],
+          "labels": [
+            "fragrant",
+            "warming"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, elderberry, rosemary: murky; toxic",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F5",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    }
+  ]
+}

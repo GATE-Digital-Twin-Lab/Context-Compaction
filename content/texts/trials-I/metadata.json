@@ -1,0 +1,155 @@
+{
+  "id": "trials:I",
+  "kind": "trials",
+  "shown as": "apothecary transcript",
+  "focus": "I",
+  "words": 509,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of elderberry, sage, dill: work 30 -> 36 (+20%); acts on intelligence (I)",
+    "a brew of elderberry, sage, dill, with a brew of elderberry and rosemary poured in: work 20 -> 21 (+5%); acts on intelligence (I); bitter; murky",
+    "a brew of elderberry, sage, dill, with a brew of mint and dill poured in: work 10 -> 11 (+10%); acts on intelligence (I)",
+    "a brew of elderberry, sage, dill, with a brew of elderberry and sage poured in: work 100 -> 100 (+0%); the work did not change; it tastes like plain water"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "a brew of elderberry, sage, dill, with a brew of elderberry and chamomile poured in: work 100 -> 145 (+45%); acts on intelligence (I); sweet",
+      "truth": "a brew of elderberry, sage, dill, with a brew of elderberry and chamomile poured in: work 40 -> 56 (+40%); acts on intelligence (I); sweet",
+      "issue": "the work is 100 -> 145, but the true change is 40 -> 56"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of elderberry, sage, dill: work 30 -> 36 (+20%); acts on intelligence (I)",
+      "role": "alone",
+      "hidden": {
+        "base counts": {
+          "elderberry": 4,
+          "sage": 1,
+          "dill": 2
+        },
+        "poured counts": [],
+        "label pairs": [],
+        "base": "+20% I",
+        "net modifier": "+0%",
+        "result": "+20% I"
+      }
+    },
+    {
+      "n": "F2",
+      "type": "trial",
+      "true": false,
+      "vague": false,
+      "says": "a brew of elderberry, sage, dill, with a brew of elderberry and chamomile poured in: work 100 -> 145 (+45%); acts on intelligence (I); sweet",
+      "role": "boost",
+      "hidden": {
+        "base counts": {
+          "elderberry": 4,
+          "sage": 1,
+          "dill": 3
+        },
+        "poured counts": [
+          {
+            "elderberry": 1,
+            "chamomile": 1
+          }
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "base": "+20% I",
+        "net modifier": "+100%",
+        "result": "+40% I"
+      },
+      "truth": "a brew of elderberry, sage, dill, with a brew of elderberry and chamomile poured in: work 40 -> 56 (+40%); acts on intelligence (I); sweet",
+      "issue": "the work is 100 -> 145, but the true change is 40 -> 56"
+    },
+    {
+      "n": "F3",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of elderberry, sage, dill, with a brew of elderberry and rosemary poured in: work 20 -> 21 (+5%); acts on intelligence (I); bitter; murky",
+      "role": "weaken",
+      "hidden": {
+        "base counts": {
+          "elderberry": 4,
+          "sage": 1,
+          "dill": 1
+        },
+        "poured counts": [
+          {
+            "elderberry": 1,
+            "rosemary": 1
+          }
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "base": "+20% I",
+        "net modifier": "-75%",
+        "result": "+5% I"
+      }
+    },
+    {
+      "n": "F4",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of elderberry, sage, dill, with a brew of mint and dill poured in: work 10 -> 11 (+10%); acts on intelligence (I)",
+      "role": "cancel",
+      "hidden": {
+        "base counts": {
+          "elderberry": 3,
+          "sage": 1,
+          "dill": 1
+        },
+        "poured counts": [
+          {
+            "mint": 1,
+            "dill": 1
+          }
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "dill + mint -> sweet (+100%)",
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "base": "+10% I",
+        "net modifier": "+0%",
+        "result": "+10% I"
+      }
+    },
+    {
+      "n": "F5",
+      "type": "trial",
+      "true": true,
+      "vague": false,
+      "says": "a brew of elderberry, sage, dill, with a brew of elderberry and sage poured in: work 100 -> 100 (+0%); the work did not change; it tastes like plain water",
+      "role": "counts",
+      "hidden": {
+        "base counts": {
+          "elderberry": 3,
+          "sage": 1,
+          "dill": 4
+        },
+        "poured counts": [
+          {
+            "elderberry": 1,
+            "sage": 1
+          }
+        ],
+        "label pairs": [],
+        "base": "+10% I",
+        "net modifier": "+0%",
+        "result": "+0% I"
+      }
+    }
+  ]
+}

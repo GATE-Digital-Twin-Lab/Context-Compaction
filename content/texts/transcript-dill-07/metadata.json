@@ -1,0 +1,127 @@
+{
+  "id": "transcript:dill:07",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "dill",
+  "words": 436,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of dill, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of dill, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of dill, elderberry, sage: acts on intelligence (I)",
+    "a brew of nettle and dill poured into a brew of all three plants of Coldharbour: the mix: acts on dexterity (D)",
+    "a brew of dill, mint, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "dill"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, elderberry, sage: acts on intelligence (I)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F4",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle and dill poured into a brew of all three plants of Coldharbour: the mix: acts on dexterity (D)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "dill",
+          "basil",
+          "rosemary"
+        ],
+        "second brew": [
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)",
+          "dill + rosemary -> bitter (-25%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "D"
+          ],
+          "labels": [
+            "fragrant",
+            "warming",
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F5",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, mint, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)",
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "labels cancel": true
+      }
+    }
+  ]
+}

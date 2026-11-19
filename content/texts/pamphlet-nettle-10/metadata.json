@@ -1,0 +1,83 @@
+{
+  "id": "pamphlet:nettle:10",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "nettle",
+  "words": 152,
+  "padding": 0.4,
+  "teaches": [
+    "\"Saint Brede's sprig\" is a folk name for nettle",
+    "a brew of nettle and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+    "a brew of nettle, \"a plant of Wendle Cross\", \"Gammock\": toxic"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "alias",
+      "true": true,
+      "vague": true,
+      "says": "\"Saint Brede's sprig\" is a folk name for nettle"
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "elderberry",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "dill + nettle -> murky (-50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "W"
+          ],
+          "labels": [
+            "warming",
+            "murky",
+            "toxic"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, \"a plant of Wendle Cross\", \"Gammock\": toxic",
+      "names": {
+        "a plant of Wendle Cross": "elderberry",
+        "Gammock": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "basil"
+        ],
+        "label pairs": [
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

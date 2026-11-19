@@ -1,0 +1,33 @@
+{
+  "id": "folk:chamomile:07",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "chamomile",
+  "words": 277,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of chamomile, elderberry, rosemary: murky"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of chamomile, elderberry, rosemary: murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "folk:rosemary:07",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "rosemary",
+  "words": 239,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of dill and rosemary poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+    "a brew of rosemary, dill: bitter"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": true,
+      "says": "a brew of dill and rosemary poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "chamomile",
+          "dill",
+          "basil",
+          "rosemary"
+        ],
+        "second brew": [
+          "elderberry",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "dill + rosemary -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "W"
+          ],
+          "labels": [
+            "fragrant",
+            "bitter",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": true,
+      "vague": true,
+      "says": "a brew of rosemary, dill: bitter",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

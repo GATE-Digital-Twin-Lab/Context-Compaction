@@ -1,0 +1,28 @@
+{
+  "id": "pamphlet:chamomile:14",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "chamomile",
+  "words": 139,
+  "padding": 0.4,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "chamomile grows wild at Coldharbour",
+      "truth": "chamomile grows wild at Ludding",
+      "issue": "chamomile does not grow at Coldharbour; it grows at Harrow's End, Brackley, Ludding"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": false,
+      "vague": false,
+      "says": "chamomile grows wild at Coldharbour",
+      "truth": "chamomile grows wild at Ludding",
+      "issue": "chamomile does not grow at Coldharbour; it grows at Harrow's End, Brackley, Ludding"
+    }
+  ]
+}

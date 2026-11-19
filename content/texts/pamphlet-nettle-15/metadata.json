@@ -1,0 +1,72 @@
+{
+  "id": "pamphlet:nettle:15",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "nettle",
+  "words": 172,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of mint and nettle poured into a brew of \"Wenna's sprig\" and \"Saint Edith's wort\": the mix: acts on vitality (V)",
+    "a brew of nettle, mint, sage: fragrant",
+    "nettle in brown earth: dies"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint and nettle poured into a brew of \"Wenna's sprig\" and \"Saint Edith's wort\": the mix: acts on vitality (V)",
+      "names": {
+        "Wenna's sprig": "mint",
+        "Saint Edith's wort": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "basil"
+        ],
+        "label pairs": [],
+        "everything the mix does": {
+          "stats": [
+            "V"
+          ],
+          "labels": [],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, mint, sage: fragrant",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "soil",
+      "true": true,
+      "vague": false,
+      "says": "nettle in brown earth: dies"
+    }
+  ]
+}

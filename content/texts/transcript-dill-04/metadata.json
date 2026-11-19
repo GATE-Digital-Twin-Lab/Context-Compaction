@@ -1,0 +1,146 @@
+{
+  "id": "transcript:dill:04",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "dill",
+  "words": 489,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of dill, mint, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+    "a brew of dill, mint, basil: sweet"
+  ],
+  "false claims": [
+    {
+      "n": "F3",
+      "says": "a brew of dill, basil: bitter",
+      "truth": "a brew of dill, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    },
+    {
+      "n": "F5",
+      "says": "a brew of dill, basil, rosemary: acts on dexterity (D)",
+      "truth": "a brew of dill, basil, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, mint, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)",
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill and basil poured into a brew of all three plants of Brackley: the mix: fragrant; warming; sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)",
+          "dill + mint -> sweet (+100%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant",
+            "warming",
+            "sweet",
+            "sweet"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F3",
+      "type": "pair",
+      "true": false,
+      "vague": false,
+      "says": "a brew of dill, basil: bitter",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "dill",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of dill, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, mint, basil: sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "dill",
+          "basil"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F5",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of dill, basil, rosemary: acts on dexterity (D)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "dill",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": true
+      },
+      "truth": "a brew of dill, basil, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on dexterity (D), but no stat acts"
+    }
+  ]
+}

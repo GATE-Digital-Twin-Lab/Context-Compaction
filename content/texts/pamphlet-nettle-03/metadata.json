@@ -1,0 +1,74 @@
+{
+  "id": "pamphlet:nettle:03",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "nettle",
+  "words": 103,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of nettle, \"a plant of Harrow's End\", \"a plant of Coldharbour\": murky; toxic",
+    "a brew of nettle, \"a plant of Brackley\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of nettle, mint, basil: acts on vitality (V)"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of nettle, \"a plant of Harrow's End\", \"a plant of Coldharbour\": murky; toxic",
+      "names": {
+        "a plant of Harrow's End": "elderberry",
+        "a plant of Coldharbour": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + rosemary -> murky (-50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": true,
+      "vague": true,
+      "says": "a brew of nettle, \"a plant of Brackley\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {
+        "a plant of Brackley": "mint"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, mint, basil: acts on vitality (V)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    }
+  ]
+}

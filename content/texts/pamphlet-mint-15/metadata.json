@@ -1,0 +1,88 @@
+{
+  "id": "pamphlet:mint:15",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "mint",
+  "words": 199,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of mint, nettle, sage: fragrant",
+    "a brew of mint, \"a plant of Coldharbour\", \"Pellow\": fragrant; sweet"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of mint, \"Hesketh\", dill: acts on strength (S); fragrant; sweet",
+      "truth": "a brew of mint, \"Hesketh\", dill: fragrant; sweet",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of mint, \"Hesketh\", dill: acts on strength (S); fragrant; sweet",
+      "names": {
+        "Hesketh": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of mint, \"Hesketh\", dill: fragrant; sweet",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of mint, nettle, sage: fragrant",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, \"a plant of Coldharbour\", \"Pellow\": fragrant; sweet",
+      "names": {
+        "a plant of Coldharbour": "sage",
+        "Pellow": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

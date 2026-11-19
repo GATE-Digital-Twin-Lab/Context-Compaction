@@ -6,14 +6,14 @@
 
 ```bash
 sbatch --partition=gpu --export=ALL,VENV=$HOME/ondemand/Uncertify/.venv \
-       scripts/generate_texts.sbatch mint -- --writer-max-tokens 32768 --reader-max-tokens 24576
+       scripts/generate_texts.sbatch mint
 ```
 
 - **`--partition=gpu`:** the cluster's default partition is `cpu`, and the partition line in the script is commented out, so this flag is needed.
 - **`--export=ALL,VENV=...`:** sessions here set `SLURM_EXPORT_ENV=NONE`. Without this flag the job gets neither your environment nor the venv, and `python` won't find the packages.
-- **Plants:** name them before `--`. One plant (`mint`), several in order (`mint sage`), or none for all eight.
+- **Plants:** name them before `--`. One plant (`mint`), several in order (`mint sage`), or none for all eight plants followed by the five trial ledgers. For the ledgers only: `scripts/generate_texts.sbatch -- --trials` (or `-- --trials S D`).
 - **Writer options:** anything after `--` goes to `corpus.write`, e.g. `--attempts 5`, or `--sheets folk:mint:01` for single sheets. `python -m corpus.write --help` lists all of them.
-- **Token limits:** at the default 16,384, the writer can spend its whole budget thinking and return an empty answer. 32,768 for the writer and 24,576 for the reader fit the server's 65,536-token context.
+- **Model settings** (the defaults of `corpus.write`): reasoning effort low for both calls; the reader decodes greedily (temperature 0), so a text's verdict does not depend on chance; token limits of 32,768 for the writer and 24,576 for the reader, thinking included, which fit the server's 65,536-token context. Override them after `--`, e.g. `-- --reasoning-effort medium`.
 - **Time:** the script asks for 8 hours, which is enough for one plant (about 2–3 hours, 44 sheets). For several plants in one job, add e.g. `--time=1-00:00:00`; the `gpu` partition allows up to 2 days.
 
 ## Watch
@@ -26,8 +26,9 @@ tail -f temp/llama-<jobid>.log             # the model server, if something look
 
 | Output | Where |
 |---|---|
-| Accepted texts | `content/texts/<kind>-<plant>-<nn>.txt` |
-| Rejected texts, each with its problems | `content/texts/failed/` |
+| What a source must imply: its claims, what it teaches, its false claims and their issues (written before the text) | `content/texts/<id>/metadata.json` |
+| Accepted text | `content/texts/<id>/<id>.txt` |
+| Last failed attempt, and its problems | `content/texts/<id>/failed.txt`, `failed.json` |
 | Every model call (prompts, answers, timings) | `temp/corpus_write/<plant>.jsonl` |
 | Images already used, per effect | `content/texts/registry.json` |
 

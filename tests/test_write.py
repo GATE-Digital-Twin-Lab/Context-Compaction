@@ -37,6 +37,9 @@ def perfect_reading(sheet_items):
                         "second": [_ref_text(k) for k in key[2]], **value})
         elif key[0] == "identity":
             out.append({"type": "identity", "ref": _ref_text(key[1]), "plant": value})
+        elif key[0] == "trial":
+            out.append({"type": "trial", "plants": [_ref_text(k) for k in key[1]],
+                        "added": [[_ref_text(k) for k in brew] for brew in key[2]], **value})
     return out
 
 
@@ -81,18 +84,16 @@ def test_hand_written_texts_use_only_their_sheets_names():
 
 
 def test_cue_spans_must_be_present_complete_and_new():
-    sheet_items = items(BY_ID["pamphlet:mint:13"])          # F1 sweet+bitter, F2 mix (warming; I), F3 V
-    body = ("Mint with Old Gilly's herb and dill tastes like a cake at a wedding, then pinches the tongue.\n"
-            "The second pot sets a man's ears burning.\nThe mix makes a man count sheep faster.\n"
+    sheet_items = items(BY_ID["pamphlet:mint:13"])          # F1 nothing (sweet and bitter cancel), F2 mix (warming; I), F3 V
+    body = ("Mint with Old Gilly's herb and dill tastes of nothing, like well water.\n"
+            "The second pot glows in the throat like mulled ale.\nThe mix makes a man count sheep faster.\n"
             "Mint, nettle and Ysolde's sprig had my uncle ploughing till dark.")
-    cues = [{"fact": "F1", "effect": "sweet", "span": "tastes like a cake at a wedding"},
-            {"fact": "F1", "effect": "bitter", "span": "pinches the tongue"},
-            {"fact": "F2", "effect": "warming", "span": "sets a man's ears burning"},
+    cues = [{"fact": "F2", "effect": "warming", "span": "glows in the throat like mulled ale"},
             {"fact": "F2", "effect": "I", "span": "count sheep faster"},
             {"fact": "F3", "effect": "V", "span": "had my uncle ploughing till dark"}]
     assert check_cues(body, sheet_items, cues, {}) == []
-    assert len(check_cues(body, sheet_items, cues[1:], {})) == 1                       # sweet has no span
-    assert len(check_cues(body, sheet_items, cues, {"bitter": ["it pinches the tongue hard"]})) == 1
+    assert len(check_cues(body, sheet_items, cues[1:], {})) == 1                       # warming has no span
+    assert len(check_cues(body, sheet_items, cues, {"warming": ["it glows in the throat like ale"]})) == 1
     missing = cues[:-1] + [{"fact": "F3", "effect": "V", "span": "not in the text"}]
     assert len(check_cues(body, sheet_items, missing, {})) == 1
 
@@ -100,6 +101,13 @@ def test_cue_spans_must_be_present_complete_and_new():
 def test_novelty():
     assert too_close("the smell clung to her shawl", ["the smell clung to his shirt for days"])
     assert not too_close("the neighbours asked what was on the fire", ["the smell clung to his shirt"])
+    # a long sentence sharing a few common words with a short earlier phrase is not a repeat ...
+    assert not too_close("her hands, white-knuckled around the cup, went slack halfway through, and set it down",
+                         ["the chill went out of his fingers before he had set the cup down"])
+    # ... but one that reuses most of its words is
+    assert too_close("The steam alone made her stop in the doorway and close her eyes",
+                     ["the steam alone made whoever passed stop and close their eyes"])
+    assert not too_close("the cat came", ["the cat left"])                       # one shared stem is never enough
 
 
 def test_parsing_the_writer_and_the_reader():

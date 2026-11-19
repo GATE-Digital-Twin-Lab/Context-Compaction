@@ -1,0 +1,58 @@
+{
+  "id": "folk:sage:03",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "sage",
+  "words": 204,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of sage, \"a plant of the mill pond\", \"a plant of Kettlebury\": fragrant; sweet",
+    "a brew of sage, \"a plant of Brackley\": sweet"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of sage, \"a plant of the mill pond\", \"a plant of Kettlebury\": fragrant; sweet",
+      "names": {
+        "a plant of the mill pond": "mint",
+        "a plant of Kettlebury": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": true,
+      "vague": true,
+      "says": "a brew of sage, \"a plant of Brackley\": sweet",
+      "names": {
+        "a plant of Brackley": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

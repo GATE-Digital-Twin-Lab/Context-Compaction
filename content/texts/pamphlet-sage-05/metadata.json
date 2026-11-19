@@ -1,0 +1,84 @@
+{
+  "id": "pamphlet:sage:05",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "sage",
+  "words": 147,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of sage and basil poured into a brew of \"Wenna's sprig\" and \"Mother Hale's herb\": the mix: fragrant; warming; sweet",
+    "sage in black earth: dies"
+  ],
+  "false claims": [
+    {
+      "n": "F3",
+      "says": "a brew of sage, elderberry: fragrant",
+      "truth": "a brew of sage, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims fragrant, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage and basil poured into a brew of \"Wenna's sprig\" and \"Mother Hale's herb\": the mix: fragrant; warming; sweet",
+      "names": {
+        "Wenna's sprig": "mint",
+        "Mother Hale's herb": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "chamomile",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "chamomile"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant",
+            "warming",
+            "sweet"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F2",
+      "type": "soil",
+      "true": true,
+      "vague": true,
+      "says": "sage in black earth: dies"
+    },
+    {
+      "n": "F3",
+      "type": "pair",
+      "true": false,
+      "vague": false,
+      "says": "a brew of sage, elderberry: fragrant",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of sage, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims fragrant, but it tastes like plain water"
+    }
+  ]
+}

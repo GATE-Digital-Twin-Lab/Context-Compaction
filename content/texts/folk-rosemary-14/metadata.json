@@ -1,0 +1,46 @@
+{
+  "id": "folk:rosemary:14",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "rosemary",
+  "words": 295,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": true,
+      "vague": true,
+      "says": "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "second brew": [
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant",
+            "warming"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "id": "transcript:nettle:07",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "nettle",
+  "words": 418,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of nettle, chamomile, basil: warming",
+    "a brew of nettle, sage, dill: murky",
+    "a brew of nettle, chamomile, rosemary: warming",
+    "a brew of nettle and chamomile poured into a brew of all three plants of Ashby Row: the mix: acts on vitality (V)",
+    "a brew of nettle, sage, chamomile: warming; sweet"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, chamomile, basil: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, sage, dill: murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, chamomile, rosemary: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F4",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle and chamomile poured into a brew of all three plants of Ashby Row: the mix: acts on vitality (V)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "dill",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "dill + mint -> sweet (+100%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "V"
+          ],
+          "labels": [
+            "warming",
+            "sweet",
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F5",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, sage, chamomile: warming; sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

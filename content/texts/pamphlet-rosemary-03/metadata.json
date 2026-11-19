@@ -1,0 +1,21 @@
+{
+  "id": "pamphlet:rosemary:03",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "rosemary",
+  "words": 154,
+  "padding": 0.4,
+  "teaches": [
+    "rosemary in black earth: ordinary"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "soil",
+      "true": true,
+      "vague": false,
+      "says": "rosemary in black earth: ordinary"
+    }
+  ]
+}

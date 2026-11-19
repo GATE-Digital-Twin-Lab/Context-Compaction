@@ -1,0 +1,100 @@
+{
+  "id": "folk:nettle:11",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "nettle",
+  "words": 176,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of nettle, \"a plant of Brackley\": bitter",
+      "truth": "a brew of nettle, \"a plant of Brackley\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": acts on intelligence (I); warming",
+      "truth": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": warming",
+      "issue": "claims it acts on intelligence (I), but no stat acts"
+    },
+    {
+      "n": "F3",
+      "says": "a brew of nettle, \"Saint Osric's leaf\", \"Thrale\": acts on strength (S); murky; toxic",
+      "truth": "a brew of nettle, \"Saint Osric's leaf\", \"Thrale\": murky; toxic",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": false,
+      "vague": true,
+      "says": "a brew of nettle, \"a plant of Brackley\": bitter",
+      "names": {
+        "a plant of Brackley": "mint"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of nettle, \"a plant of Brackley\": nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": acts on intelligence (I); warming",
+      "names": {
+        "Prior Anselm's leaf": "sage",
+        "a plant of Harrow's End": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of nettle, \"Prior Anselm's leaf\", \"a plant of Harrow's End\": warming",
+      "issue": "claims it acts on intelligence (I), but no stat acts"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of nettle, \"Saint Osric's leaf\", \"Thrale\": acts on strength (S); murky; toxic",
+      "names": {
+        "Saint Osric's leaf": "elderberry",
+        "Thrale": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + nettle -> murky (-50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of nettle, \"Saint Osric's leaf\", \"Thrale\": murky; toxic",
+      "issue": "claims it acts on strength (S), but no stat acts"
+    }
+  ]
+}

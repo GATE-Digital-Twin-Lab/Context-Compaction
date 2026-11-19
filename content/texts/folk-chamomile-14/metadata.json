@@ -1,0 +1,40 @@
+{
+  "id": "folk:chamomile:14",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "chamomile",
+  "words": 211,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of chamomile, \"Corbin's leaf\", basil: bitter",
+      "truth": "a brew of chamomile, \"Corbin's leaf\", basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of chamomile, \"Corbin's leaf\", basil: bitter",
+      "names": {
+        "Corbin's leaf": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of chamomile, \"Corbin's leaf\", basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    }
+  ]
+}

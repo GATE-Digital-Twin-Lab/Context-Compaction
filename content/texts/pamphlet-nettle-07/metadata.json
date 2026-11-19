@@ -1,0 +1,85 @@
+{
+  "id": "pamphlet:nettle:07",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "nettle",
+  "words": 121,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of nettle, elderberry: toxic",
+    "a brew of nettle, \"a plant of Brackley\", \"Saint Edith's wort\": warming"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "a brew of nettle, \"a plant of Kettlebury\", basil: acts on wisdom (W); warming",
+      "truth": "a brew of nettle, \"a plant of Kettlebury\", basil: warming",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, elderberry: toxic",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle"
+        ],
+        "label pairs": [
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of nettle, \"a plant of Kettlebury\", basil: acts on wisdom (W); warming",
+      "names": {
+        "a plant of Kettlebury": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of nettle, \"a plant of Kettlebury\", basil: warming",
+      "issue": "claims it acts on wisdom (W), but no stat acts"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, \"a plant of Brackley\", \"Saint Edith's wort\": warming",
+      "names": {
+        "a plant of Brackley": "chamomile",
+        "Saint Edith's wort": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

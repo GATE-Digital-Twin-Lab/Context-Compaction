@@ -1,0 +1,141 @@
+{
+  "id": "transcript:mint:01",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "mint",
+  "words": 323,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of mint, sage: fragrant",
+    "a brew of mint, sage, dill: fragrant; sweet",
+    "a brew of mint, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of mint, nettle, rosemary: acts on intelligence (I)",
+      "truth": "a brew of mint, nettle, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on intelligence (I), but no stat acts"
+    },
+    {
+      "n": "F5",
+      "says": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on dexterity (D)",
+      "truth": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on vitality (V)",
+      "issue": "the mix says D instead of V"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of mint, nettle, rosemary: acts on intelligence (I)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of mint, nettle, rosemary: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims it acts on intelligence (I), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, sage: fragrant",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, sage, dill: fragrant; sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F4",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F5",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on dexterity (D)",
+      "names": {
+        "a plant of Kettlebury": "sage",
+        "a plant of Coldharbour": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "sage",
+          "basil"
+        ],
+        "second brew": [
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "V"
+          ],
+          "labels": [
+            "fragrant",
+            "warming"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of mint and nettle poured into a brew of \"a plant of Kettlebury\" and \"a plant of Coldharbour\": the second brew alone: warming; the mix: acts on vitality (V)",
+      "issue": "the mix says D instead of V"
+    }
+  ]
+}

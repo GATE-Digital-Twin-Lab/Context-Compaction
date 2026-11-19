@@ -1,0 +1,88 @@
+{
+  "id": "folk:elderberry:07",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "elderberry",
+  "words": 181,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "\"Old Gilly's herb\" is a folk name for rosemary",
+      "truth": "\"Old Gilly's herb\" is a folk name for elderberry",
+      "issue": "it means elderberry, not rosemary (both grow at Wendle Cross, so locals mix them up)"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of elderberry, \"Saint Aldhelm's herb\", \"Morrick\": murky; toxic",
+      "truth": "a brew of elderberry, \"Saint Aldhelm's herb\", \"Morrick\": bitter; murky",
+      "issue": "says toxic instead of bitter"
+    },
+    {
+      "n": "F3",
+      "says": "a brew of elderberry, mint, \"Saint Edith's wort\": bitter; murky",
+      "truth": "a brew of elderberry, mint, \"Saint Edith's wort\": bitter",
+      "issue": "adds murky, which is not there"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "alias",
+      "true": false,
+      "vague": true,
+      "says": "\"Old Gilly's herb\" is a folk name for rosemary",
+      "truth": "\"Old Gilly's herb\" is a folk name for elderberry",
+      "issue": "it means elderberry, not rosemary (both grow at Wendle Cross, so locals mix them up)"
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of elderberry, \"Saint Aldhelm's herb\", \"Morrick\": murky; toxic",
+      "names": {
+        "Saint Aldhelm's herb": "mint",
+        "Morrick": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "rosemary"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)",
+          "elderberry + rosemary -> murky (-50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of elderberry, \"Saint Aldhelm's herb\", \"Morrick\": bitter; murky",
+      "issue": "says toxic instead of bitter"
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of elderberry, mint, \"Saint Edith's wort\": bitter; murky",
+      "names": {
+        "Saint Edith's wort": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "elderberry",
+          "basil"
+        ],
+        "label pairs": [
+          "elderberry + mint -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of elderberry, mint, \"Saint Edith's wort\": bitter",
+      "issue": "adds murky, which is not there"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "id": "folk:nettle:13",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "nettle",
+  "words": 239,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of nettle, \"a plant of Coldharbour\", \"a plant of Wendle Cross\": acts on vitality (V); murky",
+      "truth": "a brew of nettle, \"a plant of Coldharbour\", \"a plant of Wendle Cross\": murky",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "says": "a brew of nettle, sage: warming",
+      "truth": "a brew of nettle, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims warming, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of nettle, \"a plant of Coldharbour\", \"a plant of Wendle Cross\": acts on vitality (V); murky",
+      "names": {
+        "a plant of Coldharbour": "sage",
+        "a plant of Wendle Cross": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of nettle, \"a plant of Coldharbour\", \"a plant of Wendle Cross\": murky",
+      "issue": "claims it acts on vitality (V), but no stat acts"
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": false,
+      "vague": false,
+      "says": "a brew of nettle, sage: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of nettle, sage: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims warming, but it tastes like plain water"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "pamphlet:rosemary:13",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "rosemary",
+  "words": 144,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of rosemary, nettle, \"a plant of Wendle Cross\": bitter; murky"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "a brew of rosemary, chamomile: warming",
+      "truth": "a brew of rosemary, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims warming, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, nettle, \"a plant of Wendle Cross\": bitter; murky",
+      "names": {
+        "a plant of Wendle Cross": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "pair",
+      "true": false,
+      "vague": false,
+      "says": "a brew of rosemary, chamomile: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of rosemary, chamomile: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims warming, but it tastes like plain water"
+    }
+  ]
+}

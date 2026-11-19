@@ -1,0 +1,96 @@
+{
+  "id": "pamphlet:sage:01",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "sage",
+  "words": 131,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of sage, \"a plant of Ludding\", \"a plant of Ludding\": warming; sweet",
+    "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); warming; sweet",
+    "a brew of sage, chamomile, \"Saint Wulfric's herb\": sweet"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of sage, \"a plant of Ludding\", \"a plant of Ludding\": warming; sweet",
+      "names": {
+        "a plant of Ludding": "chamomile"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": true,
+      "vague": true,
+      "says": "a brew of sage and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W); warming; sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "sage",
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "elderberry",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "basil + sage -> warming (+50%)",
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "I",
+            "W"
+          ],
+          "labels": [
+            "warming",
+            "sweet"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of sage, chamomile, \"Saint Wulfric's herb\": sweet",
+      "names": {
+        "Saint Wulfric's herb": "dill"
+      },
+      "hidden": {
+        "plants": [
+          "sage",
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

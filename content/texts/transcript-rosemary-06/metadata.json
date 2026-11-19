@@ -1,0 +1,137 @@
+{
+  "id": "transcript:rosemary:06",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "rosemary",
+  "words": 345,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of rosemary, mint, chamomile: acts on strength (S)",
+    "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming",
+    "a brew of rosemary, dill, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes"
+  ],
+  "false claims": [
+    {
+      "n": "F4",
+      "says": "a brew of rosemary, sage, dill: murky",
+      "truth": "a brew of rosemary, sage, dill: bitter",
+      "issue": "says murky instead of bitter"
+    },
+    {
+      "n": "F5",
+      "says": "a brew of rosemary, mint: bitter",
+      "truth": "a brew of rosemary, mint: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, mint, chamomile: acts on strength (S)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of basil and rosemary poured into a brew of all three plants of Coldharbour: the mix: fragrant; warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "second brew": [
+          "sage",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant",
+            "warming"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, dill, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "dill",
+          "basil",
+          "rosemary"
+        ],
+        "label pairs": [
+          "basil + rosemary -> fragrant (+25%)",
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": false,
+      "vague": false,
+      "says": "a brew of rosemary, sage, dill: murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of rosemary, sage, dill: bitter",
+      "issue": "says murky instead of bitter"
+    },
+    {
+      "n": "F5",
+      "type": "pair",
+      "true": false,
+      "vague": false,
+      "says": "a brew of rosemary, mint: bitter",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of rosemary, mint: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    }
+  ]
+}

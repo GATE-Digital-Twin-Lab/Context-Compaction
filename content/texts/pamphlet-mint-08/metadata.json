@@ -1,0 +1,80 @@
+{
+  "id": "pamphlet:mint:08",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "mint",
+  "words": 110,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of mint, \"a plant of Kettlebury\", basil: fragrant; warming"
+  ],
+  "false claims": [
+    {
+      "n": "F2",
+      "says": "a brew of mint and sage poured into a brew of all three plants of Ashby Row: the mix: murky",
+      "truth": "a brew of mint and sage poured into a brew of all three plants of Ashby Row: the mix: fragrant; warming; sweet",
+      "issue": "the mix says murky instead of fragrant, warming, sweet"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint, \"a plant of Kettlebury\", basil: fragrant; warming",
+      "names": {
+        "a plant of Kettlebury": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "basil"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of mint and sage poured into a brew of all three plants of Ashby Row: the mix: murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "dill",
+          "basil"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)",
+          "basil + sage -> warming (+50%)",
+          "dill + mint -> sweet (+100%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant",
+            "warming",
+            "sweet"
+          ],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of mint and sage poured into a brew of all three plants of Ashby Row: the mix: fragrant; warming; sweet",
+      "issue": "the mix says murky instead of fragrant, warming, sweet"
+    }
+  ]
+}

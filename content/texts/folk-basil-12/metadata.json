@@ -1,0 +1,37 @@
+{
+  "id": "folk:basil:12",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "basil",
+  "words": 241,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of basil, elderberry: bitter",
+      "truth": "a brew of basil, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": false,
+      "vague": true,
+      "says": "a brew of basil, elderberry: bitter",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      },
+      "truth": "a brew of basil, elderberry: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "issue": "claims bitter, but it tastes like plain water"
+    }
+  ]
+}

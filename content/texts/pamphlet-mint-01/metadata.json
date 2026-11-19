@@ -1,0 +1,21 @@
+{
+  "id": "pamphlet:mint:01",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "mint",
+  "words": 169,
+  "padding": 0.4,
+  "teaches": [
+    "\"Saint Aldhelm's herb\" is a folk name for mint"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "alias",
+      "true": true,
+      "vague": false,
+      "says": "\"Saint Aldhelm's herb\" is a folk name for mint"
+    }
+  ]
+}

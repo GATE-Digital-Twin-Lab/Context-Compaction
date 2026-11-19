@@ -14,9 +14,11 @@
 #   sbatch scripts/generate_texts.sbatch mint sage                 # several, in this order
 #   sbatch scripts/generate_texts.sbatch mint -- --attempts 5      # options after -- go to corpus.write
 #   sbatch scripts/generate_texts.sbatch -- --sheets folk:mint:01  # single sheets
+#   sbatch scripts/generate_texts.sbatch -- --trials               # the five trial ledgers only (or: -- --trials S D)
 # Run one job at a time: all runs share the image registry (content/texts/registry.json), and a second
 # run refuses to start while temp/corpus_write.lock exists.
-# Output: content/texts/<kind>-<plant>-<nn>.txt (accepted), content/texts/failed/ (with the problems),
+# Output: one folder per source, content/texts/<kind>-<plant>-<nn>/: metadata.json (what the source implies),
+# <kind>-<plant>-<nn>.txt (accepted) or failed.txt + failed.json (the last attempt and its problems),
 # temp/corpus_write/<plant>.jsonl (every call), temp/potion-texts-<job>.out and temp/llama-<job>.log.
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")/..}"

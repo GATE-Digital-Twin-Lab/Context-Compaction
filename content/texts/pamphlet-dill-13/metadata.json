@@ -1,0 +1,56 @@
+{
+  "id": "pamphlet:dill:13",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "dill",
+  "words": 143,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of dill, \"a plant of Ludding\": murky",
+    "a brew of dill, \"a plant of Ashby Row\", chamomile: sweet"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of dill, \"a plant of Ludding\": murky",
+      "names": {
+        "a plant of Ludding": "nettle"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": true,
+      "says": "a brew of dill, \"a plant of Ashby Row\", chamomile: sweet",
+      "names": {
+        "a plant of Ashby Row": "mint"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

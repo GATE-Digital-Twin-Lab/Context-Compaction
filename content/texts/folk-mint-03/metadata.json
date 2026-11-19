@@ -1,0 +1,92 @@
+{
+  "id": "folk:mint:03",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "mint",
+  "words": 276,
+  "padding": 0.55,
+  "teaches": [
+    "a brew of mint and sage poured into a brew of \"Wenna's sprig\" and \"Morrick\": the mix: fragrant"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "\"Ferrow\" is a folk name for dill",
+      "truth": "\"Ferrow\" is a folk name for mint",
+      "issue": "it means mint, not dill (both grow at Ashby Row, so locals mix them up)"
+    },
+    {
+      "n": "F3",
+      "says": "a brew of mint, \"Tobin's wort\", \"a plant of Brackley\": toxic",
+      "truth": "a brew of mint, \"Tobin's wort\", \"a plant of Brackley\": fragrant",
+      "issue": "says toxic instead of fragrant"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "alias",
+      "true": false,
+      "vague": true,
+      "says": "\"Ferrow\" is a folk name for dill",
+      "truth": "\"Ferrow\" is a folk name for mint",
+      "issue": "it means mint, not dill (both grow at Ashby Row, so locals mix them up)"
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": true,
+      "vague": true,
+      "says": "a brew of mint and sage poured into a brew of \"Wenna's sprig\" and \"Morrick\": the mix: fragrant",
+      "names": {
+        "Wenna's sprig": "mint",
+        "Morrick": "rosemary"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "sage",
+          "rosemary"
+        ],
+        "second brew": [
+          "mint",
+          "rosemary"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "fragrant"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": false,
+      "vague": true,
+      "says": "a brew of mint, \"Tobin's wort\", \"a plant of Brackley\": toxic",
+      "names": {
+        "Tobin's wort": "nettle",
+        "a plant of Brackley": "sage"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "sage"
+        ],
+        "label pairs": [
+          "mint + sage -> fragrant (+25%)"
+        ],
+        "labels cancel": false
+      },
+      "truth": "a brew of mint, \"Tobin's wort\", \"a plant of Brackley\": fragrant",
+      "issue": "says toxic instead of fragrant"
+    }
+  ]
+}

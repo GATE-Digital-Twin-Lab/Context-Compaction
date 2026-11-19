@@ -1,0 +1,60 @@
+{
+  "id": "pamphlet:nettle:04",
+  "kind": "pamphlet",
+  "shown as": "merchant pamphlet",
+  "focus": "nettle",
+  "words": 174,
+  "padding": 0.4,
+  "teaches": [
+    "a brew of nettle and sage poured into a brew of all three plants of Kettlebury: the mix: murky"
+  ],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "nettle grows wild at Harrow's End",
+      "truth": "nettle grows wild at Ludding",
+      "issue": "nettle does not grow at Harrow's End; it grows at the mill pond, Ludding, Kettlebury"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "group",
+      "true": false,
+      "vague": false,
+      "says": "nettle grows wild at Harrow's End",
+      "truth": "nettle grows wild at Ludding",
+      "issue": "nettle does not grow at Harrow's End; it grows at the mill pond, Ludding, Kettlebury"
+    },
+    {
+      "n": "F2",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle and sage poured into a brew of all three plants of Kettlebury: the mix: murky",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "dill"
+        ],
+        "second brew": [
+          "nettle",
+          "sage",
+          "dill"
+        ],
+        "label pairs": [
+          "dill + nettle -> murky (-50%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "murky"
+          ],
+          "drinkable": true
+        }
+      }
+    }
+  ]
+}

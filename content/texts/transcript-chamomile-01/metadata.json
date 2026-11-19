@@ -1,0 +1,124 @@
+{
+  "id": "transcript:chamomile:01",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "chamomile",
+  "words": 303,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of chamomile, nettle, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of chamomile, mint, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
+    "a brew of chamomile, mint, nettle: warming",
+    "a brew of chamomile, nettle: warming"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile, nettle, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile, mint, basil: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile and basil poured into a brew of \"Quellock\" and \"Saint Edith's wort\": the mix: warming",
+      "names": {
+        "Quellock": "nettle",
+        "Saint Edith's wort": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "basil"
+        ],
+        "second brew": [
+          "nettle",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "everything the mix does": {
+          "stats": [],
+          "labels": [
+            "warming"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile, mint, nettle: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F5",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of chamomile, nettle: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}

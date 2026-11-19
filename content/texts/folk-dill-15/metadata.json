@@ -1,0 +1,65 @@
+{
+  "id": "folk:dill:15",
+  "kind": "folk",
+  "shown as": "folk tale",
+  "focus": "dill",
+  "words": 291,
+  "padding": 0.55,
+  "teaches": [],
+  "false claims": [
+    {
+      "n": "F1",
+      "says": "a brew of chamomile and dill poured into a brew of all three plants of Harrow's End: the mix: acts on vitality (V)",
+      "truth": "a brew of chamomile and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+      "issue": "the mix says V instead of W"
+    },
+    {
+      "n": "F2",
+      "says": "dill grows wild at Brackley",
+      "truth": "dill grows wild at Ashby Row",
+      "issue": "dill does not grow at Brackley; it grows at Wendle Cross, Ashby Row, Kettlebury"
+    }
+  ],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "mix",
+      "true": false,
+      "vague": false,
+      "says": "a brew of chamomile and dill poured into a brew of all three plants of Harrow's End: the mix: acts on vitality (V)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "elderberry",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [],
+        "everything the mix does": {
+          "stats": [
+            "W"
+          ],
+          "labels": [],
+          "drinkable": true
+        }
+      },
+      "truth": "a brew of chamomile and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+      "issue": "the mix says V instead of W"
+    },
+    {
+      "n": "F2",
+      "type": "group",
+      "true": false,
+      "vague": false,
+      "says": "dill grows wild at Brackley",
+      "truth": "dill grows wild at Ashby Row",
+      "issue": "dill does not grow at Brackley; it grows at Wendle Cross, Ashby Row, Kettlebury"
+    }
+  ]
+}

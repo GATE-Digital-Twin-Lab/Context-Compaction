@@ -1,0 +1,109 @@
+{
+  "id": "transcript:rosemary:01",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "rosemary",
+  "words": 323,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of rosemary, dill: bitter",
+    "a brew of rosemary, mint, nettle: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of rosemary, mint, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of rosemary, sage, chamomile: sweet",
+    "a brew of rosemary, nettle, sage: acts on dexterity (D)"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, dill: bitter",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, mint, nettle: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F3",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, mint, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "mint",
+          "dill",
+          "rosemary"
+        ],
+        "label pairs": [
+          "dill + mint -> sweet (+100%)",
+          "dill + rosemary -> bitter (-25%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F4",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, sage, chamomile: sweet",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "sage",
+          "chamomile",
+          "rosemary"
+        ],
+        "label pairs": [
+          "chamomile + sage -> sweet (+100%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F5",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of rosemary, nettle, sage: acts on dexterity (D)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "sage",
+          "rosemary"
+        ],
+        "label pairs": [],
+        "labels cancel": false
+      }
+    }
+  ]
+}

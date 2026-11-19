@@ -1,0 +1,143 @@
+{
+  "id": "transcript:nettle:08",
+  "kind": "transcript",
+  "shown as": "apothecary transcript",
+  "focus": "nettle",
+  "words": 324,
+  "padding": 0.2,
+  "teaches": [
+    "a brew of nettle, chamomile, basil: warming",
+    "a brew of nettle, chamomile, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+    "a brew of nettle and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+    "a brew of mint and nettle poured into a brew of \"Wenna's sprig\" and \"Saint Edith's wort\": the mix: acts on vitality (V)",
+    "a brew of nettle, elderberry: toxic"
+  ],
+  "false claims": [],
+  "claims": [
+    {
+      "n": "F1",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, chamomile, basil: warming",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)"
+        ],
+        "labels cancel": false
+      }
+    },
+    {
+      "n": "F2",
+      "type": "triple",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, chamomile, dill: nothing: it tastes, smells and looks like plain water, and no drinker changes",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "nettle",
+          "chamomile",
+          "dill"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "dill + nettle -> murky (-50%)"
+        ],
+        "labels cancel": true
+      }
+    },
+    {
+      "n": "F3",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle and dill poured into a brew of all three plants of Harrow's End: the mix: acts on wisdom (W)",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle",
+          "chamomile",
+          "dill",
+          "basil"
+        ],
+        "second brew": [
+          "elderberry",
+          "chamomile",
+          "basil"
+        ],
+        "label pairs": [
+          "chamomile + nettle -> warming (+50%)",
+          "dill + nettle -> murky (-50%)",
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "everything the mix does": {
+          "stats": [
+            "W"
+          ],
+          "labels": [
+            "warming",
+            "murky",
+            "toxic"
+          ],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F4",
+      "type": "mix",
+      "true": true,
+      "vague": false,
+      "says": "a brew of mint and nettle poured into a brew of \"Wenna's sprig\" and \"Saint Edith's wort\": the mix: acts on vitality (V)",
+      "names": {
+        "Wenna's sprig": "mint",
+        "Saint Edith's wort": "basil"
+      },
+      "hidden": {
+        "plants": [
+          "mint",
+          "nettle",
+          "basil"
+        ],
+        "second brew": [
+          "mint",
+          "basil"
+        ],
+        "label pairs": [],
+        "everything the mix does": {
+          "stats": [
+            "V"
+          ],
+          "labels": [],
+          "drinkable": true
+        }
+      }
+    },
+    {
+      "n": "F5",
+      "type": "pair",
+      "true": true,
+      "vague": false,
+      "says": "a brew of nettle, elderberry: toxic",
+      "names": {},
+      "hidden": {
+        "plants": [
+          "elderberry",
+          "nettle"
+        ],
+        "label pairs": [
+          "elderberry + nettle -> toxic (-100%)"
+        ],
+        "labels cancel": false
+      }
+    }
+  ]
+}
