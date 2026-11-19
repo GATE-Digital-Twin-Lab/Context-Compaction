@@ -14,6 +14,9 @@ from corpus.glossary import verbatim
 TEXTS_DIR = CONTENT / "texts"
 CUES_FILE = CONTENT / "cues.json"
 HEADER = ("Title", "Author", "Kind")
+KIND_NAMES = {"book": "monastery book", "transcript": "apothecary transcript", "herbal": "herbal lady tale",
+              "pamphlet": "merchant pamphlet", "folk": "folk tale"}
+REGISTRY_FILE = TEXTS_DIR / "registry.json"     # the cue spans of accepted texts, by effect
 LENGTH_TOLERANCE = 0.15            # a text's words may differ from its sheet's target by this share
 
 
@@ -49,8 +52,12 @@ def words(body: str) -> int:
 
 
 def problems(path: Path, sheet: dict) -> list[str]:
+    return problems_text(path.read_text(encoding="utf-8"), sheet)
+
+
+def problems_text(text: str, sheet: dict) -> list[str]:
     """What is wrong with a text, mechanically: header, length, layout, glossary wording."""
-    fields, body = split(path.read_text(encoding="utf-8"))
+    fields, body = split(text)
     out = []
     if tuple(fields) != HEADER:
         out.append(f"header {tuple(fields)}")
