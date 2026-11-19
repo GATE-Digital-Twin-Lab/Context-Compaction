@@ -8,6 +8,7 @@ The experiments run in the **Potion Garden**, a small fictional world in which a
 
 ```
 README.md
+run.md                      how to run the corpus generation (scripts/generate_texts.sbatch) as a Slurm job
 requirements.txt
 scripts/                    shell scripts that launch runs and the model server; every parameter set here or overridden on the command line
 main.py                     entry point: builds all components from the inputs and runs one episode
