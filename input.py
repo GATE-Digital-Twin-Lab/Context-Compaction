@@ -6,6 +6,7 @@ import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from corpus.sampler import SIZE
 from environment.requests import REQUESTS_FILE, Request, load_requests
 from utils import new_seed, slugify
 
@@ -28,6 +29,9 @@ class ExperimentConfig:
     # garden
     garden_size: int
     env_seed: int
+    # sources
+    corpus_seed: int | None      # draws the episode's sample of the corpus; None: no sources
+    corpus_size: int             # sources in the sample
     # client
     request: Request            # the full request is stored, so a run never depends on the file again
     # episode
@@ -56,7 +60,8 @@ class ExperimentConfig:
     @classmethod
     def from_dict(cls, data: dict) -> "ExperimentConfig":
         """Rebuild from params.json (extra keys such as run_id are ignored)."""
-        values = {k: data[k] for k in cls.__dataclass_fields__}
+        defaults = {"corpus_seed": None, "corpus_size": SIZE}   # runs from before the corpus existed
+        values = {k: data[k] if k in data or k not in defaults else defaults[k] for k in cls.__dataclass_fields__}
         values["request"] = Request.from_dict(data["request"])
         for key in ("prompt_file", "runs_dir", "temp_dir"):
             values[key] = Path(values[key])
@@ -87,6 +92,10 @@ def build_parser() -> argparse.ArgumentParser:
     g = p.add_argument_group("garden")
     g.add_argument("--garden-size", type=int, default=10)
     g.add_argument("--env-seed", type=int, help="default: random, recorded in params.json")
+    s = p.add_argument_group("sources")
+    s.add_argument("--corpus-seed", type=int, help="draws the episode's sources; default: random, recorded in params.json")
+    s.add_argument("--corpus-size", type=int, default=SIZE, help=f"sources in the sample (default {SIZE})")
+    s.add_argument("--no-sources", action="store_true", help="an episode without sources (no search or read)")
     u = p.add_argument_group("client")
     u.add_argument("--request", default="stonecutter", help="request id in the requests file")
     u.add_argument("--requests-file", type=Path, default=REQUESTS_FILE)
@@ -145,6 +154,8 @@ def parse_args(argv: list[str] | None = None) -> ExperimentConfig:
         llm_seed=args.llm_seed if args.llm_seed is not None else new_seed(),
         garden_size=args.garden_size,
         env_seed=args.env_seed if args.env_seed is not None else new_seed(),
+        corpus_seed=None if args.no_sources else args.corpus_seed if args.corpus_seed is not None else new_seed(),
+        corpus_size=args.corpus_size,
         request=request,
         turn_cap=args.turn_cap,
         prompt_file=args.prompt_file,
@@ -169,6 +180,8 @@ def _check(args: argparse.Namespace) -> None:
         raise ValueError("--garden-size must be >= 1.")
     if args.turn_cap < 1:
         raise ValueError("--turn-cap must be >= 1.")
+    if not 5 <= args.corpus_size <= 357:
+        raise ValueError("--corpus-size must be between 5 (the trial ledgers) and 357 (the whole pool).")
     if args.temperature is not None and args.temperature < 0:
         raise ValueError("--temperature must be >= 0.")
     if args.top_p is not None and not 0 < args.top_p <= 1:

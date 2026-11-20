@@ -101,7 +101,7 @@ def test_record_tool_reports_ids_and_belief_status(world):
     assert result.text == (
         "Recorded:\n- c1\n"
         '- b1: {"status": "true", "for": [1], "against": [], "tested": 1}\n'
-        "(4 of 5 record/validate calls left this turn.)"
+        "(4 of 5 search/record/validate calls left this turn.)"
     )
     bad = d.handle({"tool": "record", "records": [{"type": "belief"}]})
     assert bad.error and bad.text == 'A belief needs "statement". Nothing was recorded.'
@@ -141,9 +141,9 @@ def test_the_budget_allows_five_counted_calls_per_turn(world):
     d = Dispatcher(world)
     statement = {"kind": "soil", "plant": "dill", "soil": "brown", "claim": "always_dies"}
     for left in (4, 3, 2, 1, 0):
-        assert d.handle({"tool": "validate", "statements": [statement]}).text.endswith(f"({left} of 5 record/validate calls left this turn.)")
+        assert d.handle({"tool": "validate", "statements": [statement]}).text.endswith(f"({left} of 5 search/record/validate calls left this turn.)")
     sixth = d.handle({"tool": "record", "records": POND[:1]})
-    assert sixth.error and not sixth.ends_turn and "budget of 5 record/validate calls is used up" in sixth.text
+    assert sixth.error and not sixth.ends_turn and "budget of 5 search/record/validate calls is used up" in sixth.text
     assert world.records.records == [] and world.turn == 1
     for _ in range(3):                                              # not failures: no forced skip
         assert not d.handle({"tool": "validate", "statements": [statement]}).ends_turn
@@ -156,4 +156,4 @@ def test_the_budget_allows_five_counted_calls_per_turn(world):
 def test_a_failed_counted_call_does_not_use_the_budget(world):
     d = Dispatcher(world)
     assert d.handle({"tool": "validate", "statements": [{"kind": "guess"}]}).error
-    assert d.handle({"tool": "record", "records": POND[:1]}).text.endswith("(4 of 5 record/validate calls left this turn.)")
+    assert d.handle({"tool": "record", "records": POND[:1]}).text.endswith("(4 of 5 search/record/validate calls left this turn.)")

@@ -7,6 +7,8 @@ from dataclasses import dataclass, field
 from environment.brewer import Effect, RecipeError, brew, effect_of, validate_recipe
 from environment.garden import Garden, GatherResult, GrowthRecord, PlantResult
 from environment.inventory import Inventory, Potion
+from corpus.sampler import SIZE
+from environment.library import Library
 from environment.records import Record, RecordBook
 from environment.requests import Request, RequestResult, judge
 from environment.view import GardenView, garden_view
@@ -37,6 +39,7 @@ class World:
     turn: int = 1
     result: RequestResult | None = None  # set by the delivery, or when time runs out
     records: RecordBook = field(default_factory=RecordBook)  # the agent's claims, beliefs and requirements
+    library: Library | None = None   # the episode's sources (None: an episode without sources)
 
     @classmethod
     def create(
@@ -45,10 +48,14 @@ class World:
         request: Request,
         turn_cap: int,
         seed: int,
+        corpus_seed: int | None = None,
+        corpus_size: int = SIZE,
     ) -> "World":
+        """corpus_seed draws the episode's sources (corpus_size of them, default 200); None: no sources."""
         if turn_cap < 1:
             raise ValueError("The turn cap must be >= 1.")
-        return cls(Garden(size, seed), Inventory(), request, turn_cap)
+        library = None if corpus_seed is None else Library.create(corpus_seed, corpus_size)
+        return cls(Garden(size, seed), Inventory(), request, turn_cap, library=library)
 
     def to_dict(self) -> dict:
         """Complete state."""
@@ -60,6 +67,7 @@ class World:
             "turn_cap": self.turn_cap,
             "turn": self.turn,
             "result": self.result.to_dict() if self.result else None,
+            "library": self.library.to_dict() if self.library else None,
         }
 
     @classmethod
@@ -72,6 +80,7 @@ class World:
             turn_cap=data["turn_cap"],
             turn=data["turn"],
             result=RequestResult.from_dict(data["result"]) if data["result"] else None,
+            library=Library.from_dict(data["library"]) if data.get("library") else None,
         )
 
     @property

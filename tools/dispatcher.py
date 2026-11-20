@@ -4,7 +4,7 @@ import json
 from collections.abc import Callable
 
 from environment.world import World
-from tools import brew, deliver, gather, inventory, kb_lookup, mix, plant, record, skip, validate
+from tools import brew, deliver, gather, inventory, kb_lookup, mix, plant, read, record, search, skip, validate
 from tools.base import ToolError, ToolResult
 
 ACTIONS: dict[str, Callable[[World, dict], ToolResult]] = {
@@ -15,13 +15,15 @@ ACTIONS: dict[str, Callable[[World, dict], ToolResult]] = {
     "skip": skip.run,
 }
 FREE_TOOLS: dict[str, Callable[[World, dict], ToolResult]] = {
+    "search": search.run,
+    "read": read.run,
     "gather": gather.run,
     "kb_lookup": kb_lookup.run,
     "validate": validate.run,
     "record": record.run,
     "inventory": inventory.run,
 }
-COUNTED = ("record", "validate")   # with search, once it exists
+COUNTED = ("search", "record", "validate")
 BUDGET = 5                         # counted calls per turn (a batched call counts once)
 
 
@@ -74,12 +76,12 @@ class Dispatcher:
             return table[name](self.world, call)
         if self._counted >= self.budget:   # not a failure: it costs nothing and does not lead to a skip
             return ToolResult(
-                f"The budget of {self.budget} record/validate calls is used up this turn. Only kb_lookup, "
-                "inventory, gather or an action remain until the next turn.",
+                f"The budget of {self.budget} search/record/validate calls is used up this turn. Only read, "
+                "kb_lookup, inventory, gather or an action remain until the next turn.",
                 error=True,
             )
         result = table[name](self.world, call)
         self._counted += 1
         left = self.budget - self._counted
-        return ToolResult(f"{result.text}\n({left} of {self.budget} record/validate calls left this turn.)",
+        return ToolResult(f"{result.text}\n({left} of {self.budget} search/record/validate calls left this turn.)",
                           result.ends_turn, result.error)

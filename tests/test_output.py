@@ -20,6 +20,7 @@ def config(tmp_path):
 def make_world(config, out):
     return World.create(
         config.garden_size, config.request, config.turn_cap, config.env_seed,
+        config.corpus_seed, config.corpus_size,
     )
 
 

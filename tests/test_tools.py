@@ -232,7 +232,7 @@ def test_validate_is_free_and_answers_each_statement(world):
     assert result.text == (
         '1. {"status": "true", "for": [[1, 2]], "against": [], "flat": [], "tested": 1, "confounded": 0}\n'
         '2. {"status": "true", "for": [2], "against": [], "tested": 1}\n'
-        '(4 of 5 record/validate calls left this turn.)'
+        '(4 of 5 search/record/validate calls left this turn.)'
     )
     bad = d.handle({"tool": "validate", "statements": [{"kind": "soil"}, {"kind": "relation"}]})
     assert bad.error and bad.text == "Statement 1: Unknown plant None. Nothing was checked."

@@ -30,6 +30,7 @@ def start(config: ExperimentConfig) -> RunOutput:
     out = RunOutput(config)
     world = World.create(
         config.garden_size, config.request, config.turn_cap, config.env_seed,
+        config.corpus_seed, config.corpus_size,
     )
     agent, ledger = make_agent(config), Ledger()
     out.write_params(config, {"soil_table": SOIL_TABLE, **agent.info()})
