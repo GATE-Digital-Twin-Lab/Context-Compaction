@@ -1,0 +1,40 @@
+Title: Trials Book of the Green Dragon Shop
+Author: Peter Lathom, apothecary at the sign of the Green Dragon
+Kind: apothecary transcript
+
+I write my trials at day's end, by rushlight, as my master taught me.
+This was the week before the Lady Day fair.
+
+Monday.
+Dill, elderberry and sage.
+To the reeve's clerk, Gilbert, who keeps the manor's tallies.
+On Wednesday the reeve was at my door in a fury: Gilbert had lost count of the lambs three times over, added the barley twice, and could not say what day of the week it was without counting on his fingers.
+He came right again by the fair, but the reeve has asked me never to give him anything again.
+
+Tuesday.
+Dill and rosemary.
+To the reeve himself, who insisted on seeing what I had done.
+He took a gulp and pulled a face like a man with a mouthful of soot, and said it served him right.
+
+Wednesday.
+Dill and elderberry.
+To the reeve's wife, who came to see what all the fuss was.
+Water, she said, nothing to taste or smell or look at, and she went home no different, and disappointed.
+
+Thursday.
+Dill, mint and rosemary.
+To a pedlar setting up early for the fair.
+He said it was water, and asked for ale instead.
+
+Friday.
+Dill, basil and rosemary.
+To the pedlar again, who said he would give me one more chance.
+Water once more, and he went off to his stall the same man as before, shaking his head.
+
+| Day | Herbs | What was seen |
+|---|---|---|
+| Monday | dill, elderberry, sage | Gilbert lost his count |
+| Tuesday | dill, rosemary | a mouthful of soot |
+| Wednesday | dill, elderberry | nothing |
+| Thursday | dill, mint, rosemary | nothing |
+| Friday | dill, basil, rosemary | nothing |

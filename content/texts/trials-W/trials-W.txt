@@ -1,0 +1,45 @@
+Title: Trials of the Elders' Draught, Michaelmas Court
+Author: Master Edmund Garroway, apothecary to the manor court
+Kind: apothecary transcript
+
+Kept for the steward, who asked whether a draught could make a juryman sounder in his judgements, and wished to see it counted.
+Every pot this term was the same draught of elderberry, chamomile, dill and basil, the one the old men of the parish swear by.
+Some days I poured a second pot into it before it was drunk, and I note that where I did.
+Each drinker was a man of the manor court, and the steward counted his judgements the court-day before and the court-day after: how many of the quarrels set before him he judged so that both parties went home content and none appealed.
+
+The steward is a careful man, and he kept the tallies himself on a stick, notching each sound judgement as it was given.
+I have copied his notches here faithfully, and I have not added to them.
+
+First court-day.
+Elderberry, chamomile, dill and basil, nothing poured in.
+Given to Master Hugh Fennick, the reeve, who sits at the head of the jury.
+Eighty sound judgements the court before, eighty-eight the court after.
+He said it tasted of nothing at all, and it was as clear and plain as water from the manor well.
+
+Second court-day.
+Elderberry, chamomile, dill and basil, with a pot of dill and rosemary poured in.
+Given to old Walter Gossage, juryman these thirty years.
+Seventy sound judgements the court before, fifty-six the court after.
+Water, he said; no taste, no smell, and nothing in the cup to see.
+The steward has asked that he not be given that one again before the Lady Day court.
+
+Third court-day.
+Elderberry, chamomile, dill and basil, with a pot of basil and rosemary poured in.
+Given to Thomas Pye, the miller, who sits on the jury when the reeve is short a man.
+Sixty-one sound judgements the court before, and the same sixty-one the court after.
+He found nothing in the cup but what you'd find in a rain-butt, no taste, no smell, and nothing to look at.
+
+The court is adjourned now till Lady Day.
+The steward says the tally-stick has more notches on it than any year he can remember, and he does not know whether to thank me or the reeve.
+I have told him to thank the reeve, for the reeve buys more herbs.
+
+The manor hall was cold all term, and the jury sat in their cloaks.
+The steward has promised a fire for Lady Day, but he promised that last year too.
+
+Summary of the Michaelmas court:
+
+| Court-day | Herbs | Before | After | Noticed |
+|---|---|---|---|---|
+| First | elderberry, chamomile, dill, basil | 80 judgements | 88 judgements | like well water |
+| Second | the same, with dill and rosemary | 70 judgements | 56 judgements | nothing |
+| Third | the same, with basil and rosemary | 61 judgements | 61 judgements | like a rain-butt |

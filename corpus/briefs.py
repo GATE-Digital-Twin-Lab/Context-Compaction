@@ -25,15 +25,6 @@ SOIL_TOLD = {
 }
 VAGUE = (" Tell this one vaguely (hearsay, a shaky memory, a doubt), but a careful reader must still be able"
          " to make it out.")
-NOVELTY = 0.4            # a cue span is a repeat of an earlier one if their shared stems are at least this
-MIN_SHARED = 2           # share of all their stems together (Jaccard), and at least this many
-STOPWORDS = frozenset("""a an the and or but nor of to in on at by for with from as into onto that this these
-those it its his her hers their theirs he she they them him we us our you your i me my was were is are be been
-being had has have do did does not no so if than then there here what whatever who whom which when where while
-before after up down out over under all any some one own same such too very can could would should will shall
-just only also even still yet again ever never""".split())
-
-
 @lru_cache
 def _facts() -> dict[str, dict]:
     return {f["id"]: f for f in load_catalogue()}
@@ -204,7 +195,7 @@ def _trial_item(entry: dict, stat: str) -> dict:
     text = ("A trial (one ledger entry: a named drinker; wrap this data in your own words): "
             f"drank: a brew of {', '.join(base[:-1])} and {base[-1]} together (never any amounts) | "
             + "".join(f"poured into it: a brew of {' and '.join(brew)} | " for brew in poured) +
-            f"work counted: a task that shows {stat_name(stat)} (never name it), in countable things | "
+            f"work counted: a task that shows {stat_name(stat)}, in countable things | "
             f"before drinking: {told['before']} | after drinking: {told['after']}"
             + (" (no change at all)" if told["before"] == told["after"] else "") + " | "
             f"noticed while drinking: {noticed_words}. Give both counts exactly, never as a share or a percentage; "
@@ -326,49 +317,3 @@ def stray_names(text: str, sheet: dict) -> list[str]:
             if norm(a) not in allowed["aliases"] and _mentions(flat, norm(a))]
     out += [g for g in _table()["groups"] if place_key(g) not in allowed["places"] and _mentions(flat, place_key(g))]
     return out
-
-
-# --- cue spans ----------------------------------------------------------------------------------------
-
-
-def stems(text: str) -> set[str]:
-    return {w[:5] for w in re.findall(r"[a-z']+", norm(text)) if len(w) > 2 and w not in STOPWORDS}
-
-
-def too_close(span: str, earlier: list[str], threshold: float = NOVELTY) -> str | None:
-    """The first earlier span this one repeats: they share at least MIN_SHARED stems, and at least
-    `threshold` of all their stems together. Measuring against both spans keeps a long sentence from
-    "repeating" a short phrase just by containing two common words of it."""
-    mine = stems(span)
-    for other in earlier:
-        theirs = stems(other)
-        shared = mine & theirs
-        if len(shared) >= MIN_SHARED and len(shared) / len(mine | theirs) >= threshold:
-            return other
-    return None
-
-
-def check_cues(body: str, sheet_items: list[dict], cues: list[dict], registry: dict[str, list[str]]) -> list[str]:
-    """Every effect has a span that is in the text and is new: not close to an earlier text's span for
-    the same effect, nor to another span of this text."""
-    problems, flat = [], norm(body)
-    by_n = {item["n"]: item for item in sheet_items}
-    given = {(c.get("fact"), c.get("effect")) for c in cues if isinstance(c, dict)}
-    for item in sheet_items:
-        for effect in item["cues"]:
-            if (item["n"], effect) not in given:
-                problems.append(f"{item['n']}: no cue span given for {effect}")
-    seen: dict[str, list[str]] = {}
-    for cue in cues:
-        if not isinstance(cue, dict) or cue.get("fact") not in by_n:
-            problems.append(f"a cue entry names no fact of the brief: {cue}")
-            continue
-        span, effect = str(cue.get("span", "")), cue.get("effect")
-        if norm(span) not in flat:
-            problems.append(f"{cue['fact']}: the cue span is not in the text: \"{span}\"")
-            continue
-        close = too_close(span, registry.get(effect, []) + seen.get(effect, []))
-        if close:
-            problems.append(f"{cue['fact']}: the image for {effect} repeats an earlier one: \"{span}\" ~ \"{close}\"")
-        seen.setdefault(effect, []).append(span)
-    return problems

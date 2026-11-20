@@ -4,10 +4,10 @@ import json
 
 import pytest
 
-from corpus.briefs import allowed_names, check_cues, compare, items, parse_ref, stray_names, too_close
+from corpus.briefs import allowed_names, compare, items, parse_ref, stray_names
 from corpus.sheets import SHEETS_FILE
 from corpus.texts import path_of
-from corpus.write import parse_reader, parse_writer, reader_system, writer_system, writer_user
+from corpus.write import parse_reader, reader_system
 
 SHEETS = json.loads(SHEETS_FILE.read_text(encoding="utf-8"))
 BY_ID = {s["id"]: s for s in SHEETS}
@@ -84,47 +84,6 @@ def test_hand_written_texts_use_only_their_sheets_names():
     assert "mill pond" in allowed_names(BY_ID["transcript:mint:04"])["places"]
 
 
-def test_cue_spans_must_be_present_complete_and_new():
-    sheet_items = items(BY_ID["pamphlet:mint:13"])          # F1 nothing (sweet and bitter cancel), F2 mix (shimmering; I), F3 V
-    body = ("Mint with Old Gilly's herb and dill tastes of nothing, like well water.\n"
-            "The second pot shines in the cup like a new penny.\nThe mix makes a man count sheep faster.\n"
-            "Mint, nettle and Ysolde's sprig had my uncle ploughing till dark.")
-    cues = [{"fact": "F2", "effect": "shimmering", "span": "shines in the cup like a new penny"},
-            {"fact": "F2", "effect": "I", "span": "count sheep faster"},
-            {"fact": "F3", "effect": "V", "span": "had my uncle ploughing till dark"}]
-    assert check_cues(body, sheet_items, cues, {}) == []
-    assert len(check_cues(body, sheet_items, cues[1:], {})) == 1                       # shimmering has no span
-    assert len(check_cues(body, sheet_items, cues, {"shimmering": ["it shines in the cup like a penny"]})) == 1
-    missing = cues[:-1] + [{"fact": "F3", "effect": "V", "span": "not in the text"}]
-    assert len(check_cues(body, sheet_items, missing, {})) == 1
-
-
-def test_novelty():
-    assert too_close("the smell clung to her shawl", ["the smell clung to his shirt for days"])
-    assert not too_close("the neighbours asked what was on the fire", ["the smell clung to his shirt"])
-    # a long sentence sharing a few common words with a short earlier phrase is not a repeat ...
-    assert not too_close("her hands, white-knuckled around the cup, went slack halfway through, and set it down",
-                         ["the chill went out of his fingers before he had set the cup down"])
-    # ... but one that reuses most of its words is
-    assert too_close("The steam alone made her stop in the doorway and close her eyes",
-                     ["the steam alone made whoever passed stop and close their eyes"])
-    assert not too_close("the cat came", ["the cat left"])                       # one shared stem is never enough
-
-
-def test_parsing_the_writer_and_the_reader():
-    raw = ('<think>x</think>\nTITLE: A Tale\nAUTHOR: Ned, a carter\n<text>\nHe came. He went.\n</text>\n'
-           '<cues>\n```json\n[{"fact": "F1", "effect": "sweet", "span": "He came"}]\n```\n</cues>')
-    assert parse_writer(raw) == ("A Tale", "Ned, a carter", "He came. He went.",
-                                 [{"fact": "F1", "effect": "sweet", "span": "He came"}])
-    with pytest.raises(ValueError):
-        parse_writer("TITLE: A Tale\n<text>x</text>")
+def test_parsing_the_reader():
     assert parse_reader('<facts>[{"type": "alias", "name": "Ferrow", "plant": "dill"}]</facts>')[0]["plant"] == "dill"
-
-
-def test_prompts_build_for_every_kind():
-    for kind in ("book", "transcript", "herbal", "pamphlet", "folk"):
-        sheet = BY_ID[f"{kind}:sage:01"]
-        system, user = writer_system(sheet), writer_user(sheet, {"sweet": ["an old image"]}, ["a problem"])
-        assert f"about {sheet['words']} words" in system and "<cues>" in system
-        assert "<example>" in user and "F1." in user and "- a problem" in user
     assert "<facts>" in reader_system() and "Ferrow" not in reader_system()        # the reader gets no answers

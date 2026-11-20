@@ -30,7 +30,6 @@ tail -f temp/llama-<jobid>.log             # the model server, if something look
 | Accepted text | `content/texts/<id>/<id>.txt` |
 | Last failed attempt, and its problems | `content/texts/<id>/failed.txt`, `failed.json` |
 | Every model call (prompts, answers, timings) | `temp/corpus_write/<plant>.jsonl` |
-| Images already used, per effect | `content/texts/registry.json` |
 
 ## Stop
 
@@ -41,6 +40,6 @@ rm -f temp/corpus_write.lock               # cancelling leaves the lock behind; 
 
 ## Rules
 
-- **One generation job at a time.** All runs share `content/texts/registry.json`. A second job exits at once while `temp/corpus_write.lock` exists.
+- **One generation job at a time.** Two runs would write the same folders. A second job exits at once while `temp/corpus_write.lock` exists.
 - **Repeating is safe.** A job skips every text that already passes the checks. After a crash or a cancel, remove the lock and submit the same command again. `--force` rewrites texts that already pass.
 - **Not inside an interactive session.** A code-server or OnDemand session is itself a Slurm job with a time limit, and Slurm kills every process in it, detached ones included, when the session ends. Submit the generation with `sbatch` so it runs as its own job.

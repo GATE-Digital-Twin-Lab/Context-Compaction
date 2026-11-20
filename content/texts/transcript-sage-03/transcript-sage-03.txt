@@ -1,0 +1,42 @@
+Title: A Week of Sage Brews at the Sign of the Pelican
+Author: Jasper Wilde, apothecary, Pelican Yard
+Kind: apothecary transcript
+
+A week's trials, all of them with sage, which the old folk here call Prior Anselm's leaf.
+
+Monday.
+Sage, elderberry and nettle.
+To no man.
+Set out in a dish for the rats in the cellar; four found dead by morning, and none since.
+
+Tuesday.
+Sage, mint and rosemary.
+To Ellen the laundress.
+She said the steam smelled like a meadow with the hay just turned, and the taste was like the jelly off a pot of preserved plums.
+
+Wednesday.
+Sage, mint and basil.
+To the laundress's daughter.
+A scent off it like an apple-loft, and it shone in the cup like a brass basin polished for Sunday.
+
+Thursday.
+Sage, chamomile and rosemary.
+To the cooper's wife, Margery.
+She said it was as mild and kind as a baked custard and drank it with her eyes half shut.
+
+Friday.
+Sage, basil and rosemary.
+To Robin, the tumbler from the fair.
+It smelled like a herb garden at dusk and glittered like a sequin on his coat; and that afternoon, he says, he did a back-flip off the fair-booth roof and landed on his feet, where before he'd always landed on his rump.
+
+Saturday.
+No trials.
+The cellar is quiet.
+
+| Day | Herbs | What was seen |
+|---|---|---|
+| Monday | sage, elderberry, nettle | four rats dead |
+| Tuesday | sage, mint, rosemary | turned hay; plum jelly |
+| Wednesday | sage, mint, basil | an apple-loft; a brass basin |
+| Thursday | sage, chamomile, rosemary | baked custard |
+| Friday | sage, basil, rosemary | herb garden; a sequin; the back-flip |

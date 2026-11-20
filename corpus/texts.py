@@ -11,7 +11,6 @@ import re
 from pathlib import Path
 
 from corpus.catalogue import CONTENT
-from corpus.glossary import verbatim
 
 TEXTS_DIR = CONTENT / "texts"
 CUES_FILE = CONTENT / "cues.json"
@@ -19,8 +18,6 @@ HEADER = ("Title", "Author", "Kind")
 KIND_NAMES = {"book": "monastery book", "transcript": "apothecary transcript", "herbal": "herbal lady tale",
               "pamphlet": "merchant pamphlet", "folk": "folk tale",
               "trials": "apothecary transcript"}          # a trial ledger is a transcript to the agent
-REGISTRY_FILE = TEXTS_DIR / "registry.json"     # the cue spans of accepted texts, by effect
-LENGTH_TOLERANCE = 0.15            # a text's words may differ from its sheet's target by this share
 
 
 def load_cues() -> dict[str, list[str]]:
@@ -59,18 +56,14 @@ def problems(path: Path, sheet: dict) -> list[str]:
 
 
 def problems_text(text: str, sheet: dict) -> list[str]:
-    """What is wrong with a text, mechanically: header, length, layout, glossary wording."""
+    """What is wrong with a text, mechanically: its header and layout. Length is not checked (the sheet's
+    target only sizes the padding), and no word is banned (sources may name effects plainly)."""
     fields, body = split(text)
     out = []
     if tuple(fields) != HEADER:
         out.append(f"header {tuple(fields)}")
-    n, target = words(body), sheet["words"]
-    if abs(n - target) > LENGTH_TOLERANCE * target:
-        out.append(f"{n} words, target {target}")
     if body != one_sentence_per_line(body):
         out.append("a sentence does not start its own line")
-    if found := verbatim(body):
-        out.append(f"glossary wording: {found}")
     return out
 
 

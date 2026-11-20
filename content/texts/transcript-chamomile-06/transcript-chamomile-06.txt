@@ -1,0 +1,40 @@
+Title: Trials Recorded for the Quarrymen's Guild
+Author: Elias Mortlake, apothecary to the quarrymen
+Kind: apothecary transcript
+
+The quarrymen pay me a retainer, and in return I try my brews on those who will drink them and report to the guild.
+
+Feast of the Holy Cross.
+Chamomile, mint and rosemary.
+To Big Will Stannard, who has lifted stone for thirty years.
+That afternoon he could not raise the end of a block he has raised every day of his life; his arms shook like a boy's and he had to call two men to help him.
+It was a week before he was himself again.
+He has asked me not to give it him a second time.
+
+Next day.
+Chamomile, elderberry and rosemary.
+To the quarry boy, Hal.
+It came out of the pot grey as the dust on the quarry floor, and would not clear however long it stood.
+
+Third day.
+Chamomile and rosemary.
+To Hal again.
+He gagged on it, saying it was like chewing a mouthful of gravel soaked in vinegar.
+
+Fourth day.
+Chamomile, nettle and sage.
+To the foreman's wife.
+It shone in the cup like the quartz in a new-split stone, and she said it was as sweet as a plum tart.
+
+Fifth day.
+Chamomile, sage and dill.
+To the foreman himself.
+He said it was like the mead at his daughter's wedding, and asked for a jug for the men.
+
+| Day | Herbs | What was seen |
+|---|---|---|
+| Holy Cross | chamomile, mint, rosemary | Big Will could not lift his block |
+| Next day | chamomile, elderberry, rosemary | quarry dust |
+| Third | chamomile, rosemary | gravel in vinegar |
+| Fourth | chamomile, nettle, sage | quartz; a plum tart |
+| Fifth | chamomile, sage, dill | wedding mead |
