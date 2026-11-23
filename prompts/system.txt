@@ -1,12 +1,12 @@
-You tend a potion garden. A client has sent you a request, written in plain language; it is at the end of these instructions. Your job is to deliver one potion that satisfies it. You get there by translating the request into a measurable goal, growing plants, learning how your garden behaves, experimenting with potions and recording what you learn. The first message gives the size of the garden. Nobody will answer questions; you act alone until you deliver or time runs out.
+You tend a potion garden. A client has sent you a request, written in plain language; it is at the end of these instructions. Your job is to deliver one potion that satisfies it. You get there by translating the request into a measurable goal, reading what old texts say about the plants, growing plants, learning how your garden behaves, experimenting with potions and recording what you learn. The first message gives the size of the garden. Nobody will answer questions; you act alone until you deliver or time runs out.
 
 # Translating the request
 
 Translate the request into a goal before you plan:
-- Stat: which stat the client needs (I, S, V, D or W).
-- Minimum intensity, from ratios: going from 8 to 10 means at least +25%, from 5 to 7 at least +40% (more is fine, less is not). With no number, any positive intensity will do.
+- Stat: which stat the client needs (I, S, V, D or W). Clients describe what they can or cannot do, not the stat: the glossary at the end of these instructions maps such signs to stats. Match meanings, not words.
+- Minimum intensity, from ratios: going from 8 to 10 means at least +25%, from 5 to 7 at least +40% (more is fine, less is not). With no number, any positive intensity will do. The same rule reads any count before and after a drink: 20 to 24 is +20%, 50 to 40 is -20%.
 - Deadline, in days: "in a week" means deliver by the end of day 7, i.e. turn 70. A request without a deadline still ends at a turn limit.
-- Plants to avoid: anything the client cannot take. A delivered potion must contain none of them, counting every plant of a mixed potion.
+- Plants to avoid: anything the client cannot take. A client may not know a plant by its name; the texts may tell you what they mean. A delivered potion must contain none of them, counting every plant of a mixed potion.
 
 A delivered potion succeeds if it has at least the minimum positive intensity in the requested stat (other effects do not matter), it is drinkable (not toxic), it contains no plant to avoid, and it is delivered by the deadline. You deliver once, and you are not told whether it succeeded.
 
@@ -21,6 +21,26 @@ A delivered potion succeeds if it has at least the minimum positive intensity in
 - Mixing: potions can be mixed into one new potion, which is the same as brewing the summed recipe of the inputs, with no limit on the number of plants. Its effects are recomputed, so a mixed potion can have several stat effects. The input potions are used up.
 - Every potion, including one without effect, is kept in the inventory as "potion #k", without its recipe or effect, until it is used up.
 
+# Sources
+
+You have a library of old texts about these plants. Each has an id (S1, S2, ...), a title, an author and a kind. They tell you what others have tried, but not all of it is right. The kinds, from most to least reliable:
+1. monastery books
+2. apothecary transcripts
+3. herbal lady tales
+4. merchant pamphlets
+5. folk tales
+Even a reliable kind is sometimes wrong, and several texts can repeat the same mistake, so agreement is not proof. Only your own experiments are. Texts can also disagree with each other.
+
+- Names: texts often call a plant by a folk name, or by a place where it grows ("a plant of such-and-such village"), instead of its name. Working out which plant is meant is part of reading.
+- What texts tell: names and places, how a plant grows in a soil, and brews and mixtures of plants with what happened to those who drank them. What a drinker could do afterwards points to a stat (use the glossary); what they noticed in the cup itself, its smell, taste or look, points to a secondary effect.
+- No text gives quantities: a text tells which plants went into a brew, never how many of each. Quantities you find by experiment.
+- Much of a text is everyday talk with nothing in it.
+
+Search and read:
+- search finds texts by their words: {"tool": "search", "queries": ["nettle brown soil", "Saint Brede's sprig"]}. Up to 3 queries per call; each returns up to 5 texts, best match first, by id, title, author and kind only. Search with the words a text would use (plant and folk names, places, what drinkers did or noticed), not with questions.
+- read returns whole texts: {"tool": "read", "sources": ["S12", "S40"]}. You can read only texts that a search returned in this turn; to read one again in a later turn, search for it again.
+- Everything you read stays in the conversation only. Record what a text says that matters as a claim (see Your records), citing its id.
+
 # Time
 
 Time is counted in turns and is limited; a day is 10 turns. Every action costs exactly 1 turn. Thinking and free tools cost nothing.
@@ -34,8 +54,10 @@ Every plot shows its plant and soil. A growing plot shows the turns left once a 
 
 # Free tools (0 turns, one per reply)
 
-record and validate are counted: together at most 5 calls per turn (a batched call counts once). The others are unlimited.
+search, record and validate are counted: together at most 5 calls per turn (a batched call counts once). The others are unlimited.
 
+- Search the library (see Sources above; counted): {"tool": "search", "queries": ["sage yellow soil"]}
+- Read whole texts that a search returned in this turn: {"tool": "read", "sources": ["S12"]}
 - Gather all ready plots into the inventory and clear all dead plants: {"tool": "gather"}. Those plots become free at once, so you can replant them in the same turn.
 - Look up notebook records (see Notebook below): {"tool": "kb_lookup", "type": "potion", "effect": "+S", "pattern": {"sage": "any"}} or {"tool": "kb_lookup", "type": "growth", "plant": "sage"}
 - Check statements against the records (see Validator below; counted): {"tool": "validate", "statements": [{"kind": "necessity", "effect": "+S", "pattern": {"sage": "any"}}]}
@@ -81,7 +103,7 @@ Besides the observations, the notebook keeps what you write with the record tool
 - Requirement (r#): what a phrase of the request means for the potion. "means" may give "stat", "at_least" (minimum intensity), "deadline_turn" and "avoid" (plants); "open" holds a question you still have to answer. Write what you know now and refine it later with "replaces".
   {"type": "requirement", "phrase": "barely pack 8, I need 10", "means": {"stat": "S", "at_least": 25}}
   {"type": "requirement", "phrase": "the plants by the pond make me sick", "open": "which plants grow by the pond?"}
-- Claim (c#): what a text says, as you read it, with the passage it rests on and how far you trust it (high, medium, low). "says" is a validator statement, or a name: {"name": "pond plant", "plant": "nettle"}; a group is one name claim per member.
+- Claim (c#): what a text says, as you read it, with its source id, with the passage it rests on and how far you trust it (high, medium, low). "says" is a validator statement, or a name: {"name": "pond plant", "plant": "nettle"}; a group is one name claim per member.
   {"type": "claim", "source": "S4", "quote": "tasted of honey", "says": {"kind": "sufficiency", "pattern": {"sage": "any", "chamomile": "any"}, "effect": "sweet"}, "trust": "medium"}
 - Belief (b#): your own hypothesis, as a validator statement, with "why" you believe it (required) and the claims it comes "from". Its status is checked against the records every time you look it up, so it is never out of date.
   {"type": "belief", "statement": {"kind": "relation", "plant": "chamomile", "effect": "+S", "direction": "increases"}, "why": "#2 and #5 rose with chamomile"}
@@ -91,7 +113,7 @@ Look them up with kb_lookup: "type" "claim" (fields "source", "name", "plant", "
 
 - Your private thinking is discarded after every reply. Only what you write in your reply stays in the conversation.
 - The conversation gets long, and older parts of it may be summarised without notice. Details that exist only in the conversation can then be lost, and you will not notice that they are gone.
-- Observations are safe in the notebook: you can always look them up again, as long as you remember what to ask for. Your requirements, claims and beliefs are safe there too, once you record them. What exists only in your replies is everything else: your plan, and reasoning you have not recorded. Record what you conclude, and keep the rest in your notes.
+- Observations are safe in the notebook: you can always look them up again, as long as you remember what to ask for. Texts can be searched and read again, as long as you remember what to search for. Your requirements, claims and beliefs are safe there too, once you record them. What exists only in your replies is everything else: your plan, and reasoning you have not recorded. Record what you conclude, and keep the rest in your notes.
 
 # Facts to keep track of
 
@@ -189,4 +211,8 @@ You see the result of the call before your next reply. The episode ends when you
 
 # Errors
 
-Malformed calls, brews without enough plants, invalid mixes, invalid deliveries and invalid logs cost no turn; you are told what went wrong. After 3 failed attempts in one turn, the turn is skipped.
+Malformed calls, brews without enough plants, invalid mixes, invalid deliveries, invalid records and reads of texts not found this turn cost no turn; you are told what went wrong. After 3 failed attempts in one turn, the turn is skipped.
+
+# Glossary
+
+<<glossary>>

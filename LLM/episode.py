@@ -1,6 +1,7 @@
 """The turn loop: compaction check → turn → end of turn → checkpoint."""
 
 import checkpoint
+from corpus.glossary import prompt_text
 from agents.base import Agent, ContextFull
 from environment.world import World
 from input import ExperimentConfig
@@ -18,8 +19,13 @@ def opening_message(world: World) -> str:
     return f"The garden has {world.garden.size} plots. It is day 1, turn 1."
 
 
+GLOSSARY_SLOT = "<<glossary>>"
+
+
 def system_prompt(base: str, request_text: str) -> str:
-    """The prompt file followed by the client's request, so the request is never compacted."""
+    """The prompt file, with the glossary filled in, followed by the client's request, so the request is
+    never compacted."""
+    base = base.replace(GLOSSARY_SLOT, prompt_text())
     return f"{base.rstrip()}\n\n# The request\n\n{request_text.strip()}\n"
 
 

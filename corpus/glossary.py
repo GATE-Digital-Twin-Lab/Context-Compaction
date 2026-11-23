@@ -33,3 +33,17 @@ def verbatim(text: str, glossary: dict | None = None) -> list[str]:
     flat = re.sub(r"\s+", " ", text.lower())
     return sorted({phrase for phrases in entries(glossary).values() for phrase in phrases
                    if re.search(r"(?<![\w'])" + re.escape(phrase.lower()) + r"(?![\w'])", flat)})
+
+
+def prompt_text(glossary: dict | None = None) -> str:
+    """The glossary as the agent sees it: per stat its words, signs of more and less, and trades; per label
+    its words and cues. The near words are a writer's list and stay hidden."""
+    glossary = glossary or load_glossary()
+    lines = [glossary["note"], "", "Stats (signs of more; signs of less; trades that need it):"]
+    for stat, e in glossary["stats"].items():
+        lines.append(f"- {stat}, {e['name']} ({', '.join(e['words'])}): more: {'; '.join(e['more'])}. "
+                     f"Less: {'; '.join(e['less'])}. Trades: {', '.join(e['trades'])}.")
+    lines += ["", "Secondary effects (noticed in the potion itself):"]
+    for label, e in glossary["labels"].items():
+        lines.append(f"- {label} ({', '.join(e['words'])}): e.g. {'; '.join(e['cues'])}.")
+    return "\n".join(lines)

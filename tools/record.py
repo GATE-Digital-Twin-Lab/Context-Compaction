@@ -10,6 +10,12 @@ from tools.base import ToolError, ToolResult
 
 
 def run(world: World, args: dict) -> ToolResult:
+    raw = args.get("records")
+    if world.library is not None and isinstance(raw, list):
+        for rec in raw:
+            if isinstance(rec, dict) and rec.get("type") == "claim" and isinstance(rec.get("source"), str) \
+                    and rec["source"] not in world.library.sources:
+                raise ToolError(f"Unknown source {rec['source']}: a claim cites a text id such as S12. Nothing was recorded.")
     try:
         records = world.record(args.get("records"))
     except RecordError as err:

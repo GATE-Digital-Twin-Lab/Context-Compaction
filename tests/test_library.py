@@ -125,3 +125,21 @@ def test_config_draws_a_corpus_seed_and_old_params_load_without_one(tmp_path):
     del data["corpus_seed"], data["corpus_size"]
     old = ExperimentConfig.from_dict(data)
     assert old.corpus_seed is None and old.corpus_size == 200
+
+
+def test_a_claim_must_cite_a_source_of_the_sample():
+    d = Dispatcher(world_with_sources())
+    claim = {"type": "claim", "quote": "q", "says": {"name": "Ferrow", "plant": "mint"}, "trust": "low"}
+    bad = d.handle({"tool": "record", "records": [{**claim, "source": "S999"}]})
+    assert bad.error and "Unknown source S999" in bad.text
+    assert not d.handle({"tool": "record", "records": [{**claim, "source": "S12"}]}).error
+
+
+def test_the_system_prompt_carries_the_glossary_and_the_search_tools():
+    from LLM.episode import system_prompt
+    from input import parse_args
+    text = system_prompt(parse_args([]).prompt_file.read_text(encoding="utf-8"), "my request")
+    assert "<<glossary>>" not in text and "- S, strength (" in text and "a feeble grip" in text
+    assert '{"tool": "search"' in text and '{"tool": "read"' in text
+    assert "honeycomb" not in text   # the writers' near words stay hidden
+    assert text.endswith("# The request\n\nmy request\n")
